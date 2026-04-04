@@ -22,37 +22,63 @@
             }
           },
           {
+            "id": "b1af11376ca87483",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "InitialIRCFamiliarisation.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "InitialIRCFamiliarisation"
+            }
+          },
+          {
+            "id": "fcad0667a26fdeeb",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Functions.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Functions"
+            }
+          },
+          {
             "id": "ed4b91ef838ddf05",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "InitialPlan.md",
+                "file": "InitialBuildPlan.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "InitialPlan"
+              "title": "InitialBuildPlan"
+            }
+          },
+          {
+            "id": "069079080468c985",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "InitialIRCFamiliarisation.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "InitialIRCFamiliarisation"
             }
           }
         ],
-        "currentTab": 1
-      },
-      {
-        "id": "09d9b33c9e2b81cc",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "75503c8d98dd4a81",
-            "type": "leaf",
-            "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
-            }
-          }
-        ]
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -214,12 +240,17 @@
       "bases:Create new base": false
     }
   },
-  "active": "ed4b91ef838ddf05",
+  "active": "fcad0667a26fdeeb",
   "lastOpenFiles": [
+    "InitialBuildPlan.md",
+    "pollAndEquivalent.md",
+    "InitialIRCFamiliarisation.md",
+    "Functions.md",
+    "tokyonight.md",
+    "Images",
+    "Pasted image 20260404095622.png",
     "Pasted image 20260404093647.png",
     "Pasted image 20260404093549.png",
-    "Pasted image 20260404093451.png",
-    "tokyonight.md",
-    "InitialPlan.md"
+    "Pasted image 20260404093451.png"
   ]
 }
