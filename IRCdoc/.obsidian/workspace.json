@@ -1,0 +1,225 @@
+{
+  "main": {
+    "id": "881286edacfd6e75",
+    "type": "split",
+    "children": [
+      {
+        "id": "fdf9ca765c996082",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7c689c201a42e625",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "tokyonight.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "tokyonight"
+            }
+          },
+          {
+            "id": "ed4b91ef838ddf05",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "InitialPlan.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "InitialPlan"
+            }
+          }
+        ],
+        "currentTab": 1
+      },
+      {
+        "id": "09d9b33c9e2b81cc",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "75503c8d98dd4a81",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "5cc7bc3f940983f4",
+    "type": "split",
+    "children": [
+      {
+        "id": "6f609f28d46f1fad",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b6d6f908e8151604",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "121f770094398d5d",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "cdacc27c84385f70",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "d231bd6662ca932c",
+    "type": "split",
+    "children": [
+      {
+        "id": "2c354012f3515ae5",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "861d92a6d68ccd13",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "InitialPlan.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for InitialPlan"
+            }
+          },
+          {
+            "id": "6021d2c0b871e859",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "InitialPlan.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from InitialPlan"
+            }
+          },
+          {
+            "id": "1c3dd9d88be69505",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "b6575d916ec7a76c",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "be841b50218df507",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "InitialPlan.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of InitialPlan"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "ed4b91ef838ddf05",
+  "lastOpenFiles": [
+    "Pasted image 20260404093647.png",
+    "Pasted image 20260404093549.png",
+    "Pasted image 20260404093451.png",
+    "tokyonight.md",
+    "InitialPlan.md"
+  ]
+}
