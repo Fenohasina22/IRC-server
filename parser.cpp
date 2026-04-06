@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/06 13:19:04 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/06 13:54:36 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,23 @@ void	getArgs(const std::vector<std::string> &splitMess, iRCMessage &parsedMess)
 {
 	if (splitMess.size() < 3)
 		return ;
-	for (int i = 2; (i < splitMess.size() && splitMess[i] != "/r/n"); i++)
+	for (size_t i = 2; (i < splitMess.size() && splitMess[i] != "/r/n"); i++)
 		parsedMess.args.push_back(splitMess[i]);
+	for (int i = 0; i < parsedMess.args.size(); i++)
+	{
+		if (parsedMess.args[i][0] == ':')
+		{
+			std::string &tmp = parsedMess.args[i];
+			size_t 		start = i;
+			while ((start < parsedMess.args.size() && splitMess[start] != "/r/n"))
+			{
+				tmp.append(parsedMess.args[start + 1]);
+				start++;
+			}
+			parsedMess.args.erase(parsedMess.args.begin() + i, parsedMess.args.end());
+			return ;
+		}
+	}
 }
 
 void	getCRLF(const std::vector<std::string> &splitMess, iRCMessage &parsedMess)
@@ -77,30 +92,30 @@ iRCMessage parseMessage(const std::string &strMess)
 	return (parsedMess);
 }
 /*                 					   DEBUG                                */
-// void	printiRCMESS(iRCMessage mess)
-// {
-// 	std::cout << "prefix = " << mess.prefix << std::endl;
-// 	std::cout << "command = " << mess.command << std::endl;
-// 	std::cout << "args = ";
-// 	for (int i = 0; i < mess.args.size(); i++)
-// 		std::cout << "-" << mess.args[i] << std::endl;
-// }
+void	printiRCMESS(iRCMessage mess)
+{
+	std::cout << "prefix = " << mess.prefix << std::endl;
+	std::cout << "command = " << mess.command << std::endl;
+	std::cout << "args = ";
+	for (int i = 0; i < mess.args.size(); i++)
+		std::cout << "-" << mess.args[i] << std::endl;
+}
 
-// void print_vector(const std::vector<std::string>& v)
-// {
-//     for (size_t i = 0; i < v.size(); i++)
-//         std::cout << "[" << i << "] " << v[i] << std::endl;
-// }
+void print_vector(const std::vector<std::string>& v)
+{
+    for (size_t i = 0; i < v.size(); i++)
+        std::cout << "[" << i << "] " << v[i] << std::endl;
+}
 
-// int main(int argc, char **argv)
-// {
-// 	iRCMessage stuff;
+int main(int argc, char **argv)
+{
+	iRCMessage stuff;
 
-// 	if (argc < 2)
-// 		return 0;
-// 	stuff = parseMessage(argv[1]);
-// 	print_vector(split(argv[1], ' '));
-// 	printiRCMESS(stuff);
-// 	return (0);
-// }
+	if (argc < 2)
+		return 0;
+	stuff = parseMessage(argv[1]);
+	print_vector(split(argv[1], ' '));
+	printiRCMESS(stuff);
+	return (0);
+}
 // -------------------------------------------------------------------------
