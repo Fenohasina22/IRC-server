@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 	addr.sin_addr.s_addr = INADDR_ANY; // 0.0.0.0, There are others macro to change this but we initilize it like that to begin 
 
 	fd = socket(AF_INET, SOCK_STREAM, 0); // SOCK_STREAM is for TCP
-	if (!bind(fd, (struct sockaddr *)&addr, sizeof(addr)))
+	if (bind(fd, (struct sockaddr *)&addr, sizeof(addr)) == 0)
 	{
 		std::cout << "Binding successfull" << std::endl;
 	}
@@ -52,6 +52,32 @@ int main(int argc, char **argv)
 		std::cout << "binding failed" << std::endl;
 	}
 	std::cout << "fd  = " << fd << std::endl;
+	// sleep(1000000);
+	if (listen(fd, 10) == 0) // 10 personnes en file d'attente, listen cre une file d'attente d'une taille 10
+	{
+		std::cout << "Listen successful"<<  std::endl;
+	}
+	else
+	{
+		std::cout << "Listen failed" << std::endl;
+	}
+	/*
+		accept initialize a sockaddr_in struct and returns an fd of a client
+		We can add NULL to begin with
 
+		By default accept waits for client to interact
+	*/
+	int clientfd;
+
+
+	clientfd = accept(fd, NULL, NULL);
+	if (clientfd != -1)
+	{
+		std::cout << "Yayy a client is conected" << std::endl;
+	}
+	else{
+		std::cout << "Hey there" << std::endl;
+	}
+	// sleep (1000000);
 	return (0);
 }
