@@ -15,13 +15,43 @@
 int main(int argc, char **argv)
 {
 	if (argc != 3)
+	{
+		std::cout << "Needs more args" << std::endl;
 		return (1);
+	}
 	std::cout << "password: " << argv[1] <<  std::endl;
 	std::cout << "port: " 	  << argv[2] <<  std::endl;
 
 
-	//socket();
+	/*socket() cree un telephone;
+		bind assigne un numero au telephone
+	*/
 
+	int fd;
+	/*
+
+	We use struct sockaddr_in to initialize what we need to bind
+	We don't directly use sockaddr cuz it's harder to initialize and not optimal
+	So we use sockaddr_in then cast it to sockaddr , 
+
+	*/
+	struct sockaddr_in addr;
+
+
+	addr.sin_family = AF_INET; // Address Family - Internet Protocol v4 (IPv4)
+	addr.sin_port = htons(6667); // conversion
+	addr.sin_addr.s_addr = INADDR_ANY; // 0.0.0.0, There are others macro to change this but we initilize it like that to begin 
+
+	fd = socket(AF_INET, SOCK_STREAM, 0); // SOCK_STREAM is for TCP
+	if (!bind(fd, (struct sockaddr *)&addr, sizeof(addr)))
+	{
+		std::cout << "Binding successfull" << std::endl;
+	}
+	else
+	{
+		std::cout << "binding failed" << std::endl;
+	}
+	std::cout << "fd  = " << fd << std::endl;
 
 	return (0);
 }

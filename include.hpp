@@ -16,6 +16,8 @@
 #include <iostream>
 #include <poll.h> // pour poll
 #include <sys/socket.h> // pour socket , bind , etc
+#include <netinet/in.h> // pour struct sockaddr_in
+
 
 
 
