@@ -1,27 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   include.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/06 14:28:59 by fsamy-an         ###   ########.fr       */
+/*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
+/*   Updated: 2026/04/06 14:21:58 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include.hpp"
+#ifndef	INCLUDE_HPP
+#define INCLUDE_HPP
 
-int main(int argc, char **argv)
-{
-	if (argc != 3)
-		return (1);
-	std::cout << "password: " << argv[1] <<  std::endl;
-	std::cout << "port: " 	  << argv[2] <<  std::endl;
+#include <iostream>
+#include <poll.h> // pour poll
+#include <sys/socket.h> // pour socket , bind , etc
 
 
-	//socket();
 
 
-	return (0);
-}
+
+#endif
+
