@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Everything About IRC — A Complete Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0e0f13;
+  --bg2: #161820;
+  --bg3: #1e2028;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.14);
+  --text: #e8e9f0;
+  --muted: #8b8d9a;
+  --accent: #5b8af0;
+  --accent2: #3ecf8e;
+  --accent3: #f0a05b;
+  --accent4: #d05be8;
+  --danger: #e85b5b;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Sora', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.75;}
+
+/* Layout */
+.sidebar{position:fixed;top:0;left:0;width:240px;height:100vh;background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;z-index:100;padding:1.5rem 0;}
+.main{margin-left:240px;max-width:900px;padding:3rem 3rem 6rem;}
+.sidebar-title{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;padding:0 1.25rem 1rem;}
+.nav-item{display:block;padding:.45rem 1.25rem;font-size:13px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:all .15s;}
+.nav-item:hover{color:var(--text);background:rgba(255,255,255,.03);}
+.nav-item.active{color:var(--accent);border-left-color:var(--accent);background:rgba(91,138,240,.07);}
+.nav-section{padding:.75rem 1.25rem .25rem;font-size:10px;font-weight:600;color:rgba(139,141,154,.5);letter-spacing:.1em;text-transform:uppercase;margin-top:.5rem;}
+
+/* Sections */
+.section{padding:3rem 0 1rem;border-bottom:1px solid var(--border);}
+.section:last-child{border-bottom:none;}
+.section-tag{display:inline-block;font-family:var(--mono);font-size:11px;padding:3px 10px;border-radius:4px;margin-bottom:1rem;font-weight:500;}
+.tag-net{background:rgba(91,138,240,.15);color:#88aaff;}
+.tag-tcp{background:rgba(62,207,142,.12);color:#5ee8a8;}
+.tag-irc{background:rgba(240,160,91,.12);color:#f0b86e;}
+.tag-server{background:rgba(208,91,232,.12);color:#d88ef0;}
+.tag-adv{background:rgba(232,91,91,.12);color:#f09090;}
+h1{font-size:2.2rem;font-weight:600;line-height:1.2;margin-bottom:.75rem;}
+h2{font-size:1.5rem;font-weight:600;margin-bottom:1.25rem;color:var(--text);}
+h3{font-size:1.1rem;font-weight:500;margin:1.75rem 0 .75rem;color:var(--text);}
+p{color:#c8cad6;margin-bottom:1rem;}
+p:last-child{margin-bottom:0;}
+.lead{font-size:1.05rem;color:#a8aab8;margin-bottom:1.5rem;}
+strong{color:var(--text);font-weight:500;}
+
+/* Code */
+code{font-family:var(--mono);font-size:13px;background:var(--bg3);padding:2px 7px;border-radius:4px;color:#a8d4ff;}
+pre{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:1.25rem 0;font-family:var(--mono);font-size:13px;line-height:1.7;}
+pre .c{color:var(--muted);}
+pre .k{color:#88aaff;}
+pre .s{color:#88e0a8;}
+pre .n{color:#f0b86e;}
+pre .p{color:#e8e9f0;}
+
+/* Callout boxes */
+.box{border-radius:10px;padding:1.1rem 1.4rem;margin:1.25rem 0;border-left:3px solid;}
+.box-info{background:rgba(91,138,240,.08);border-color:var(--accent);}
+.box-tip{background:rgba(62,207,142,.08);border-color:var(--accent2);}
+.box-warn{background:rgba(240,160,91,.08);border-color:var(--accent3);}
+.box-danger{background:rgba(232,91,91,.08);border-color:var(--danger);}
+.box-title{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;}
+.box-info .box-title{color:var(--accent);}
+.box-tip .box-title{color:var(--accent2);}
+.box-warn .box-title{color:var(--accent3);}
+.box-danger .box-title{color:var(--danger);}
+.box p{margin-bottom:0;font-size:14px;}
+
+/* Diagram containers */
+.diagram{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;overflow-x:auto;}
+.diagram svg{display:block;max-width:100%;}
+
+/* Analogy cards */
+.analogy{display:flex;gap:1rem;background:var(--bg3);border-radius:10px;padding:1.25rem;margin:1.25rem 0;align-items:flex-start;}
+.analogy-icon{font-size:2rem;flex-shrink:0;line-height:1;}
+.analogy-body{flex:1;}
+.analogy-label{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.3rem;}
+.analogy-body p{font-size:14px;margin:0;}
+
+/* Step list */
+.steps{counter-reset:step;list-style:none;margin:1rem 0;}
+.steps li{counter-increment:step;display:flex;gap:1rem;margin-bottom:1rem;align-items:flex-start;}
+.steps li::before{content:counter(step);background:rgba(91,138,240,.2);color:var(--accent);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;margin-top:2px;}
+.steps li p{margin:0;font-size:14px;color:#c8cad6;}
+
+/* Message anatomy */
+.msg-line{font-family:var(--mono);font-size:14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:1rem 0;overflow-x:auto;white-space:nowrap;}
+.msg-part{display:inline-block;padding:2px 0;}
+.mp-prefix{color:#88aaff;}
+.mp-cmd{color:#5ee8a8;}
+.mp-param{color:#f0b86e;}
+.mp-trail{color:#d88ef0;}
+.mp-sep{color:var(--muted);}
+.msg-legend{display:flex;flex-wrap:wrap;gap:.5rem .75rem;margin-top:.75rem;}
+.legend-item{display:flex;align-items:center;gap:.4rem;font-size:12px;color:var(--muted);}
+.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+
+/* Two column */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.25rem 0;}
+.col-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem;}
+.col-card h4{font-size:13px;font-weight:500;margin-bottom:.5rem;color:var(--text);}
+.col-card p{font-size:13px;color:var(--muted);margin:0;}
+
+/* Table */
+table{width:100%;border-collapse:collapse;margin:1.25rem 0;font-size:13px;}
+th{background:var(--bg3);color:var(--muted);font-weight:500;padding:.6rem 1rem;text-align:left;border-bottom:1px solid var(--border2);}
+td{padding:.6rem 1rem;border-bottom:1px solid var(--border);color:#c8cad6;vertical-align:top;}
+td:first-child{font-family:var(--mono);color:#a8d4ff;}
+tr:last-child td{border-bottom:none;}
+
+/* Mode table */
+.mode-badge{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,.08);padding:2px 8px;border-radius:4px;}
+
+/* Numeric codes */
+.num-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.6rem;margin:1rem 0;}
+.num-card{background:var(--bg3);border-radius:8px;padding:.7rem 1rem;display:flex;gap:.75rem;align-items:flex-start;}
+.num-code{font-family:var(--mono);font-size:12px;font-weight:500;padding:2px 6px;border-radius:4px;white-space:nowrap;flex-shrink:0;}
+.num-ok{background:rgba(62,207,142,.2);color:#5ee8a8;}
+.num-err{background:rgba(232,91,91,.2);color:#f09090;}
+.num-info{background:rgba(91,138,240,.2);color:#88aaff;}
+.num-card span{font-size:12px;color:var(--muted);}
+
+/* Progress bar (topic progress) */
+.progress-bar{position:fixed;top:0;left:240px;right:0;height:2px;background:var(--border);z-index:200;}
+.progress-fill{height:100%;background:var(--accent);width:0%;transition:width .2s;}
+
+/* Scrollspy highlight */
+.highlight-box{animation:highlight .8s ease;}
+@keyframes highlight{0%,100%{background:transparent}50%{background:rgba(91,138,240,.1)}}
+
+/* Responsive */
+@media(max-width:768px){
+  .sidebar{display:none;}
+  .main{margin-left:0;padding:2rem 1.25rem 4rem;}
+  .two-col{grid-template-columns:1fr;}
+  h1{font-size:1.6rem;}
+}
+
+/* Interactive demo */
+.demo-wrap{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;overflow:hidden;margin:1.5rem 0;}
+.demo-header{background:var(--bg3);padding:.75rem 1.25rem;font-size:12px;color:var(--muted);font-family:var(--mono);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem;}
+.demo-dot{width:8px;height:8px;border-radius:50%;}
+.demo-body{padding:1.25rem;}
+.demo-terminal{font-family:var(--mono);font-size:13px;line-height:1.8;}
+.t-server{color:#88aaff;}
+.t-client{color:#5ee8a8;}
+.t-comment{color:rgba(139,141,154,.6);font-style:italic;}
+.t-num{color:#f0b86e;}
+button.demo-btn{background:rgba(91,138,240,.15);border:1px solid rgba(91,138,240,.3);color:var(--accent);padding:.45rem 1rem;border-radius:6px;font-size:12px;font-family:var(--mono);cursor:pointer;transition:all .15s;}
+button.demo-btn:hover{background:rgba(91,138,240,.25);}
+.demo-controls{display:flex;gap:.6rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap;}
+.demo-step-info{font-size:12px;color:var(--muted);}
+
+/* Poll diagram interactive */
+.poll-fd{cursor:pointer;transition:opacity .2s;}
+.poll-fd:hover{opacity:.8;}
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+
+<nav class="sidebar">
+  <div class="sidebar-title">IRC Complete Guide</div>
+  <div class="nav-section">Foundations</div>
+  <a class="nav-item" href="#networks">1. Networks & IP</a>
+  <a class="nav-item" href="#ports">2. Ports</a>
+  <a class="nav-item" href="#sockets">3. What is a Socket</a>
+  <a class="nav-item" href="#tcp">4. TCP vs UDP</a>
+  <a class="nav-item" href="#handshake">5. TCP Handshake</a>
+  <div class="nav-section">Server Architecture</div>
+  <a class="nav-item" href="#server-loop">6. The Server Loop</a>
+  <a class="nav-item" href="#poll">7. poll() Explained</a>
+  <a class="nav-item" href="#buffering">8. Stream Buffering</a>
+  <div class="nav-section">IRC Protocol</div>
+  <a class="nav-item" href="#irc-what">9. What is IRC</a>
+  <a class="nav-item" href="#irc-messages">10. Message Format</a>
+  <a class="nav-item" href="#registration">11. Registration Flow</a>
+  <a class="nav-item" href="#channels">12. Channels</a>
+  <a class="nav-item" href="#commands">13. Key Commands</a>
+  <div class="nav-section">Advanced</div>
+  <a class="nav-item" href="#modes">14. Modes</a>
+  <a class="nav-item" href="#numerics">15. Numeric Replies</a>
+  <a class="nav-item" href="#signals">16. Signals & Shutdown</a>
+  <a class="nav-item" href="#datamodel">17. Data Model</a>
+</nav>
+
+<main class="main">
+
+<!-- HERO -->
+<div style="padding:2rem 0 3rem;border-bottom:1px solid var(--border);">
+  <div style="display:inline-block;font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--bg3);padding:4px 12px;border-radius:4px;margin-bottom:1rem;">ft_irc · complete reference</div>
+  <h1>Everything About IRC</h1>
+  <p class="lead">From "what is a network" to implementing a working IRC server — every concept explained with real examples, zero hand-waving.</p>
+  <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+    <span style="font-size:12px;background:rgba(91,138,240,.12);color:#88aaff;padding:4px 12px;border-radius:20px;">17 concepts</span>
+    <span style="font-size:12px;background:rgba(62,207,142,.12);color:#5ee8a8;padding:4px 12px;border-radius:20px;">Interactive demos</span>
+    <span style="font-size:12px;background:rgba(240,160,91,.12);color:#f0b86e;padding:4px 12px;border-radius:20px;">RFC 1459 aligned</span>
+  </div>
+</div>
+
+<!-- 1. NETWORKS -->
+<section class="section" id="networks">
+  <span class="section-tag tag-net">Foundations</span>
+  <h2>1. Networks &amp; IP Addresses</h2>
+  <p>A <strong>network</strong> is simply a collection of computers that can send data to each other. The internet is the biggest network — billions of computers all connected together.</p>
+  <p>For computers to find each other, every device on a network gets an <strong>IP address</strong> — a unique numerical label, like a home address for your computer.</p>
+
+  <div class="two-col">
+    <div class="col-card">
+      <h4>IPv4 address</h4>
+      <p>Four numbers 0–255 separated by dots.<br><code>192.168.1.42</code><br>About 4 billion possible addresses. Running out.</p>
+    </div>
+    <div class="col-card">
+      <h4>IPv6 address</h4>
+      <p>Eight groups of hex digits.<br><code>2001:db8::1</code><br>340 undecillion possible addresses. Won't run out.</p>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-icon">🏠</div>
+    <div class="analogy-body">
+      <div class="analogy-label">Analogy</div>
+      <p>An IP address is like a street address. If you want to send a letter to someone, you need their address. If you want to send data to a computer, you need its IP address.</p>
+    </div>
+  </div>
+
+  <h3>Special addresses</h3>
+  <table>
+    <tr><th>Address</th><th>Meaning</th></tr>
+    <tr><td>127.0.0.1</td><td><strong>Localhost</strong> — your own machine. Sending to this address talks to yourself. Used for testing.</td></tr>
+    <tr><td>0.0.0.0</td><td><strong>All interfaces</strong> — when binding a server, means "listen on every network interface of this machine".</td></tr>
+    <tr><td>255.255.255.255</td><td><strong>Broadcast</strong> — send to all devices on the local network at once.</td></tr>
+  </table>
+</section>
+
+<!-- 2. PORTS -->
+<section class="section" id="ports">
+  <span class="section-tag tag-net">Foundations</span>
+  <h2>2. Ports</h2>
+  <p>An IP address identifies a <em>machine</em>. But a machine runs many programs at once — a web server, an IRC server, a game server. How does incoming data know which program it's for? That's what <strong>ports</strong> solve.</p>
+  <p>A port is a number from <strong>0 to 65535</strong>. Think of it as the "apartment number" inside the building (the IP address). A connection is identified by the combination: <code>IP:port</code>.</p>
+
+  <div class="analogy">
+    <div class="analogy-icon">🏢</div>
+    <div class="analogy-body">
+      <div class="analogy-label">Analogy</div>
+      <p>The IP address is the building. The port is the apartment number. <code>192.168.1.10:6667</code> means building <code>192.168.1.10</code>, apartment <code>6667</code>.</p>
+    </div>
+  </div>
+
+  <table>
+    <tr><th>Port</th><th>Used for</th></tr>
+    <tr><td>80</td><td>HTTP (web)</td></tr>
+    <tr><td>443</td><td>HTTPS (secure web)</td></tr>
+    <tr><td>22</td><td>SSH</td></tr>
+    <tr><td>6667</td><td>IRC (the default IRC port)</td></tr>
+    <tr><td>6697</td><td>IRC over TLS (secure)</td></tr>
+  </table>
+
+  <div class="box box-info">
+    <div class="box-title">Port ranges</div>
+    <p>Ports 0–1023 are "well-known" and require root to use. Ports 1024–49151 are "registered". Ports 49152–65535 are ephemeral — the OS assigns these randomly to clients when they connect out. Your ft_irc listens on a port you choose (usually above 1024 for testing).</p>
+  </div>
+</section>
+
+<!-- 3. SOCKETS -->
+<section class="section" id="sockets">
+  <span class="section-tag tag-net">Foundations</span>
+  <h2>3. What is a Socket?</h2>
+  <p>A <strong>socket</strong> is the programming interface the OS gives you to use the network. It's an endpoint — one side of a two-way communication channel.</p>
+  <p>From your program's perspective, a socket is just an <strong>integer</strong> — a file descriptor (fd). Once a connection is open, you read from it and write to it exactly like a file. The OS handles all the networking underneath invisibly.</p>
+
+  <div class="analogy">
+    <div class="analogy-icon">📞</div>
+    <div class="analogy-body">
+      <div class="analogy-label">Analogy</div>
+      <p>A socket is like a phone. Before you talk, both sides need a phone (socket). One side dials (connect), the other answers (accept). Once connected, you speak and listen freely. When done, both sides hang up (close). The phone company (OS kernel) handles everything in between.</p>
+    </div>
+  </div>
+
+  <div class="diagram">
+    <svg viewBox="0 0 700 200" width="100%">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#5b8af0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+        <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="#3ecf8e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+      <!-- Client -->
+      <rect x="20" y="50" width="140" height="100" rx="10" fill="#1e2028" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      <text x="90" y="85" text-anchor="middle" fill="#e8e9f0" font-family="Sora,sans-serif" font-size="14" font-weight="500">Client</text>
+      <rect x="50" y="100" width="80" height="30" rx="6" fill="rgba(91,138,240,0.15)" stroke="rgba(91,138,240,0.3)" stroke-width="1"/>
+      <text x="90" y="120" text-anchor="middle" fill="#88aaff" font-family="JetBrains Mono,monospace" font-size="12">fd = 5</text>
+      <!-- Server -->
+      <rect x="540" y="50" width="140" height="100" rx="10" fill="#1e2028" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+      <text x="610" y="85" text-anchor="middle" fill="#e8e9f0" font-family="Sora,sans-serif" font-size="14" font-weight="500">Server</text>
+      <rect x="570" y="100" width="80" height="30" rx="6" fill="rgba(62,207,142,0.12)" stroke="rgba(62,207,142,0.3)" stroke-width="1"/>
+      <text x="610" y="120" text-anchor="middle" fill="#5ee8a8" font-family="JetBrains Mono,monospace" font-size="12">fd = 8</text>
+      <!-- Connection line -->
+      <line x1="210" y1="100" x2="490" y2="100" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+      <rect x="270" y="75" width="160" height="50" rx="8" fill="#161820" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+      <text x="350" y="97" text-anchor="middle" fill="#8b8d9a" font-family="JetBrains Mono,monospace" font-size="11">TCP connection</text>
+      <text x="350" y="113" text-anchor="middle" fill="#5b5d6e" font-family="JetBrains Mono,monospace" font-size="10">1.2.3.4:54321 ↔ 5.6.7.8:6667</text>
+      <!-- Arrows -->
+      <line x1="300" y1="155" x2="490" y2="140" stroke="#5b8af0" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="4 3"/>
+      <text x="350" y="172" text-anchor="middle" fill="#88aaff" font-family="JetBrains Mono,monospace" font-size="11">send(5, "NICK alice\r\n")</text>
+      <line x1="490" y1="70" x2="300" y2="62" stroke="#3ecf8e" stroke-width="1.5" marker-end="url(#arr2)" stroke-dasharray="4 3"/>
+      <text x="350" y="52" text-anchor="middle" fill="#5ee8a8" font-family="JetBrains Mono,monospace" font-size="11">send(8, ":srv 001 alice :Welcome")</text>
+    </svg>
+  </div>
+
+  <h3>What the OS handles for you</h3>
+  <p>You never touch raw network packets. The OS kernel does all of this transparently:</p>
+  <ul style="color:#c8cad6;padding-left:1.5rem;line-height:2;">
+    <li>Breaking your data into packets small enough to travel the network</li>
+    <li>Numbering packets so the receiver can reassemble them in order</li>
+    <li>Waiting for acknowledgements and retransmitting lost packets</li>
+    <li>Buffering incoming data until your program calls <code>recv()</code></li>
+  </ul>
+</section>
+
+<!-- 4. TCP vs UDP -->
+<section class="section" id="tcp">
+  <span class="section-tag tag-tcp">TCP</span>
+  <h2>4. TCP vs UDP</h2>
+  <p>There are two main transport protocols. TCP is what IRC uses — it's worth understanding why.</p>
+
+  <div class="two-col">
+    <div class="col-card" style="border-color:rgba(91,138,240,0.3);">
+      <h4 style="color:#88aaff;">TCP — Transmission Control Protocol</h4>
+      <p><strong>Reliable, ordered, stream-based.</strong><br><br>
+      Every byte you send is guaranteed to arrive, in the same order you sent it. If a packet is lost, TCP retransmits it. There's a "connection" — both sides acknowledge the link is open.<br><br>
+      Used for: web (HTTP), email, IRC, SSH — anything where data must arrive correctly.</p>
+    </div>
+    <div class="col-card" style="border-color:rgba(240,160,91,0.3);">
+      <h4 style="color:#f0b86e;">UDP — User Datagram Protocol</h4>
+      <p><strong>Fast, unreliable, message-based.</strong><br><br>
+      Fire-and-forget. Packets may arrive out of order or not at all — UDP doesn't care. No connection setup, just send.<br><br>
+      Used for: video streaming, games, DNS — anything where speed matters more than perfect delivery.</p>
+    </div>
+  </div>
+
+  <div class="box box-tip">
+    <div class="box-title">Why IRC uses TCP</div>
+    <p>IRC is a chat protocol. If a message is lost, that's unacceptable — the user needs to see every message. TCP's reliability guarantees are exactly what chat needs. The slight latency overhead doesn't matter at human conversation speeds.</p>
+  </div>
+
+  <h3>The "stream" nature of TCP</h3>
+  <p>This is the single most important thing to understand for your server. TCP sends a <strong>continuous stream of bytes</strong> — it has no concept of "messages". If you send <code>"NICK alice\r\nUSER bob\r\n"</code> in one call, the receiver might get all of it, or <code>"NICK ali"</code> then <code>"ce\r\nUSER bob\r\n"</code>, or three separate chunks. The data always arrives complete and in order — but not necessarily in the same "chunks" you sent.</p>
+
+  <div class="box box-warn">
+    <div class="box-title">This is why you need a receive buffer</div>
+    <p>You cannot assume one <code>recv()</code> call gives you one complete IRC message. You must accumulate bytes in a per-client buffer and scan for <code>\r\n</code> yourself. More on this in section 8.</p>
+  </div>
+</section>
+
+<!-- 5. TCP HANDSHAKE -->
+<section class="section" id="handshake">
+  <span class="section-tag tag-tcp">TCP</span>
+  <h2>5. The TCP Handshake</h2>
+  <p>Before any data flows, TCP establishes a connection with a <strong>3-way handshake</strong>. This is automatic — you never write handshake code. But understanding it explains why <code>connect()</code> and <code>accept()</code> behave the way they do.</p>
+
+  <div class="demo-wrap">
+    <div class="demo-header">
+      <div class="demo-dot" style="background:#ff5f57;"></div>
+      <div class="demo-dot" style="background:#febc2e;"></div>
+      <div class="demo-dot" style="background:#28c840;"></div>
+      <span style="margin-left:.5rem;">TCP 3-way handshake</span>
+    </div>
+    <div class="demo-body">
+      <div class="demo-controls">
+        <button class="demo-btn" onclick="hsStep()">Next step →</button>
+        <button class="demo-btn" onclick="hsReset()">Reset</button>
+        <span class="demo-step-info" id="hs-info">Click "Next step" to begin</span>
+      </div>
+      <div class="demo-terminal" id="hs-terminal">
+        <div style="color:var(--muted);">Client &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Server</div>
+        <div style="color:var(--border2);">──────────────────────────────────────────</div>
+      </div>
+    </div>
+  </div>
+
+  <p>After the handshake, the connection is established and data can flow in both directions. <code>connect()</code> on the client side triggers steps 1+2. <code>accept()</code> on the server side completes step 3 and returns a new fd for this specific connection.</p>
+</section>
+
+<!-- 6. SERVER LOOP -->
+<section class="section" id="server-loop">
+  <span class="section-tag tag-server">Server</span>
+  <h2>6. The Server Loop</h2>
+  <p>A server needs to handle many clients simultaneously. You set up one <strong>listening socket</strong> that accepts new connections, and then monitor all connected clients for incoming data. This is the fundamental loop every server follows.</p>
+
+  <ol class="steps">
+    <li><p><strong>socket()</strong> — Create a new socket. The OS returns a file descriptor (an integer like 3).</p></li>
+    <li><p><strong>setsockopt(SO_REUSEADDR)</strong> — Allow reusing the port immediately after server restart. Without this, you'd wait ~2 minutes before binding the same port again.</p></li>
+    <li><p><strong>bind()</strong> — Attach the socket to an IP address and port. This is how the OS knows which port this socket "owns". Example: bind to <code>0.0.0.0:6667</code>.</p></li>
+    <li><p><strong>listen()</strong> — Tell the OS "start accepting connections on this socket". The OS will queue incoming connections (up to <code>backlog</code> count) even before you call <code>accept()</code>.</p></li>
+    <li><p><strong>poll() loop</strong> — Wait for activity on any monitored fd. When poll() returns, check which fds are ready.</p></li>
+    <li><p><strong>accept()</strong> — When the listening fd is ready, accept a new connection. Returns a brand new fd for that specific client. Add it to your poll set.</p></li>
+    <li><p><strong>recv() / send()</strong> — When a client fd is ready, read from it or write to it.</p></li>
+    <li><p><strong>close()</strong> — When client disconnects, close their fd and clean up.</p></li>
+  </ol>
+
+  <pre><span class="c">// Pseudocode — the core structure of your server</span>
+<span class="k">int</span> listen_fd = <span class="n">socket</span>(AF_INET, SOCK_STREAM, <span class="n">0</span>);
+<span class="n">setsockopt</span>(listen_fd, SOL_SOCKET, SO_REUSEADDR, ...);
+<span class="n">bind</span>(listen_fd, &addr, sizeof(addr));
+<span class="n">listen</span>(listen_fd, <span class="n">128</span>);
+
+<span class="k">while</span> (running) {
+    <span class="k">int</span> ready = <span class="n">poll</span>(fds, nfds, <span class="n">-1</span>);   <span class="c">// block until something happens</span>
+
+    <span class="k">if</span> (fds[<span class="n">0</span>].revents & POLLIN)         <span class="c">// listening fd got a connection</span>
+        <span class="n">accept_new_client</span>();
+
+    <span class="k">for</span> (<span class="k">each</span> client fd with POLLIN)
+        <span class="n">read_and_handle</span>(client);           <span class="c">// recv → parse → respond</span>
+
+    <span class="k">for</span> (<span class="k">each</span> client fd with POLLHUP)
+        <span class="n">disconnect_client</span>(client);         <span class="c">// cleanup</span>
+}</pre>
+</section>
+
+<!-- 7. POLL -->
+<section class="section" id="poll">
+  <span class="section-tag tag-server">Server</span>
+  <h2>7. poll() Explained</h2>
+  <p><code>poll()</code> is the mechanism that lets one thread watch many file descriptors at once. Without it, you'd have to either spin-check every fd constantly (wasting CPU) or block on one fd and miss events on others.</p>
+  <p>You give <code>poll()</code> an array of <code>struct pollfd</code>, each containing a file descriptor and what events you're interested in. <code>poll()</code> blocks until at least one fd has an event, then fills in the <code>revents</code> field for each ready fd.</p>
+
+  <pre><span class="k">struct</span> pollfd {
+    <span class="k">int</span>   fd;       <span class="c">// the file descriptor to watch</span>
+    <span class="k">short</span> events;   <span class="c">// what you're asking for: POLLIN, POLLOUT</span>
+    <span class="k">short</span> revents;  <span class="c">// what actually happened (filled by the OS)</span>
+};</pre>
+
+  <table>
+    <tr><th>Flag</th><th>Meaning</th></tr>
+    <tr><td>POLLIN</td><td>Data is available to read (recv() won't block)</td></tr>
+    <tr><td>POLLOUT</td><td>Socket is ready to write (send() won't block)</td></tr>
+    <tr><td>POLLHUP</td><td>The other side closed the connection</td></tr>
+    <tr><td>POLLERR</td><td>An error occurred on this fd</td></tr>
+  </table>
+
+  <div class="demo-wrap">
+    <div class="demo-header">
+      <div class="demo-dot" style="background:#ff5f57;"></div>
+      <div class="demo-dot" style="background:#febc2e;"></div>
+      <div class="demo-dot" style="background:#28c840;"></div>
+      <span style="margin-left:.5rem;">poll() — watching multiple clients</span>
+    </div>
+    <div class="demo-body">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:1rem;">Click a client to simulate it sending data or disconnecting.</p>
+      <div id="poll-demo"></div>
+    </div>
+  </div>
+
+  <div class="box box-info">
+    <div class="box-title">poll() vs select() vs epoll()</div>
+    <p><code>select()</code> does the same job but has a hard limit of 1024 fds and a clunky API — avoid it. <code>epoll()</code> (Linux) and <code>kqueue()</code> (macOS) are more scalable at 10,000+ fds but overkill for ft_irc. <code>poll()</code> is the right tool for your use case.</p>
+  </div>
+</section>
+
+<!-- 8. BUFFERING -->
+<section class="section" id="buffering">
+  <span class="section-tag tag-server">Server</span>
+  <h2>8. Stream Buffering</h2>
+  <p>Because TCP is a byte stream with no message boundaries, every client needs its own <strong>receive buffer</strong> — a string where you accumulate incoming bytes until you see a complete <code>\r\n</code> terminated line.</p>
+
+  <div class="demo-wrap">
+    <div class="demo-header">
+      <div class="demo-dot" style="background:#ff5f57;"></div>
+      <div class="demo-dot" style="background:#febc2e;"></div>
+      <div class="demo-dot" style="background:#28c840;"></div>
+      <span style="margin-left:.5rem;">recv() buffer — what you might actually receive</span>
+    </div>
+    <div class="demo-body">
+      <div class="demo-controls">
+        <button class="demo-btn" onclick="bufStep()">Simulate recv() →</button>
+        <button class="demo-btn" onclick="bufReset()">Reset</button>
+        <span class="demo-step-info" id="buf-info">Client is sending: NICK alice\r\nUSER bob 0 * :Bob\r\n</span>
+      </div>
+      <div class="demo-terminal" id="buf-terminal"></div>
+    </div>
+  </div>
+
+  <pre><span class="c">// Per client — run this every time poll() says POLLIN</span>
+<span class="k">char</span> tmp[<span class="n">512</span>];
+<span class="k">int</span> n = <span class="n">recv</span>(client.fd, tmp, <span class="n">512</span>, <span class="n">0</span>);
+<span class="k">if</span> (n == <span class="n">0</span>) { <span class="n">disconnect</span>(client); <span class="k">return</span>; }  <span class="c">// connection closed</span>
+<span class="k">if</span> (n  < <span class="n">0</span>) { <span class="n">handle_error</span>(); <span class="k">return</span>; }
+
+client.recv_buf.<span class="n">append</span>(tmp, n);   <span class="c">// accumulate bytes</span>
+
+<span class="k">size_t</span> pos;
+<span class="k">while</span> ((pos = client.recv_buf.<span class="n">find</span>(<span class="s">"\r\n"</span>)) != <span class="k">string</span>::npos) {
+    <span class="k">string</span> line = client.recv_buf.<span class="n">substr</span>(<span class="n">0</span>, pos);
+    client.recv_buf.<span class="n">erase</span>(<span class="n">0</span>, pos + <span class="n">2</span>);  <span class="c">// consume including \r\n</span>
+    <span class="n">parse_and_dispatch</span>(client, line);    <span class="c">// handle the complete command</span>
+}</pre>
+</section>
+
+<!-- 9. WHAT IS IRC -->
+<section class="section" id="irc-what">
+  <span class="section-tag tag-irc">IRC Protocol</span>
+  <h2>9. What is IRC?</h2>
+  <p><strong>IRC — Internet Relay Chat</strong> — is a text-based chat protocol invented in 1988 by Jarkko Oikarinen. It's defined in <a href="https://www.rfc-editor.org/rfc/rfc1459" style="color:var(--accent);">RFC 1459</a> (1993) and refined in RFC 2812 (2000).</p>
+  <p>The concept is simple: users connect to a server, identify themselves with a nickname, join channels (chat rooms), and exchange text messages — publicly in channels or privately between users.</p>
+
+  <div class="two-col">
+    <div class="col-card">
+      <h4>Key concepts</h4>
+      <p><strong>Nick</strong> — your username on the server (e.g. <code>alice</code>)<br>
+      <strong>Channel</strong> — a chat room (e.g. <code>#general</code>)<br>
+      <strong>Operator</strong> — a privileged user in a channel<br>
+      <strong>Server</strong> — the program you're building</p>
+    </div>
+    <div class="col-card">
+      <h4>What makes it special</h4>
+      <p>IRC is <strong>plain text</strong> — every message is human-readable. There's no binary encoding, no compression. You can literally use <code>nc</code> (netcat) as a client and type commands by hand.</p>
+    </div>
+  </div>
+
+  <div class="box box-tip">
+    <div class="box-title">Try it with netcat</div>
+    <p>Once your server is running: <code>nc 127.0.0.1 6667</code> — then type <code>NICK test</code> and <code>USER test 0 * :Test User</code> and press Enter after each. You're now hand-typing IRC!</p>
+  </div>
+</section>
+
+<!-- 10. MESSAGE FORMAT -->
+<section class="section" id="irc-messages">
+  <span class="section-tag tag-irc">IRC Protocol</span>
+  <h2>10. IRC Message Format</h2>
+  <p>Every IRC message is one line, terminated with <code>\r\n</code>, maximum 512 bytes total. The format has up to four parts:</p>
+
+  <div class="msg-line">
+    <span class="mp-prefix">:nick!user@host</span><span class="mp-sep"> </span><span class="mp-cmd">PRIVMSG</span><span class="mp-sep"> </span><span class="mp-param">#channel</span><span class="mp-sep"> </span><span class="mp-trail">:Hello world</span><span class="mp-sep">\r\n</span>
+  </div>
+  <div class="msg-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#88aaff;"></div> Prefix (optional) — who sent it</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#5ee8a8;"></div> Command — what to do</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f0b86e;"></div> Parameters — space-separated</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#d88ef0;"></div> Trailing — starts with :, can contain spaces</div>
+  </div>
+
+  <h3>Parsing rules</h3>
+  <ol class="steps">
+    <li><p>If the line starts with <code>:</code>, everything up to the first space is the <strong>prefix</strong>. Strip it.</p></li>
+    <li><p>The next word (uppercase) is the <strong>command</strong> — e.g. <code>PRIVMSG</code>, <code>JOIN</code>, <code>NICK</code>.</p></li>
+    <li><p>Split the rest by spaces to get <strong>parameters</strong>. Stop splitting when you see a token starting with <code>:</code> — that's the trailing parameter, and it gets everything to the end of the line (including spaces).</p></li>
+  </ol>
+
+  <div class="demo-wrap">
+    <div class="demo-header">
+      <div class="demo-dot" style="background:#ff5f57;"></div>
+      <div class="demo-dot" style="background:#febc2e;"></div>
+      <div class="demo-dot" style="background:#28c840;"></div>
+      <span style="margin-left:.5rem;">Message parser — click a message to parse it</span>
+    </div>
+    <div class="demo-body">
+      <div id="parser-msgs" style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;"></div>
+      <div id="parser-out" style="font-family:var(--mono);font-size:13px;color:var(--muted);min-height:60px;">Select a message above to see it parsed.</div>
+    </div>
+  </div>
+
+  <h3>The prefix in detail</h3>
+  <p>The prefix <code>:nick!user@host</code> contains three things separated by <code>!</code> and <code>@</code>:</p>
+  <table>
+    <tr><th>Part</th><th>Example</th><th>Meaning</th></tr>
+    <tr><td>nick</td><td>alice</td><td>The IRC nickname</td></tr>
+    <tr><td>user</td><td>alice</td><td>The username (from USER command)</td></tr>
+    <tr><td>host</td><td>192.168.1.5</td><td>The client's IP or hostname</td></tr>
+  </table>
+  <p>When your server broadcasts messages to other clients (e.g. forwarding a PRIVMSG), it prepends the sender's prefix so recipients know who sent it.</p>
+</section>
+
+<!-- 11. REGISTRATION -->
+<section class="section" id="registration">
+  <span class="section-tag tag-irc">IRC Protocol</span>
+  <h2>11. Client Registration Flow</h2>
+  <p>A client is <strong>not considered connected</strong> in the IRC sense until they complete registration. Until then, your server should reject most commands with <code>451 ERR_NOTREGISTERED</code>.</p>
+  <p>Registration requires receiving three commands: <code>PASS</code> (optional), <code>NICK</code>, and <code>USER</code>. The order of NICK and USER is flexible — register the client once both have been received.</p>
+
+  <div class="demo-wrap">
+    <div class="demo-header">
+      <div class="demo-dot" style="background:#ff5f57;"></div>
+      <div class="demo-dot" style="background:#febc2e;"></div>
+      <div class="demo-dot" style="background:#28c840;"></div>
+      <span style="margin-left:.5rem;">Registration sequence — step by step</span>
+    </div>
+    <div class="demo-body">
+      <div class="demo-controls">
+        <button class="demo-btn" onclick="regStep()">Next →</button>
+        <button class="demo-btn" onclick="regReset()">Reset</button>
+        <span class="demo-step-info" id="reg-info">Step 0 / 6</span>
+      </div>
+      <div class="demo-terminal" id="reg-terminal">
+        <div style="color:var(--muted);">← Client sends &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Server responds →</div>
+        <div style="color:var(--border2);margin-bottom:.5rem;">────────────────────────────────────────</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>The welcome burst</h3>
+  <p>Once registration is complete, the server must send a sequence of numeric replies called the <strong>welcome burst</strong>:</p>
+  <pre><span class="c">// All replies take the form: :server_name CODE client_nick :message</span>
+<span class="s">":irc.server 001 alice :Welcome to the IRC network alice!alice@host"</span>
+<span class="s">":irc.server 002 alice :Your host is irc.server, running version 1.0"</span>
+<span class="s">":irc.server 003 alice :This server was created ..."</span>
+<span class="s">":irc.server 004 alice irc.server 1.0 o o"</span>
+<span class="s">":irc.server 375 alice :- irc.server Message of the day -"</span>
+<span class="s">":irc.server 372 alice :- Welcome! -"</span>
+<span class="s">":irc.server 376 alice :End of /MOTD command."</span></pre>
+
+  <div class="box box-warn">
+    <div class="box-title">State tracking per client</div>
+    <p>Each client struct needs boolean flags: <code>has_nick</code>, <code>has_user</code>, <code>registered</code>, and optionally <code>authenticated</code> (if your server has a password). Check these on every command — reject unregistered clients early.</p>
+  </div>
+</section>
+
+<!-- 12. CHANNELS -->
+<section class="section" id="channels">
+  <span class="section-tag tag-irc">IRC Protocol</span>
+  <h2>12. Channels</h2>
+  <p>Channels are the core of IRC. A channel is a named chat room, prefixed with <code>#</code>. They are <strong>created automatically</strong> when the first user joins and <strong>destroyed automatically</strong> when the last user leaves.</p>
+
+  <h3>JOIN and PART</h3>
+  <pre><span class="c">// Client joins a channel</span>
+JOIN #general
+JOIN #secret secretpass    <span class="c">// join with key (+k mode)</span>
+
+<span class="c">// Server must respond to a successful JOIN:</span>
+<span class="s">":alice!alice@host JOIN #general"</span>     <span class="c">// broadcast to all in channel</span>
+<span class="s">":server 332 alice #general :Topic here"</span>  <span class="c">// topic (if set)</span>
+<span class="s">":server 353 alice = #general :@alice bob"</span> <span class="c">// NAMES list</span>
+<span class="s">":server 366 alice #general :End of NAMES"</span> <span class="c">// end of NAMES</span>
+
+<span class="c">// Client leaves</span>
+PART #general :Goodbye!</pre>
+
+  <h3>PRIVMSG and NOTICE</h3>
+  <pre><span class="c">// Send a message to a channel</span>
+PRIVMSG #general :Hello everyone!
+
+<span class="c">// Send a private message to a user</span>
+PRIVMSG alice :Hey, got a minute?
+
+<span class="c">// Server must NOT echo the message back to the sender</span>
+<span class="c">// Forward to all OTHER members of the channel with sender's prefix:</span>
+<span class="s">":bob!bob@host PRIVMSG #general :Hello everyone!"</span>  <span class="c">// sent to alice, carol, etc.</span></pre>
+
+  <div class="box box-info">
+    <div class="box-title">The first user to JOIN becomes operator</div>
+    <p>When a channel is created (first JOIN), that user automatically receives operator status (<code>@</code>). Operators can use MODE, KICK, INVITE, and TOPIC.</p>
+  </div>
+
+  <h3>TOPIC</h3>
+  <pre><span class="c">// Set the topic</span>
+TOPIC #general :Welcome to the main channel!
+
+<span class="c">// Query the topic</span>
+TOPIC #general
+
+<span class="c">// Response: 332 if topic exists, 331 if no topic</span>
+<span class="s">":server 332 alice #general :Welcome to the main channel!"</span></pre>
+
+  <h3>NAMES and WHO</h3>
+  <pre><span class="c">// List users in a channel</span>
+NAMES #general
+
+<span class="c">// Response: 353 lists users, 366 ends the list</span>
+<span class="c">// @ prefix = operator, no prefix = regular user</span>
+<span class="s">":server 353 alice = #general :@alice bob @carol"</span>
+<span class="s">":server 366 alice #general :End of /NAMES list"</span></pre>
+</section>
+
+<!-- 13. COMMANDS -->
+<section class="section" id="commands">
+  <span class="section-tag tag-irc">IRC Protocol</span>
+  <h2>13. Key Commands Reference</h2>
+
+  <table>
+    <tr><th>Command</th><th>Syntax</th><th>What it does</th></tr>
+    <tr><td>PASS</td><td><code>PASS &lt;password&gt;</code></td><td>Server password — must be sent before NICK/USER</td></tr>
+    <tr><td>NICK</td><td><code>NICK &lt;nickname&gt;</code></td><td>Set or change your nickname</td></tr>
+    <tr><td>USER</td><td><code>USER &lt;user&gt; 0 * :&lt;realname&gt;</code></td><td>Set username and realname — part of registration</td></tr>
+    <tr><td>JOIN</td><td><code>JOIN &lt;#channel&gt; [key]</code></td><td>Join a channel (optionally with a key)</td></tr>
+    <tr><td>PART</td><td><code>PART &lt;#channel&gt; [:reason]</code></td><td>Leave a channel</td></tr>
+    <tr><td>PRIVMSG</td><td><code>PRIVMSG &lt;target&gt; :&lt;message&gt;</code></td><td>Send a message to a user or channel</td></tr>
+    <tr><td>NOTICE</td><td><code>NOTICE &lt;target&gt; :&lt;message&gt;</code></td><td>Like PRIVMSG but no auto-reply expected</td></tr>
+    <tr><td>TOPIC</td><td><code>TOPIC &lt;#channel&gt; [:text]</code></td><td>Get or set the channel topic</td></tr>
+    <tr><td>NAMES</td><td><code>NAMES [#channel]</code></td><td>List users in a channel</td></tr>
+    <tr><td>MODE</td><td><code>MODE &lt;target&gt; &lt;flags&gt; [params]</code></td><td>Set/unset modes on a user or channel</td></tr>
+    <tr><td>KICK</td><td><code>KICK &lt;#chan&gt; &lt;nick&gt; [:reason]</code></td><td>Remove a user from a channel (operator only)</td></tr>
+    <tr><td>INVITE</td><td><code>INVITE &lt;nick&gt; &lt;#channel&gt;</code></td><td>Invite a user to an invite-only channel</td></tr>
+    <tr><td>QUIT</td><td><code>QUIT [:reason]</code></td><td>Disconnect from the server</td></tr>
+    <tr><td>PING</td><td><code>PING :&lt;token&gt;</code></td><td>Server sends to check if client is alive</td></tr>
+    <tr><td>PONG</td><td><code>PONG :&lt;token&gt;</code></td><td>Client replies to PING — must echo the token</td></tr>
+    <tr><td>WHO</td><td><code>WHO [#channel]</code></td><td>Get info about users</td></tr>
+  </table>
+
+  <h3>PING / PONG — the keep-alive</h3>
+  <p>IRC clients can go idle. The server periodically sends a <code>PING</code> and expects a <code>PONG</code> back within a timeout (typically 60–120s). If no reply, the server disconnects the client. Your server should also respond to <code>PING</code> from the client.</p>
+  <pre><span class="c">// Server → Client</span>
+<span class="s">":server PING :1234567890"</span>
+
+<span class="c">// Client → Server (must echo the exact token)</span>
+<span class="s">"PONG :1234567890"</span></pre>
+</section>
+
+<!-- 14. MODES -->
+<section class="section" id="modes">
+  <span class="section-tag tag-adv">Advanced</span>
+  <h2>14. Modes</h2>
+  <p>Modes are flags that modify the behavior of a channel (or user). The <code>MODE</code> command sets them with <code>+</code> (add) or <code>-</code> (remove). Only channel operators can set channel modes.</p>
+
+  <table>
+    <tr><th>Mode</th><th>Name</th><th>Effect</th><th>Parameter?</th></tr>
+    <tr><td><span class="mode-badge">+i</span></td><td>invite-only</td><td>Only invited users can JOIN</td><td>No</td></tr>
+    <tr><td><span class="mode-badge">+t</span></td><td>topic lock</td><td>Only operators can change the TOPIC</td><td>No</td></tr>
+    <tr><td><span class="mode-badge">+k</span></td><td>key (password)</td><td>JOIN requires the correct key</td><td>Yes — the key itself</td></tr>
+    <tr><td><span class="mode-badge">+o</span></td><td>operator</td><td>Grant/revoke operator status to a user</td><td>Yes — the nickname</td></tr>
+    <tr><td><span class="mode-badge">+l</span></td><td>user limit</td><td>Maximum number of members in the channel</td><td>Yes — the number</td></tr>
+  </table>
+
+  <h3>MODE parsing — the tricky part</h3>
+  <p>The MODE command can combine multiple flags in one call. You iterate the mode string character by character, track whether you're in <code>+</code> or <code>-</code> context, and consume parameters from the argument list as needed.</p>
+  <pre><span class="c">// Examples</span>
+MODE #chan +i           <span class="c">// set invite-only (no param)</span>
+MODE #chan +k secret    <span class="c">// set key to "secret" (one param)</span>
+MODE #chan +o alice     <span class="c">// make alice an operator (one param)</span>
+MODE #chan +ik secret   <span class="c">// invite-only + key in one shot</span>
+MODE #chan -k           <span class="c">// remove key</span>
+MODE #chan +l 50        <span class="c">// limit to 50 users</span>
+MODE #chan -l           <span class="c">// remove limit</span>
+
+<span class="c">// After successful MODE, broadcast to all channel members:</span>
+<span class="s">":alice!alice@host MODE #chan +i"</span>
+
+<span class="c">// Parsing loop pseudocode:</span>
+<span class="k">bool</span> adding = <span class="k">true</span>;  <span class="c">// + by default</span>
+<span class="k">int</span> param_idx = <span class="n">0</span>;
+<span class="k">for</span> (<span class="k">char</span> c : mode_string) {
+    <span class="k">if</span> (c == <span class="s">'+'</span>) { adding = <span class="k">true</span>; }
+    <span class="k">else if</span> (c == <span class="s">'-'</span>) { adding = <span class="k">false</span>; }
+    <span class="k">else</span> { <span class="n">apply_mode</span>(c, adding, params[param_idx++]); }
+}</pre>
+</section>
+
+<!-- 15. NUMERICS -->
+<section class="section" id="numerics">
+  <span class="section-tag tag-adv">Advanced</span>
+  <h2>15. Numeric Replies</h2>
+  <p>The server communicates status back to clients using <strong>three-digit numeric codes</strong>. They always take the form: <code>:server CODE nick :message</code>. Codes 001–099 are welcome/info, 200–399 are informational, 400–599 are errors.</p>
+
+  <h3>Codes you must implement</h3>
+  <div class="num-grid">
+    <div class="num-card"><span class="num-code num-ok">001</span><span>RPL_WELCOME — registration complete</span></div>
+    <div class="num-card"><span class="num-code num-ok">002</span><span>RPL_YOURHOST — server info</span></div>
+    <div class="num-card"><span class="num-code num-ok">003</span><span>RPL_CREATED — server creation date</span></div>
+    <div class="num-card"><span class="num-code num-ok">004</span><span>RPL_MYINFO — server capabilities</span></div>
+    <div class="num-card"><span class="num-code num-info">331</span><span>RPL_NOTOPIC — no topic set</span></div>
+    <div class="num-card"><span class="num-code num-info">332</span><span>RPL_TOPIC — channel topic</span></div>
+    <div class="num-card"><span class="num-code num-info">341</span><span>RPL_INVITING — invite sent</span></div>
+    <div class="num-card"><span class="num-code num-info">353</span><span>RPL_NAMREPLY — list of names</span></div>
+    <div class="num-card"><span class="num-code num-info">366</span><span>RPL_ENDOFNAMES — end of names</span></div>
+    <div class="num-card"><span class="num-code num-info">375</span><span>RPL_MOTDSTART — start of MOTD</span></div>
+    <div class="num-card"><span class="num-code num-info">372</span><span>RPL_MOTD — a line of MOTD</span></div>
+    <div class="num-card"><span class="num-code num-info">376</span><span>RPL_ENDOFMOTD — end of MOTD</span></div>
+    <div class="num-card"><span class="num-code num-err">401</span><span>ERR_NOSUCHNICK — nick not found</span></div>
+    <div class="num-card"><span class="num-code num-err">403</span><span>ERR_NOSUCHCHANNEL — channel not found</span></div>
+    <div class="num-card"><span class="num-code num-err">421</span><span>ERR_UNKNOWNCOMMAND — bad command</span></div>
+    <div class="num-card"><span class="num-code num-err">431</span><span>ERR_NONICKNAMEGIVEN — missing nick</span></div>
+    <div class="num-card"><span class="num-code num-err">432</span><span>ERR_ERRONEUSNICKNAME — invalid nick</span></div>
+    <div class="num-card"><span class="num-code num-err">433</span><span>ERR_NICKNAMEINUSE — nick taken</span></div>
+    <div class="num-card"><span class="num-code num-err">442</span><span>ERR_NOTONCHANNEL — not in channel</span></div>
+    <div class="num-card"><span class="num-code num-err">443</span><span>ERR_USERONCHANNEL — already in channel</span></div>
+    <div class="num-card"><span class="num-code num-err">451</span><span>ERR_NOTREGISTERED — not registered</span></div>
+    <div class="num-card"><span class="num-code num-err">461</span><span>ERR_NEEDMOREPARAMS — missing params</span></div>
+    <div class="num-card"><span class="num-code num-err">471</span><span>ERR_CHANNELISFULL — limit reached</span></div>
+    <div class="num-card"><span class="num-code num-err">473</span><span>ERR_INVITEONLYCHAN — invite only</span></div>
+    <div class="num-card"><span class="num-code num-err">475</span><span>ERR_BADCHANNELKEY — wrong password</span></div>
+    <div class="num-card"><span class="num-code num-err">482</span><span>ERR_CHANOPRIVSNEEDED — not an op</span></div>
+  </div>
+</section>
+
+<!-- 16. SIGNALS -->
+<section class="section" id="signals">
+  <span class="section-tag tag-adv">Advanced</span>
+  <h2>16. Signals &amp; Clean Shutdown</h2>
+  <p>When the user presses Ctrl+C or the OS sends <code>SIGTERM</code>, your server should shut down cleanly: send an ERROR to all clients, close all sockets, free memory.</p>
+  <p>The key rule: <strong>never do complex work inside a signal handler</strong>. Signal handlers can interrupt your code at any point, including in the middle of a <code>malloc()</code>. Doing anything non-trivial there causes undefined behavior.</p>
+
+  <pre><span class="c">// The safe pattern:</span>
+<span class="k">volatile sig_atomic_t</span> g_running = <span class="n">1</span>;
+
+<span class="k">void</span> <span class="n">signal_handler</span>(<span class="k">int</span> sig) {
+    g_running = <span class="n">0</span>;  <span class="c">// ONLY this. Nothing else.</span>
+}
+
+<span class="k">int</span> <span class="n">main</span>() {
+    <span class="k">struct</span> sigaction sa = {};
+    sa.sa_handler = signal_handler;
+    <span class="n">sigaction</span>(SIGINT, &sa, NULL);
+    <span class="n">sigaction</span>(SIGTERM, &sa, NULL);
+
+    <span class="k">while</span> (g_running) {
+        <span class="k">int</span> n = <span class="n">poll</span>(fds, nfds, <span class="n">1000</span>);  <span class="c">// 1s timeout to recheck g_running</span>
+        <span class="k">if</span> (n < <span class="n">0</span> && errno == EINTR) <span class="k">continue</span>;  <span class="c">// poll was interrupted by signal</span>
+        <span class="c">// ... handle events ...</span>
+    }
+
+    <span class="c">// Cleanup happens HERE, in normal code, not in the signal handler</span>
+    <span class="k">for</span> (<span class="k">auto</span>& client : clients)
+        <span class="n">send</span>(client.fd, <span class="s">"ERROR :Server shutting down\r\n"</span>, ...);
+    <span class="c">// close all fds, free memory...</span>
+}</pre>
+
+  <div class="box box-info">
+    <div class="box-title">volatile sig_atomic_t</div>
+    <p>This type is guaranteed to be readable/writable atomically even when interrupted by a signal. The <code>volatile</code> keyword prevents the compiler from caching the value in a register — it forces a fresh memory read every iteration of the loop.</p>
+  </div>
+</section>
+
+<!-- 17. DATA MODEL -->
+<section class="section" id="datamodel">
+  <span class="section-tag tag-adv">Advanced</span>
+  <h2>17. The Data Model</h2>
+  <p>Your server needs two core data structures. They cross-reference each other because a Client knows which channels it's in, and a Channel knows which clients are members.</p>
+
+  <pre><span class="k">struct</span> <span class="n">Client</span> {
+    <span class="k">int</span>         fd;           <span class="c">// the socket file descriptor</span>
+    <span class="k">string</span>      nick;         <span class="c">// current nickname</span>
+    <span class="k">string</span>      username;     <span class="c">// from USER command</span>
+    <span class="k">string</span>      realname;     <span class="c">// from USER command</span>
+    <span class="k">string</span>      hostname;     <span class="c">// their IP address</span>
+    <span class="k">bool</span>        registered;   <span class="c">// has_nick && has_user (and auth if required)</span>
+    <span class="k">string</span>      recv_buf;     <span class="c">// partial incoming data</span>
+    <span class="k">string</span>      send_buf;     <span class="c">// data waiting to be sent</span>
+    <span class="n">set</span>&lt;Channel*&gt; channels;   <span class="c">// channels this client is in</span>
+};
+
+<span class="k">struct</span> <span class="n">Channel</span> {
+    <span class="k">string</span>      name;         <span class="c">// e.g. "#general"</span>
+    <span class="k">string</span>      topic;
+    <span class="n">set</span>&lt;Client*&gt; members;    <span class="c">// all users in channel</span>
+    <span class="n">set</span>&lt;Client*&gt; operators;  <span class="c">// users with @ (op) status</span>
+    <span class="n">set</span>&lt;string&gt;  invite_list; <span class="c">// nicks allowed in (+i mode)</span>
+    <span class="k">string</span>      key;          <span class="c">// password (+k mode)</span>
+    <span class="k">int</span>         limit;        <span class="c">// max members, 0 = none (+l mode)</span>
+    <span class="k">bool</span>        invite_only;  <span class="c">// +i</span>
+    <span class="k">bool</span>        topic_locked; <span class="c">// +t</span>
+};
+
+<span class="k">struct</span> <span class="n">Server</span> {
+    <span class="k">int</span>                     listen_fd;
+    <span class="n">map</span>&lt;<span class="k">int</span>, Client*&gt;       clients;   <span class="c">// fd → client</span>
+    <span class="n">map</span>&lt;<span class="k">string</span>, Channel*&gt;   channels;  <span class="c">// name → channel</span>
+    <span class="n">vector</span>&lt;pollfd&gt;          poll_fds;
+};</pre>
+
+  <h3>Common operations and how they use the model</h3>
+  <table>
+    <tr><th>Operation</th><th>How it uses the structures</th></tr>
+    <tr><td>PRIVMSG #chan</td><td>Lookup channel by name → iterate <code>members</code> → send to all except sender</td></tr>
+    <tr><td>PRIVMSG nick</td><td>Iterate all clients to find by nick → send to that one fd</td></tr>
+    <tr><td>JOIN #chan</td><td>Create channel if not in map → add client to <code>members</code> → add channel to client's <code>channels</code></td></tr>
+    <tr><td>Client disconnect</td><td>Iterate client's <code>channels</code> → remove from each channel's <code>members</code> → broadcast QUIT → close(fd) → erase from clients map</td></tr>
+    <tr><td>NICK change</td><td>Check no other client has that nick → update client.nick → broadcast to all channels they're in</td></tr>
+    <tr><td>KICK nick from chan</td><td>Verify sender is operator → remove target from channel members → send KICK to all channel members → remove channel from target's channels</td></tr>
+  </table>
+
+  <div class="box box-tip">
+    <div class="box-title">Build order recommendation</div>
+    <p>1. TCP server loop with poll() and accept() → 2. recv buffer + line extraction → 3. NICK+USER registration + welcome burst → 4. PING/PONG → 5. JOIN+PART+PRIVMSG → 6. NAMES+TOPIC → 7. MODE → 8. KICK+INVITE → 9. Signal handling. Test each step with <code>nc</code> before moving on.</p>
+  </div>
+</section>
+
+<div style="padding:3rem 0 1rem;text-align:center;color:var(--muted);font-size:13px;font-family:var(--mono);">
+  RFC 1459 · RFC 2812 · ft_irc complete reference<br>
+  <span style="color:var(--border2);">The only cheat is not understanding what you build.</span>
+</div>
+
+</main>
+
+<script>
+// ── Scrollspy ──────────────────────────────────────────────────────────
+const navItems = document.querySelectorAll('.nav-item');
+const sections = document.querySelectorAll('.section');
+const prog = document.getElementById('prog');
+
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  const docH = document.body.scrollHeight - window.innerHeight;
+  prog.style.width = (scrollY / docH * 100) + '%';
+
+  let current = '';
+  sections.forEach(s => {
+    if (scrollY >= s.offsetTop - 120) current = s.id;
+  });
+  navItems.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+
+// ── TCP Handshake demo ─────────────────────────────────────────────────
+const HS_STEPS = [
+  { line: '<span style="color:#88aaff;">Client</span>  ──── SYN ─────────────────────────────────────────► <span style="color:#5ee8a8;">Server</span>', info: 'Step 1/3 — Client says "I want to connect" (SYN = synchronize)' },
+  { line: '<span style="color:#88aaff;">Client</span>  ◄── SYN-ACK ───────────────────────────────────── <span style="color:#5ee8a8;">Server</span>', info: 'Step 2/3 — Server says "OK, and I want to connect too" (SYN-ACK)' },
+  { line: '<span style="color:#88aaff;">Client</span>  ──── ACK ─────────────────────────────────────────► <span style="color:#5ee8a8;">Server</span>', info: 'Step 3/3 — Client acknowledges. Connection is established!' },
+  { line: '<span style="color:#f0b86e;">Connection ESTABLISHED — data can now flow in both directions</span>', info: 'accept() on server returns a new fd. connect() on client returns 0.' },
+];
+let hsIdx = 0;
+
+function hsStep() {
+  if (hsIdx >= HS_STEPS.length) return;
+  const t = document.getElementById('hs-terminal');
+  const div = document.createElement('div');
+  div.innerHTML = HS_STEPS[hsIdx].line;
+  div.style.marginTop = '.25rem';
+  t.appendChild(div);
+  document.getElementById('hs-info').textContent = HS_STEPS[hsIdx].info;
+  hsIdx++;
+}
+function hsReset() {
+  hsIdx = 0;
+  const t = document.getElementById('hs-terminal');
+  t.innerHTML = '<div style="color:var(--muted);">Client &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Server</div><div style="color:var(--border2);">──────────────────────────────────────────</div>';
+  document.getElementById('hs-info').textContent = 'Click "Next step" to begin';
+}
+
+// ── Poll demo ──────────────────────────────────────────────────────────
+const pollState = { fds: [
+  { label: 'listen_fd (3)', status: 'idle', color: '#5b8af0' },
+  { label: 'client Alice (4)', status: 'idle', color: '#3ecf8e' },
+  { label: 'client Bob (5)', status: 'idle', color: '#f0a05b' },
+  { label: 'client Carol (6)', status: 'idle', color: '#d05be8' },
+]};
+const pollLog = [];
+
+function renderPollDemo() {
+  const wrap = document.getElementById('poll-demo');
+  wrap.innerHTML = '';
+  const grid = document.createElement('div');
+  grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.6rem;margin-bottom:1rem;';
+  pollState.fds.forEach((fd, i) => {
+    const card = document.createElement('div');
+    card.style.cssText = `background:${fd.status==='ready'?'rgba(62,207,142,0.12)':fd.status==='hup'?'rgba(232,91,91,0.1)':'var(--bg3)'};border:1px solid ${fd.status==='ready'?'rgba(62,207,142,0.4)':fd.status==='hup'?'rgba(232,91,91,0.3)':'var(--border)'};border-radius:8px;padding:.75rem 1rem;cursor:pointer;transition:all .2s;`;
+    card.innerHTML = `<div style="font-size:12px;font-family:var(--mono);color:${fd.color};margin-bottom:.3rem;">${fd.label}</div><div style="font-size:11px;color:var(--muted);">${fd.status==='idle'?'waiting…':fd.status==='ready'?'POLLIN ready':'POLLHUP'}</div>`;
+    if (i > 0) {
+      card.title = 'Click to simulate event';
+      card.onclick = () => {
+        const action = fd.status === 'hup' ? 'idle' : (fd.status === 'ready' ? 'hup' : 'ready');
+        fd.status = action;
+        if (action === 'ready') pollLog.unshift(`poll() woke up → ${fd.label} has data → calling recv()`);
+        if (action === 'hup') pollLog.unshift(`poll() woke up → ${fd.label} disconnected → calling close()`);
+        if (action === 'idle') pollLog.unshift(`${fd.label} cleaned up, back to watching`);
+        renderPollDemo();
+      };
+    } else {
+      card.title = 'Click to simulate new connection';
+      card.onclick = () => {
+        pollLog.unshift('poll() woke up → listen_fd has POLLIN → calling accept() → new client connected');
+        renderPollDemo();
+      };
+    }
+    grid.appendChild(card);
+  });
+  wrap.appendChild(grid);
+  const log = document.createElement('div');
+  log.style.cssText = 'font-family:var(--mono);font-size:12px;color:var(--muted);max-height:120px;overflow-y:auto;';
+  log.innerHTML = pollLog.slice(0,6).map(l=>`<div style="padding:3px 0;border-bottom:1px solid var(--border);">${l}</div>`).join('') || '<div>Click the cards above to simulate events...</div>';
+  wrap.appendChild(log);
+}
+renderPollDemo();
+
+// ── Buffer demo ────────────────────────────────────────────────────────
+const BUF_STEPS = [
+  { recv: 'NICK alic', buf: 'NICK alic', extracted: [], info: 'recv() call 1 — got "NICK alic" (incomplete! no \\r\\n yet)' },
+  { recv: 'e\r\nUSER', buf: 'NICK alice\r\nUSER', extracted: ['NICK alice'], info: 'recv() call 2 — got "e\\r\\nUSER". Buffer now has a complete line! Extract it.' },
+  { recv: ' bob 0 * :Bob\r\n', buf: 'USER bob 0 * :Bob\r\n', extracted: ['NICK alice', 'USER bob 0 * :Bob'], info: 'recv() call 3 — got the rest. Second complete line extracted!' },
+];
+let bufIdx = 0;
+
+function bufStep() {
+  if (bufIdx >= BUF_STEPS.length) return;
+  const s = BUF_STEPS[bufIdx];
+  const t = document.getElementById('buf-terminal');
+  t.innerHTML += `<div style="margin-top:.5rem;"><span style="color:var(--muted);">recv() → </span><span style="color:#f0b86e;">"${s.recv.replace(/\r\n/g,'<span style="color:#d88ef0;">\\r\\n</span>')}"</span></div>`;
+  t.innerHTML += `<div><span style="color:var(--muted);">  buffer: </span><span style="color:#5ee8a8;">"${s.buf.replace(/\r\n/g,'<span style="color:#d88ef0;">\\r\\n</span>')}"</span></div>`;
+  if (s.extracted.length) {
+    s.extracted.forEach(e => {
+      t.innerHTML += `<div><span style="color:var(--muted);">  → dispatch: </span><span style="color:#88aaff;">${e}</span></div>`;
+    });
+  }
+  document.getElementById('buf-info').textContent = s.info;
+  bufIdx++;
+}
+function bufReset() {
+  bufIdx = 0;
+  document.getElementById('buf-terminal').innerHTML = '';
+  document.getElementById('buf-info').textContent = 'Client is sending: NICK alice\\r\\nUSER bob 0 * :Bob\\r\\n';
+}
+
+// ── Message parser demo ────────────────────────────────────────────────
+const MSGS = [
+  ':alice!alice@192.168.1.5 PRIVMSG #general :Hello world',
+  'NICK alice',
+  'USER bob 0 * :Bob Smith',
+  ':alice!alice@host JOIN #channel',
+  ':server 001 alice :Welcome to the IRC network',
+  'PING :1234567890',
+  ':alice!alice@host QUIT :Goodbye!',
+  'MODE #chan +o alice',
+];
+const pmsgs = document.getElementById('parser-msgs');
+MSGS.forEach(msg => {
+  const btn = document.createElement('button');
+  btn.className = 'demo-btn';
+  btn.style.cssText = 'font-size:11px;padding:3px 8px;';
+  btn.textContent = msg.length > 30 ? msg.slice(0,28)+'…' : msg;
+  btn.onclick = () => parseMsg(msg);
+  pmsgs.appendChild(btn);
+});
+
+function parseMsg(raw) {
+  let s = raw;
+  let prefix = '', command = '', params = [];
+  if (s.startsWith(':')) {
+    const sp = s.indexOf(' ');
+    prefix = s.slice(1, sp);
+    s = s.slice(sp + 1);
+  }
+  const parts = s.split(' ');
+  command = parts[0];
+  for (let i = 1; i < parts.length; i++) {
+    if (parts[i].startsWith(':')) {
+      params.push(parts.slice(i).join(' ').slice(1));
+      break;
+    }
+    params.push(parts[i]);
+  }
+  let [nick='', user='', host=''] = ['', '', ''];
+  if (prefix) {
+    const bang = prefix.indexOf('!');
+    const at = prefix.indexOf('@');
+    if (bang >= 0 && at >= 0) { nick = prefix.slice(0, bang); user = prefix.slice(bang+1, at); host = prefix.slice(at+1); }
+    else { nick = prefix; }
+  }
+  const out = document.getElementById('parser-out');
+  out.innerHTML = `
+    <div style="color:var(--muted);margin-bottom:.5rem;">Raw: <span style="color:var(--text);">${raw}</span></div>
+    ${prefix ? `<div>Prefix: <span style="color:#88aaff;">${prefix}</span> ${nick?`(nick=<b style="color:#e8e9f0;">${nick}</b>, user=<b style="color:#e8e9f0;">${user||'—'}</b>, host=<b style="color:#e8e9f0;">${host||'—'}</b>)`:'(server name)'}</div>`:'<div style="color:var(--muted);">No prefix (sent directly by client)</div>'}
+    <div>Command: <span style="color:#5ee8a8;font-weight:500;">${command}</span></div>
+    <div>Params: ${params.length ? params.map((p,i)=>`<span style="color:#f0b86e;">[${i}] ${p}</span>`).join('  ') : '<span style="color:var(--muted);">none</span>'}</div>
+  `;
+}
+
+// ── Registration demo ──────────────────────────────────────────────────
+const REG_STEPS = [
+  { c: 'PASS serverpassword', s: null, info: 'Step 1/6 — Client sends the server password. Server checks it silently.' },
+  { c: 'NICK alice', s: null, info: 'Step 2/6 — Client sets their nickname. Server checks it\'s valid and not in use.' },
+  { c: 'USER alice 0 * :Alice Smith', s: null, info: 'Step 3/6 — Client sends username + realname. Now the server has both NICK and USER.' },
+  { c: null, s: ':irc.server 001 alice :Welcome to the IRC network alice!alice@host', info: 'Step 4/6 — Server sends welcome burst: 001 RPL_WELCOME' },
+  { c: null, s: ':irc.server 002 alice :Your host is irc.server, version 1.0\n:irc.server 003 alice :This server was created today\n:irc.server 004 alice irc.server 1.0 o o', info: 'Step 5/6 — Server continues the welcome burst: 002, 003, 004' },
+  { c: null, s: ':irc.server 375 alice :- irc.server MOTD -\n:irc.server 372 alice :- Welcome! -\n:irc.server 376 alice :End of /MOTD command.', info: 'Step 6/6 — Server sends MOTD. Registration is complete! Client can now JOIN channels.' },
+];
+let regIdx = 0;
+
+function regStep() {
+  if (regIdx >= REG_STEPS.length) return;
+  const s = REG_STEPS[regIdx];
+  const t = document.getElementById('reg-terminal');
+  if (s.c) {
+    s.c.split('\n').forEach(line => {
+      const d = document.createElement('div');
+      d.innerHTML = `<span style="color:#5ee8a8;">← ${line}</span>`;
+      t.appendChild(d);
+    });
+  }
+  if (s.s) {
+    s.s.split('\n').forEach(line => {
+      const d = document.createElement('div');
+      d.innerHTML = `<span style="color:#88aaff;padding-left:180px;">${line} →</span>`;
+      d.style.textAlign = 'right';
+      t.appendChild(d);
+    });
+  }
+  document.getElementById('reg-info').textContent = s.info;
+  regIdx++;
+}
+function regReset() {
+  regIdx = 0;
+  const t = document.getElementById('reg-terminal');
+  t.innerHTML = '<div style="color:var(--muted);">← Client sends &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Server responds →</div><div style="color:var(--border2);margin-bottom:.5rem;">────────────────────────────────────────</div>';
+  document.getElementById('reg-info').textContent = 'Step 0 / 6';
+}
+</script>
+</body>
+</html>
