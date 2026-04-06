@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/06 13:17:41 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/06 13:19:04 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ iRCMessage parseMessage(const std::string &strMess)
 	int							index = 0;
 
 	if (strMess.empty())
-		return {"", UNKNOWN, {}, "", 0};
+		return (parsedMess);
 	splitMess = split(strMess, ' ');
 	parsedMess.len = strMess.size();
 	getPrefix(splitMess, parsedMess);
