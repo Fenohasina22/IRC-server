@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 09:02:30 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 09:18:04 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,30 +91,30 @@ iRCMessage parseMessage(const std::string &strMess)
 	return (parsedMess);
 }
 /*                 					   DEBUG                                */
-void	printiRCMESS(iRCMessage mess)
-{
-	std::cout << "prefix = " << mess.prefix << std::endl;
-	std::cout << "command = " << mess.command << std::endl;
-	std::cout << "args = ";
-	for (int i = 0; i < mess.args.size(); i++)
-		std::cout << "-" << mess.args[i] << std::endl;
-}
+// void	printiRCMESS(iRCMessage mess)
+// {
+// 	std::cout << "prefix = " << mess.prefix << std::endl;
+// 	std::cout << "command = " << mess.command << std::endl;
+// 	std::cout << "args = ";
+// 	for (int i = 0; i < mess.args.size(); i++)
+// 		std::cout << "-" << mess.args[i] << std::endl;
+// }
 
-void print_vector(const std::vector<std::string>& v)
-{
-    for (size_t i = 0; i < v.size(); i++)
-        std::cout << "[" << i << "] " << v[i] << std::endl;
-}
+// void print_vector(const std::vector<std::string>& v)
+// {
+//     for (size_t i = 0; i < v.size(); i++)
+//         std::cout << "[" << i << "] " << v[i] << std::endl;
+// }
 
-int main(int argc, char **argv)
-{
-	iRCMessage stuff;
+// int main(int argc, char **argv)
+// {
+// 	iRCMessage stuff;
 
-	if (argc < 2)
-		return 0;
-	stuff = parseMessage(argv[1]);
-	print_vector(split(argv[1], ' '));
-	printiRCMESS(stuff);
-	return (0);
-}
+// 	if (argc < 2)
+// 		return 0;
+// 	stuff = parseMessage(argv[1]);
+// 	print_vector(split(argv[1], ' '));
+// 	printiRCMESS(stuff);
+// 	return (0);
+// }
 // -------------------------------------------------------------------------
