@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 10:56:21 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 10:57:00 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ int main(int argc, char **argv)
 	/*POLL*/
 	struct pollfd		tabfd[10];
 	int					ret;
-
-
 
 	/*INITIALISATION SOCKET*/
 	addr.sin_family = AF_INET;
