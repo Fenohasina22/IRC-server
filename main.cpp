@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 17:17:22 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:38:38 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,41 +19,36 @@ int main(int argc, char **argv)
 		std::cout << "Needs more args" << std::endl;
 		return (1);
 	}
-
-	/*SOCKET*/
-	struct sockaddr_in	addr;
-	int					sockfd;
-	/*CLIENT*/
 	int					clientfd;
 	struct sockaddr_in	clientinfo;
 	socklen_t			clientinfosize;
 	/*POLL*/
-	std::vector<pollfd>	vecpol;
-	int					ret;
 
 	Server				server;
 
-	server.Initialize();
-
-	struct pollfd sock;
 	clientinfosize = sizeof(sockaddr_in);
-	sock.fd = sockfd;
+	server.Initialize();
+	
+	struct pollfd sock;
+	
 	sock.events = POLLIN;
+	sock.fd =  server.getSockfd();
+	std::vector<pollfd>&	vecpol = server.getVecPoll();
 	vecpol.push_back(sock);
 	std::string			message;
 	while (1)
 	{
-		ret = poll(&vecpol[0], vecpol.size(), -1); // SLEEPS AND WAKE UP WHEN AN EVENT HAPPENS LIKE POLLIN
-		if (ret < 0)
+		// poll SLEEPS AND WAKE UP WHEN AN EVENT HAPPENS LIKE POLLIN
+		if (poll(&vecpol[0], vecpol.size(), -1) < 0)
 		{
 			std::cout << "error: poll"<< std::endl;
 			return (0);
 		}
 		for (int i = 0; i < vecpol.size(); i++)
 		{
-			if (vecpol[i].fd == sockfd && (vecpol[i].revents & POLLIN))
+			if (vecpol[i].fd == server.getSockfd() && (vecpol[i].revents & POLLIN))
 			{
-				NewUserHandling(sockfd, clientinfo, clientinfosize, vecpol);
+				NewUserHandling(server.getSockfd(), clientinfo, clientinfosize, vecpol);
 			}
 			else if (vecpol[i].revents & POLLIN)
 			{
