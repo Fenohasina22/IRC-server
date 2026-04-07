@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/06 13:54:36 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 09:02:30 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,31 +40,30 @@ void	getCommand(const std::vector<std::string> &splitMess, iRCMessage &parsedMes
 	for (int i = 0; i < types.size(); i++)
 	{
 		if (strCommand == types[i])
+		{
 			parsedMess.command = static_cast<command>(i);
+			return ;
+		}
 	}
 	parsedMess.command = UNKNOWN;
 }
 
 void	getArgs(const std::vector<std::string> &splitMess, iRCMessage &parsedMess)
 {
+	bool trailing = false;
+
 	if (splitMess.size() < 3)
 		return ;
 	for (size_t i = 2; (i < splitMess.size() && splitMess[i] != "/r/n"); i++)
-		parsedMess.args.push_back(splitMess[i]);
-	for (int i = 0; i < parsedMess.args.size(); i++)
 	{
-		if (parsedMess.args[i][0] == ':')
+		if (trailing == false)
 		{
-			std::string &tmp = parsedMess.args[i];
-			size_t 		start = i;
-			while ((start < parsedMess.args.size() && splitMess[start] != "/r/n"))
-			{
-				tmp.append(parsedMess.args[start + 1]);
-				start++;
-			}
-			parsedMess.args.erase(parsedMess.args.begin() + i, parsedMess.args.end());
-			return ;
+			parsedMess.args.push_back(splitMess[i]);
+			if (splitMess[i][0] == ':')
+				trailing = true;
 		}
+		else
+			parsedMess.args.back().append(" " + splitMess[i]);
 	}
 }
 
