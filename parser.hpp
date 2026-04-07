@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:40 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/06 12:53:06 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 09:53:18 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <sstream>
 # include <vector>
 # include <string>
-
+# include <algorithm>
 
 //KICK - Eject a client from the channel
 //TOPIC - Change or view the channel topic
@@ -44,6 +44,7 @@ struct iRCMessage
 	std::vector<std::string>	args;
 	std::string 				CRLF;
 	size_t						len;
+	std::string					ogMess;
 };
 
 #endif

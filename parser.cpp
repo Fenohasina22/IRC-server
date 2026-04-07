@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 09:18:04 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 09:56:26 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ iRCMessage parseMessage(const std::string &strMess)
 
 	if (strMess.empty())
 		return (parsedMess);
+	parsedMess.ogMess = strMess;
 	splitMess = split(strMess, ' ');
 	parsedMess.len = strMess.size();
 	getPrefix(splitMess, parsedMess);
@@ -90,6 +91,26 @@ iRCMessage parseMessage(const std::string &strMess)
 	getCRLF(splitMess, parsedMess);
 	return (parsedMess);
 }
+
+bool	isMessValid(const iRCMessage &mess)
+{
+	if (mess.CRLF != "/r/n")
+		return (false);
+	if (mess.len == 0)
+		return (false);
+	if (mess.args.empty() && mess.command == UNKNOWN && mess.CRLF.empty()
+		&& mess.prefix.empty())
+		return (false);
+	if (mess.command == UNKNOWN)
+		return (false);
+	if (std::count(mess.args.back().begin(), mess.args.back().end(), ':') > 1)
+		return (false);
+	if (std::count(mess.ogMess.begin(), mess.ogMess.end(), '\r') > 1
+		|| std::count(mess.ogMess.begin(), mess.ogMess.end(), '\n') > 1)
+		return (false);
+	return (true);
+}
+
 /*                 					   DEBUG                                */
 // void	printiRCMESS(iRCMessage mess)
 // {
