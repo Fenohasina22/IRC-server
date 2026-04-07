@@ -6,24 +6,46 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/07 16:34:47 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:27:09 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
 
-void	InitializeServer(int& sockfd , sockaddr_in& addr)
+/*SERVER*/
+Server::Server()
 {
-	addr.sin_family = AF_INET;
-	addr.sin_port = htons(6667);
-	addr.sin_addr.s_addr = INADDR_ANY; 
-	sockfd = socket(AF_INET, SOCK_STREAM, 0); // Creates a socket IPv4, TCP
-	if (bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) == 0) // adding info to the socket
+}
+
+Server::~Server()
+{
+}
+
+std::vector<pollfd>&	Server::getVecPoll()
+{
+	return (this->_vecPoll);
+}
+int			Server::getSockfd() const
+{
+	return (this->_sockfd);
+}
+sockaddr_in	Server::getSocketstats() const
+{
+	return (this->_addr);
+}
+
+void	Server::Initialize()
+{
+	this->_addr.sin_family = AF_INET;
+	this->_addr.sin_port = htons(6667);
+	this->_addr.sin_addr.s_addr = INADDR_ANY; 
+	this->_sockfd = socket(AF_INET, SOCK_STREAM, 0); // Creates a socket IPv4, TCP
+	if (bind(this->_sockfd, (struct sockaddr *)&(this->_addr), sizeof(this->_addr)) == 0) // adding info to the socket
 		std::cout << "Binding successfull" << std::endl;
 	else
 		std::cout << "binding failed" << std::endl;	
-	if (listen(sockfd, 10) == 0) // socket is in listen mode
+	if (listen(this->_sockfd, 10) == 0) // socket is in listen mode 10 en file d'attente
 		std::cout << "Listen successful"<<  std::endl;
 	else
 		std::cout << "Listen failed" << std::endl;
@@ -38,3 +60,24 @@ void	NewUserHandling(int sockfd, sockaddr_in& clientinfo, socklen_t&  csize,std:
 	std::cout << "New user connected from port : " << clientinfo.sin_port << std::endl;
 	vecpol.push_back(tmp);
 }
+
+std::string		BufferCleaning(char *buff)
+{
+	std::string	result;
+
+	int	i;
+
+	i = 0;
+	while (buff[i + 1])
+	{
+		result += buff[i];
+		if (buff[i] == '\r' && buff[i + 1] == '\n')
+		{
+			result += "\r\n";
+			return (result);
+		}
+		i++;
+	}
+	return (result);
+}
+

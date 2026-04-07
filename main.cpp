@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 16:37:35 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:17:22 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,16 @@ int main(int argc, char **argv)
 	std::vector<pollfd>	vecpol;
 	int					ret;
 
+	Server				server;
 
-	InitializeServer(sockfd, addr);
+	server.Initialize();
 
 	struct pollfd sock;
 	clientinfosize = sizeof(sockaddr_in);
 	sock.fd = sockfd;
 	sock.events = POLLIN;
 	vecpol.push_back(sock);
+	std::string			message;
 	while (1)
 	{
 		ret = poll(&vecpol[0], vecpol.size(), -1); // SLEEPS AND WAKE UP WHEN AN EVENT HAPPENS LIKE POLLIN
@@ -55,14 +57,18 @@ int main(int argc, char **argv)
 			}
 			else if (vecpol[i].revents & POLLIN)
 			{
-				char buff[5];
-				int		retval;
-				retval = recv(vecpol[i].fd, buff, 5, 0);
+				char				buff[MSG_BUFFERSIZE + 1];
+				int					retval;
+				std::string			msg; // Is this necessary
+
+				memset (buff, 0, MSG_BUFFERSIZE);
+				retval = recv(vecpol[i].fd, buff, MSG_BUFFERSIZE, 0);
 				if (retval == -1)
 				{
 					std::cout << "Recve error" << std::endl;
 				}
-				std::cout << "Buff = " << buff << std::endl;
+				msg += BufferCleaning(buff);
+				std::cout << msg << std::endl;
 			}
 		}
 	}
