@@ -116,52 +116,55 @@ When a user successfully joins a channel your server must send back in this orde
 
 ### 6. The numeric reply codes you must send
 
-**Welcome sequence (required):**
-
+***Welcome sequence (registration / connection setup)***
 ```
-001  RPL_WELCOME
-002  RPL_YOURHOST
-003  RPL_CREATED
-004  RPL_MYINFO
-```
-
-**Channel responses:**
-
-```
-331  RPL_NOTOPIC       — no topic set
-332  RPL_TOPIC         — here is the topic
-353  RPL_NAMREPLY      — list of users in channel
-366  RPL_ENDOFNAMES    — end of names list
+001 RPL_WELCOME — registration complete  
+002 RPL_YOURHOST — server info  
+003 RPL_CREATED — server creation date
+004 RPL_MYINFO — server capabilities
 ```
 
-**Error replies you must handle:**
+---
+***Channel responses (channel state / info)***
 
 ```
-401  ERR_NOSUCHNICK        — nick doesn't exist
-403  ERR_NOSUCHCHANNEL     — channel doesn't exist
-421  ERR_UNKNOWNCOMMAND    — command not recognized
-431  ERR_NONICKNAMEGIVEN   — NICK with no parameter
-432  ERR_ERRONEUSNICKNAME  — invalid characters in nick
-433  ERR_NICKNAMEINUSE     — nick already taken
-441  ERR_USERNOTINCHANNEL  — target not in channel
-442  ERR_NOTONCHANNEL      — you're not in that channel
-451  ERR_NOTREGISTERED     — command sent before completing handshake
-461  ERR_NEEDMOREPARAMS    — not enough parameters
-462  ERR_ALREADYREGISTRED  — tried to register twice
-464  ERR_PASSWDMISMATCH    — wrong password
-482  ERR_CHANOPRIVSNEEDED  — need to be chanop to do this
+331 RPL_NOTOPIC — no topic set  
+332 RPL_TOPIC — channel topic  
+341 RPL_INVITING — invite sent  
+353 RPL_NAMREPLY — list of names  
+366 RPL_ENDOFNAMES — end of names  
+375 RPL_MOTDSTART — start of MOTD  
+372 RPL_MOTD — a line of MOTD  
+376 RPL_ENDOFMOTD — end of MOTD
 ```
+---
 
+***Error replies (all failure cases)***
+```
+401 ERR_NOSUCHNICK — nick not found  
+403 ERR_NOSUCHCHANNEL — channel not found  
+421 ERR_UNKNOWNCOMMAND — bad command  
+431 ERR_NONICKNAMEGIVEN — missing nick  
+432 ERR_ERRONEUSNICKNAME — invalid nick  
+433 ERR_NICKNAMEINUSE — nick taken  
+442 ERR_NOTONCHANNEL — not in channel  
+443 ERR_USERONCHANNEL — already in channel  
+451 ERR_NOTREGISTERED — not registered  
+461 ERR_NEEDMOREPARAMS — missing params  
+471 ERR_CHANNELISFULL — limit reached  
+473 ERR_INVITEONLYCHAN — invite only  
+475 ERR_BADCHANNELKEY — wrong password  
+482 ERR_CHANOPRIVSNEEDED — need chanop privileges
+
+```
 ---
 
 ### 7. PING/PONG — connection liveness
 
 The server pings each client periodically. If a client doesn't respond within a set time, the connection is closed. Any client that receives a PING must respond immediately with PONG:
 
-```
 Server sends:  PING :uranium.libera.chat
 Client sends:  PONG :uranium.libera.chat
-```
 
 This goes both ways — your server must respond to client PINGs too.
 
