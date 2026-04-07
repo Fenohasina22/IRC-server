@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 17:56:44 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 18:04:22 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ int main(int argc, char **argv)
 		return (1);
 	}
 	struct sockaddr_in	clientinfo;
+	struct pollfd		sock; // for initialization of the first element of vecpol
 	socklen_t			c_size;
 	Server				server;
 
 	c_size = sizeof(sockaddr_in);
 	server.Initialize();
 	
-	struct pollfd sock;
 	
 	sock.events = POLLIN;
 	sock.fd =  server.getSockfd();
@@ -53,6 +53,5 @@ int main(int argc, char **argv)
 			}
 		}
 	}
-
 	return (0);
 }

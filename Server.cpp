@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/07 17:55:32 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 18:10:40 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,14 +89,13 @@ void	Processmessage (int i, std::vector<pollfd>& vecpol)
 {
 	char				buff[MSG_BUFFERSIZE + 1];
 	int					retval;
-	std::string			msg; // Is this necessa
+	
 	memset (buff, 0, MSG_BUFFERSIZE);
 	retval = recv(vecpol[i].fd, buff, MSG_BUFFERSIZE, 0);
 	if (retval == -1)
 	{
-		std::cout << "Recve error" << std::endl;
+		std::cout << "Recv error" << std::endl;
 	}
-	//msg += BufferCleaning(buff);
-	std::cout << buff << std::endl;
+	std::cout << buff << std::endl; //still print undefined char
 }
 
