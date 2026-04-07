@@ -55,12 +55,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "RFC 1459 — What matters for your server.md",
+                "file": "InitialBuildPlan.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "RFC 1459 — What matters for your server"
+              "title": "InitialBuildPlan"
             }
           },
           {
@@ -256,8 +256,8 @@
   },
   "active": "3c016b3c7de676f3",
   "lastOpenFiles": [
-    "InitialBuildPlan.md",
     "RFC 1459 — What matters for your server.md",
+    "InitialBuildPlan.md",
     "InitialIRCFamiliarisation.md",
     "Functions.md",
     "pollAndEquivalent.md",

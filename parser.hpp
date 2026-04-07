@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:40 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 09:53:18 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 09:57:54 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,10 @@ struct iRCMessage
 	size_t						len;
 	std::string					ogMess;
 };
+
+
+iRCMessage	parseMessage(const std::string &strMess);
+bool		isMessValid(const iRCMessage &mess);
+
 
 #endif

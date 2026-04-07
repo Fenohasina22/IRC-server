@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 09:56:26 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 10:21:16 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ bool	isMessValid(const iRCMessage &mess)
 		return (false);
 	if (std::count(mess.ogMess.begin(), mess.ogMess.end(), '\r') > 1
 		|| std::count(mess.ogMess.begin(), mess.ogMess.end(), '\n') > 1)
+		return (false);
+	if (mess.len > 512)
 		return (false);
 	return (true);
 }
