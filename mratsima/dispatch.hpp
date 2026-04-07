@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:56:54 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 10:19:21 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 19:08:24 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 # define DISPATCH_HPP
 # include <iostream>
 # include "parser.hpp"
+# include "commands.hpp"
 
-void	dispatchCommand(const iRCMessage &mess);
+void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv);
 
 #endif
