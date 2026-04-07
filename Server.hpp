@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/07 17:27:22 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:56:15 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,17 @@ class Server
 		Server();
 		~Server();
 		std::vector<pollfd>&	getVecPoll();
-		int			getSockfd() const;
-		sockaddr_in	getSocketstats() const;
-		void	Initialize();
+		int						getSockfd() const;
+		sockaddr_in				getSocketstats() const;
+		void					Initialize();
 };
 
 
 
-void			NewUserHandling(int sockfd, sockaddr_in& clientinfo, 
-							socklen_t&  csize,std::vector<pollfd>& vecpol);
+void			NewUserHandling(int sockfd, sockaddr_in& clientinfo, socklen_t&  csize,std::vector<pollfd>& vecpol);
 std::string		BufferCleaning(char *buff);
+void			Processmessage (int i, std::vector<pollfd>& vecpol);
+
 
 #endif
 

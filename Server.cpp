@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/07 17:27:09 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:55:32 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int			Server::getSockfd() const
 {
 	return (this->_sockfd);
 }
+
 sockaddr_in	Server::getSocketstats() const
 {
 	return (this->_addr);
@@ -41,7 +42,8 @@ void	Server::Initialize()
 	this->_addr.sin_port = htons(6667);
 	this->_addr.sin_addr.s_addr = INADDR_ANY; 
 	this->_sockfd = socket(AF_INET, SOCK_STREAM, 0); // Creates a socket IPv4, TCP
-	if (bind(this->_sockfd, (struct sockaddr *)&(this->_addr), sizeof(this->_addr)) == 0) // adding info to the socket
+	// bind adding info to the socket
+	if (bind(this->_sockfd, (struct sockaddr *)&(this->_addr), sizeof(this->_addr)) == 0) 
 		std::cout << "Binding successfull" << std::endl;
 	else
 		std::cout << "binding failed" << std::endl;	
@@ -51,7 +53,8 @@ void	Server::Initialize()
 		std::cout << "Listen failed" << std::endl;
 }
 
-void	NewUserHandling(int sockfd, sockaddr_in& clientinfo, socklen_t&  csize,std::vector<pollfd>& vecpol)
+void	NewUserHandling(int sockfd, sockaddr_in& clientinfo, 
+							socklen_t&  csize,std::vector<pollfd>& vecpol)
 {
 	struct pollfd tmp;
 
@@ -79,5 +82,21 @@ std::string		BufferCleaning(char *buff)
 		i++;
 	}
 	return (result);
+}
+
+
+void	Processmessage (int i, std::vector<pollfd>& vecpol)
+{
+	char				buff[MSG_BUFFERSIZE + 1];
+	int					retval;
+	std::string			msg; // Is this necessa
+	memset (buff, 0, MSG_BUFFERSIZE);
+	retval = recv(vecpol[i].fd, buff, MSG_BUFFERSIZE, 0);
+	if (retval == -1)
+	{
+		std::cout << "Recve error" << std::endl;
+	}
+	//msg += BufferCleaning(buff);
+	std::cout << buff << std::endl;
 }
 

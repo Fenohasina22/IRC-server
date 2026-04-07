@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 17:45:41 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:56:44 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,11 @@ int main(int argc, char **argv)
 		std::cout << "Needs more args" << std::endl;
 		return (1);
 	}
-	int					clientfd;
 	struct sockaddr_in	clientinfo;
-	socklen_t			clientinfosize;
-	/*POLL*/
-
+	socklen_t			c_size;
 	Server				server;
 
-	clientinfosize = sizeof(sockaddr_in);
+	c_size = sizeof(sockaddr_in);
 	server.Initialize();
 	
 	struct pollfd sock;
@@ -48,22 +45,11 @@ int main(int argc, char **argv)
 		{
 			if (vecpol[i].fd == server.getSockfd() && (vecpol[i].revents & POLLIN))
 			{
-				NewUserHandling(server.getSockfd(), clientinfo, clientinfosize, vecpol);
+				NewUserHandling(server.getSockfd(), clientinfo, c_size, vecpol);
 			}
 			else if (vecpol[i].revents & POLLIN)
 			{
-				char				buff[MSG_BUFFERSIZE + 1];
-				int					retval;
-				std::string			msg; // Is this necessary
-
-				memset (buff, 0, MSG_BUFFERSIZE);
-				retval = recv(vecpol[i].fd, buff, MSG_BUFFERSIZE, 0);
-				if (retval == -1)
-				{
-					std::cout << "Recve error" << std::endl;
-				}
-				msg += BufferCleaning(buff);
-				std::cout << msg << std::endl;
+				Processmessage(i, vecpol);
 			}
 		}
 	}
