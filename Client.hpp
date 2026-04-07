@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:00:12 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 11:28:14 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 12:57:09 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ class Client
 		std::string 		nickname;
 		std::string 		username;
 		std::string 		realname;
-		bool				isPasswordAccepted;
-		bool				isNickSet;
-		bool				isUserSet;
+		bool				isPassOk;
+		bool				isNickOk;
+		bool				isUserOk;
 		bool				isRegistered;
 		std::string			readBuffer; /*no idea what it does yet*/
 		std::string			writeBuffer;/*no idea what it does yet*/

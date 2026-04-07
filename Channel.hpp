@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:05 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 11:30:25 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 12:58:32 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ class Channel
 {
 	private:
 		std::string 		name;
+		std::string			topic;
 		std::set<Client*>	members;
 
 	public:

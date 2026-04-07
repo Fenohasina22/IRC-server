@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 10:21:16 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 12:59:18 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	getCRLF(const std::vector<std::string> &splitMess, iRCMessage &parsedMess)
 
 iRCMessage parseMessage(const std::string &strMess)
 {
-	iRCMessage					parsedMess = {"", UNKNOWN, {}, "", 0};
+	iRCMessage					parsedMess = {"", UNKNOWN, {}, "", 0, ""};
 	std::vector<std::string>	splitMess;
 	int							index = 0;
 
