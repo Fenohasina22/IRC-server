@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/07 18:10:40 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 19:08:41 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,20 @@ sockaddr_in	Server::getSocketstats() const
 
 void	Server::Initialize()
 {
+	int opt;
+
 	this->_addr.sin_family = AF_INET;
 	this->_addr.sin_port = htons(6667);
 	this->_addr.sin_addr.s_addr = INADDR_ANY; 
 	this->_sockfd = socket(AF_INET, SOCK_STREAM, 0); // Creates a socket IPv4, TCP
 	// bind adding info to the socket
+	opt = 1;
+	if (setsockopt(this->_sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
+	{
+		std::cout << "setsockopt error" << std::endl;
+		/*err handling here*/
+		return ;
+	}
 	if (bind(this->_sockfd, (struct sockaddr *)&(this->_addr), sizeof(this->_addr)) == 0) 
 		std::cout << "Binding successfull" << std::endl;
 	else
@@ -89,7 +98,8 @@ void	Processmessage (int i, std::vector<pollfd>& vecpol)
 {
 	char				buff[MSG_BUFFERSIZE + 1];
 	int					retval;
-	
+	std::string			msg;
+
 	memset (buff, 0, MSG_BUFFERSIZE);
 	retval = recv(vecpol[i].fd, buff, MSG_BUFFERSIZE, 0);
 	if (retval == -1)
@@ -97,5 +107,6 @@ void	Processmessage (int i, std::vector<pollfd>& vecpol)
 		std::cout << "Recv error" << std::endl;
 	}
 	std::cout << buff << std::endl; //still print undefined char
+
 }
 

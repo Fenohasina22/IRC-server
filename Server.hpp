@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/07 17:56:15 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 18:48:23 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include <unistd.h>
 #include <vector>
 #include <cstring>
-#define	MSG_BUFFERSIZE 512
+#define	MSG_BUFFERSIZE 5
 
 class Server
 {
