@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 18:12:08 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 19:05:51 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void 	tryRegistration(Client &client)
 	}
 }
 
-bool	passCmd(Client &client, iRCMessage &mess, Server &serv)
+bool	passCmd(Client &client, const iRCMessage &mess, Server &serv)
 {
     if (client.isRegistered())
     {
@@ -43,7 +43,7 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv)
 	    send(client.getFd(), ":server 461 * PASS :Not enough parameters\r\n", 44, 0);
 		return (false);
 	}
-    if (mess.args[0] != serv.password)
+    if (mess.args[0] != serv.getPass())
     {
 	    send(client.getFd(), ":server 464 * :Password incorrect\r\n", 36, 0);
 		return (false);
@@ -52,7 +52,7 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv)
 	return (true);
 }
 
-bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
+bool	nickCmd(Client &client, const iRCMessage &mess, Server &serv)
 {
 	std::string newNick;
 
@@ -62,9 +62,9 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 		return (false);
 	}
 	newNick = mess.args[0];
-	for (int i = 0; i < serv.AllClients.size(); i++)
+	for (int i = 0; i < serv.getAllClients().size(); i++)
 	{
-		if (serv.AllClients[i].getNick() == newNick)
+		if (serv.getAllClients()[i].getNick() == newNick)
 		{
 			send(client.getFd(), ":server 433 :Nicknaem already taken\r\n", 44, 0);
 			return (false);
@@ -76,7 +76,7 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 	return (true);
 }
 
-bool	userCmd(Client &client, iRCMessage &mess)
+bool	userCmd(Client &client, const iRCMessage &mess)
 {
 	if (client.isRegistered())
         return send(client.getFd(), ":server 462 * :You may not reregister\r\n", 40, 0);

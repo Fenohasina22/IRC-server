@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:01:25 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 18:05:16 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 18:49:09 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,17 @@
 #include <algorithm>
 
 Client::Client()
+: fd(-1)
+, nickname("")
+, username("")
+, realname("")
+, isPassOk(false)
+, isNickOk(false)
+, isUserOk(false)
+, userIsRegistered(false)
+, readBuffer("")
+, writeBuffer("")
+
 {
 }
 

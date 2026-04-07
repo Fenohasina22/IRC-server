@@ -3,14 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 18:04:22 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 19:31:21 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "mratsima/dispatch.hpp"
+#include "mratsima/parser.hpp"
+
+bool	getParams(char **argv, Server &serv)
+{
+	char		*endptr;
+	int			newPort;
+	std::string newPass;
+	errno = 0;
+	newPass = argv[2];
+	newPort = std::strtol(argv[1], &endptr, 10);
+	if (errno)
+		return (false);
+	if (*endptr != 0 || endptr == argv[1])
+		return (false);
+	serv.setPort(newPort);
+	serv.setPass(newPass);
+	return (true);
+}
 
 int main(int argc, char **argv)
 {
@@ -24,10 +43,11 @@ int main(int argc, char **argv)
 	socklen_t			c_size;
 	Server				server;
 
+	if (!getParams(argv, server))
+		return (1);
 	c_size = sizeof(sockaddr_in);
 	server.Initialize();
-	
-	
+
 	sock.events = POLLIN;
 	sock.fd =  server.getSockfd();
 	std::vector<pollfd>&	vecpol = server.getVecPoll();
@@ -45,11 +65,11 @@ int main(int argc, char **argv)
 		{
 			if (vecpol[i].fd == server.getSockfd() && (vecpol[i].revents & POLLIN))
 			{
-				NewUserHandling(server.getSockfd(), clientinfo, c_size, vecpol);
+				server.NewUserHandling(clientinfo, c_size, i);
 			}
 			else if (vecpol[i].revents & POLLIN)
 			{
-				Processmessage(i, vecpol);
+				server.Processmessage(i);
 			}
 		}
 	}

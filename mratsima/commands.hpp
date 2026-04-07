@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 17:47:15 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 19:03:56 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,5 +16,11 @@
 # include "parser.hpp"
 # include "Client.hpp"
 # include <sys/socket.h>
+# include "../Server.hpp"
+
+bool	passCmd(Client &client, iRCMessage &mess, Server &serv);
+bool	nickCmd(Client &client, iRCMessage &mess, Server &serv);
+bool	userCmd(Client &client, iRCMessage &mess);
+
 
 #endif
