@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/07 19:47:43 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 20:45:47 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	Server::Processmessage (int i)
 	{
 		std::cout << "Recv error" << std::endl;
 	}
-	// std::cout << buff << std::endl;
+	std::cout << buff << std::endl;
 	parsedMess = parseMessage(buff);
 	if (!this->getAllClients()[i].isRegistered()
 		&& parsedMess.command != PASS && parsedMess.command != NICK && parsedMess.command != USER)
