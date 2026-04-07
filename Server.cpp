@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/07 19:53:27 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 21:16:07 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,12 @@ void 					Server::setPass(std::string newPass)
 	this->_password = newPass;
 }
 
-int						Server::setPort(int newPort)
+void						Server::setPort(int newPort)
 {
 	this->_port = newPort;
 }
 
-const int						Server::getPort() const
+int						Server::getPort() const
 {
 	return (this->_port);
 }
@@ -86,7 +86,7 @@ void	Server::Initialize()
 		std::cout << "Listen failed" << std::endl;
 }
 
-bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize, int i)
+bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 {
 	struct pollfd tmp;
 	Client	client;

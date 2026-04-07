@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:00:12 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 18:05:19 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 21:11:00 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 # include <iostream>
 # include <set>
 # include "Channel.hpp"
+
+class Channel;
 
 class Client
 {
@@ -35,14 +37,14 @@ class Client
 			to broadcast nick change;
 		*/
 	public:
-		const int 			getFd() const;
-		const std::string	getNick() const;
-		const std::string	getUser() const;
-		const std::string	getReal() const;
-		const bool			getNickState() const;
-		const bool			getUserState() const;
-		const bool			getPassState() const;
-		const bool			isRegistered() const;
+		int 			getFd() const;
+		std::string		getNick() const;
+		std::string		getUser() const;
+		std::string		getReal() const;
+		bool			getNickState() const;
+		bool			getUserState() const;
+		bool			getPassState() const;
+		bool			isRegistered() const;
 		void 				setFd(int fd);
 		void				setNick(std::string toSet);
 		void				setUser(std::string toSet);

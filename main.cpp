@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 19:52:26 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 21:16:34 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,11 @@ int main(int argc, char **argv)
 			std::cout << "error: poll"<< std::endl;
 			return (0);
 		}
-		for (int i = 0; i < vecpol.size(); i++)
+		for (unsigned int i = 0; i < vecpol.size(); i++)
 		{
 			if (vecpol[i].fd == server.getSockfd() && (vecpol[i].revents & POLLIN))
 			{
-				server.NewUserHandling(clientinfo, c_size, i);
+				server.NewUserHandling(clientinfo, c_size);
 			}
 			else if (vecpol[i].revents & POLLIN)
 			{

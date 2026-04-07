@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 16:48:12 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 21:21:55 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,15 @@ void	getCommand(const std::vector<std::string> &splitMess, iRCMessage &parsedMes
 	if (splitMess.size() < 2)
 		return ;
 	std::string strCommand = splitMess[1];
-	std::vector<std::string>	types = {"PASS", "NICK", "USER","KICK"
+	std::string tab[10] = {"PASS", "NICK", "USER","KICK"
 		, "TOPIC", "MODE", "JOIN", "PART" , "PRIVMSG", "QUIT"};
-	for (int i = 0; i < types.size(); i++)
+	std::vector<std::string>types;
+
+	for (int i = 0; i < 10; i++)
+	{
+		types.push_back(tab[i]);
+	}
+	for (unsigned int i = 0; i < types.size(); i++)
 	{
 		if (strCommand == types[i])
 		{
@@ -76,9 +82,8 @@ void	getCRLF(const std::vector<std::string> &splitMess, iRCMessage &parsedMess)
 
 iRCMessage parseMessage(const std::string &strMess)
 {
-	iRCMessage					parsedMess = {"", UNKNOWN, {}, "", 0, ""};
+	iRCMessage					parsedMess = {"", UNKNOWN, std::vector<std::string>(), "", 0, ""};
 	std::vector<std::string>	splitMess;
-	int							index = 0;
 
 	if (strMess.empty())
 		return (parsedMess);

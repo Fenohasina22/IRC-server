@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 19:05:51 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 21:17:48 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <commands.hpp>
+#include "commands.hpp"
 
 void 	tryRegistration(Client &client)
 {
@@ -62,7 +62,7 @@ bool	nickCmd(Client &client, const iRCMessage &mess, Server &serv)
 		return (false);
 	}
 	newNick = mess.args[0];
-	for (int i = 0; i < serv.getAllClients().size(); i++)
+	for (unsigned int i = 0; i < serv.getAllClients().size(); i++)
 	{
 		if (serv.getAllClients()[i].getNick() == newNick)
 		{
@@ -79,12 +79,18 @@ bool	nickCmd(Client &client, const iRCMessage &mess, Server &serv)
 bool	userCmd(Client &client, const iRCMessage &mess)
 {
 	if (client.isRegistered())
-        return send(client.getFd(), ":server 462 * :You may not reregister\r\n", 40, 0);
+    {
+		send(client.getFd(), ":server 462 * :You may not reregister\r\n", 40, 0);
+		return (false);
+	}   
     if (mess.args.size() < 4)
-        return send(client.getFd(), ":server 461 * USER :Not enough parameters\r\n", 44, 0);
-
+    {
+		send(client.getFd(), ":server 461 * USER :Not enough parameters\r\n", 44, 0);
+		return (false);
+	}   
     client.setUser(mess.args[0]);
     client.setReal(mess.args[3]);
     client.setUserState(true);
     tryRegistration(client);
+	return (true);
 }

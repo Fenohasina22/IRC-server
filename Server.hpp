@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/07 19:53:54 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 21:16:20 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,13 @@ class Server
 		std::vector<pollfd>&	getVecPoll();
 		int						getSockfd() const;
 		sockaddr_in				getSocketstats() const;
-		const int				getPort() const;
+		int						getPort() const;
 		const std::string		getPass() const;
 		void					Initialize();
 		void 					setPass(std::string newPass);
-		int						setPort(int newPort);
+		void					setPort(int newPort);
 		std::vector<Client>&	getAllClients();
-		bool					NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize, int i);
+		bool					NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize);
 		void					Processmessage (int i);
 };
 
