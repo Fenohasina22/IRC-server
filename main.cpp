@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 10:52:30 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 15:20:17 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 	struct sockaddr_in	clientinfo;
 	socklen_t			clientinfosize;
 	/*POLL*/
-	struct pollfd		tabfd[10];
+	std::vector<pollfd>	vecpol;
 	int					ret;
 
 
@@ -46,32 +46,52 @@ int main(int argc, char **argv)
 		std::cout << "Listen successful"<<  std::endl;
 	else
 		std::cout << "Listen failed" << std::endl;
+		
 
-	/*INITIALISATION CLIENT INFO
-	clientinfosize = sizeof(struct sockaddr_in);
-	clientfd = accept(sockfd, (struct sockaddr*)&clientinfo, &clientinfosize); // return fd for a client and initialize clientinfo
-	if (clientfd != -1)
-		std::cout << "Client port: " << clientinfo.sin_port << std::endl;
-	else
-		std::cout << "Hey there" << std::endl;*/
+	clientinfosize = sizeof(sockaddr_in);
 
+	int j = 1;
+	int i = 0;
+	int nfds = 2;
+	/*
+	Pour bien utiliser poll il faut nettoyer apres reception de siggnal nc via accept si c'est le socket, recv si c'est un client
+	
+	tabfd[0] = socket;
+	*/
+	struct pollfd sock;
+
+	sock.fd = sockfd;
+	sock.events = POLLIN;
+
+	vecpol.push_back(sock);
 	while (1)
 	{
-
-		tabfd[0].fd = sockfd;
-		tabfd[0].events = POLLIN;
-		ret = poll(tabfd, 10, -1);
-		if (ret ==  -1)
+		ret = poll(&vecpol[0], vecpol.size(), -1); // SLEEPS AND WAKE UP WHEN AN EVENT HAPPENS LIKE POLLIN
+		if (ret < 0)
 		{
-			std::cout << "error: in poll" << std::endl;
-			return (0);
+			std::cout << "error: poll"<< std::endl;
 		}
-		else if (ret == 0)
+		for (int i = 0; i < nfds; i++)
 		{
-			std::cout << "Timeout" << std::endl;
-			return (0);
-		}
+			if (vecpol[i].fd == sockfd && (vecpol[i].revents & POLLIN))
+			{
+				struct pollfd tmp;
 
+				tmp.fd = accept(sockfd, (sockaddr *)&clientinfo, &clientinfosize);
+				tmp.events = POLLIN;
+				std::cout << "New user connected from port : " << clientinfo.sin_port << std::endl;
+				vecpol.push_back(tmp);
+			}
+			else if (vecpol[i].revents & POLLIN)
+			{
+				/*recv*/
+				char buff[5]; // to test
+
+				recv(vecpol[i].fd, buff, 5, 0);
+				std::cout << "Buff = " << buff << std::endl;
+			}
+		}
 	}
+
 	return (0);
 }

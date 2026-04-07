@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/07 09:30:31 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 14:50:34 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 #include <poll.h> // pour poll 
 #include <sys/socket.h> // pour socket , bind , etc
 #include <netinet/in.h>
-
+#include <unistd.h>
+#include <vector>
 
 
 #endif
