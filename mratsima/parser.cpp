@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 12:59:18 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 16:48:12 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,8 @@ void	getCommand(const std::vector<std::string> &splitMess, iRCMessage &parsedMes
 	if (splitMess.size() < 2)
 		return ;
 	std::string strCommand = splitMess[1];
-	std::vector<std::string>	types = {"KICK", "TOPIC", "MODE", "JOIN", "PART"
-		, "PRIVMSG", "QUIT"};
+	std::vector<std::string>	types = {"PASS", "NICK", "USER","KICK"
+		, "TOPIC", "MODE", "JOIN", "PART" , "PRIVMSG", "QUIT"};
 	for (int i = 0; i < types.size(); i++)
 	{
 		if (strCommand == types[i])

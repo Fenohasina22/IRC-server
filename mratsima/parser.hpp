@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:40 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 09:57:54 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 16:48:31 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@
 //TOPIC	View or set channel topic — only ops can set if mode +t
 typedef enum	command
 {
+	PASS	,
+	NICK	,
+	USER	,
 	KICK	,
 	TOPIC	,
 	MODE	,
