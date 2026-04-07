@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:01:25 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 16:44:52 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 18:05:16 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,24 @@ const std::string	Client::getReal() const
 	return (this->realname);
 }
 
+const bool			Client::getNickState() const
+{
+	return (this->isNickOk);
+}
+
+const bool			Client::getUserState() const
+{
+	return (this->isUserOk);
+}
+
+const bool			Client::getPassState() const
+{
+	return (this->isPassOk);
+}
 
 const bool			Client::isRegistered() const
 {
-	if (this->isPassOk && this->isNickOk && this->isUserOk)
-		return (true);
-	return (false);
+	return (this->userIsRegistered);
 }
 
 void 				Client::setFd(int fd)
@@ -68,6 +80,27 @@ void				Client::setReal(std::string toSet)
 {
 	this->realname = toSet;
 }
+
+void				Client::setPassState(bool state)
+{
+	this->isPassOk = state;
+}
+
+void				Client::setNickState(bool state)
+{
+	this->isNickOk = state;
+}
+
+void				Client::setUserState(bool state)
+{
+	this->isUserOk = state;
+}
+
+void				Client::setRegistrationState(bool state)
+{
+	this->userIsRegistered = state;
+}
+
 
 bool 	Client::isInChannel(Channel* c) const
 {
