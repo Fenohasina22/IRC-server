@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 10:25:18 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/07 10:36:52 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void	dispatchCommand(const iRCMessage &mess)
 		case (QUIT):
 			//QUIT command handler
 			break;
-		default: break;
+		default:
+			//HANDLE AS UNKNOWN COMMAND 421
+			break;
 	}
 }
