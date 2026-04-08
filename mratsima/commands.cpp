@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/08 14:27:43 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/08 15:24:50 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,17 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv)
 	// std::cout << "inpasscmd" <<std::endl;
     if (client.isRegistered())
     {
-	    send(client.getFd(), ":server 462 * :You may not reregister\r\n", 40, 0);
+		sendCodes(client.getFd(), "462", ":server", ":You may not reregister");
 		return (false);
 	}
     if (mess.args.empty())
     {
-	    send(client.getFd(), ":server 461 * PASS :Not enough parameters\r\n", 44, 0);
+		sendCodes(client.getFd(), "461", ":server", "* PASS :Not enough parameters");
 		return (false);
 	}
     if (mess.args[0] != serv.getPass())
     {
-	    send(client.getFd(), ":server 464 * :Password incorrect\r\n", 36, 0);
+		sendCodes(client.getFd(), "464", ":server", ":Password incorrect");
 		return (false);
 	}
     client.setPassState(true);
@@ -62,7 +62,7 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 
 	if (mess.args.empty())
     {
-	    send(client.getFd(), ":server 431 :No nickname specified\r\n", 44, 0);
+		sendCodes(client.getFd(), "431", ":server", ":No nickname specified");
 		return (false);
 	}
 	newNick = mess.args[0];
@@ -70,7 +70,7 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 	{
 		if (serv.getAllClients()[i].getNick() == newNick)
 		{
-			send(client.getFd(), ":server 433 :Nickname already taken\r\n", 44, 0);
+			sendCodes(client.getFd(), "433", ":server", ":Nickname already taken");
 			return (false);
 		}
 	}
@@ -85,12 +85,12 @@ bool	userCmd(Client &client, iRCMessage &mess)
 {
 	if (client.isRegistered())
     {
-		send(client.getFd(), ":server 462 * :You may not reregister\r\n", 40, 0);
+		sendCodes(client.getFd(), "462", ":server", ":You may not reregister");
 		return (false);
 	}
     if (mess.args.size() < 4)
     {
-		send(client.getFd(), ":server 461 * USER :Not enough parameters\r\n", 44, 0);
+		sendCodes(client.getFd(), "461" , ":server", "* USER :Not enough parameters");
 		return (false);
 	}
     client.setUser(mess.args[0]);

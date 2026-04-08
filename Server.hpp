@@ -6,24 +6,31 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/08 14:14:45 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/08 14:55:54 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef	SERVER_HPP
-#define SERVER_HPP
+# define SERVER_HPP
 
-#include <iostream>
-#include <poll.h> // pour poll
-#include <sys/socket.h> // pour socket , bind , etc
-#include <netinet/in.h>
-#include <unistd.h>
-#include <vector>
-#include "Client.hpp"
-#include <cstring>
-#include <errno.h>
-#include "mratsima/dispatch.hpp"
-#define	MSG_BUFFERSIZE 1024
+# include <iostream>
+# include <poll.h> // pour poll
+# include <sys/socket.h> // pour socket , bind , etc
+# include <netinet/in.h>
+# include <unistd.h>
+# include <vector>
+# include "Client.hpp"
+# include <cstring>
+# include <errno.h>
+# include "mratsima/dispatch.hpp"
+# define	MSG_BUFFERSIZE 1024
+
+# ifndef	CRLN
+# define CRLN "\r\n"
+# endif
+
+
+
 
 class Server
 {

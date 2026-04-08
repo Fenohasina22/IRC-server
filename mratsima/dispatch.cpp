@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/08 14:33:41 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/08 15:18:47 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,11 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 			//HANDLE AS UNKNOWN COMMAND 421
 			break;
 	}
+}
+
+void	sendCodes(const int &fd, std::string code, const std::string &prefix, const::std::string &msg)
+{
+	std::string completeMsg = prefix + " " + code + " " + msg + CRLN;
+	std::cout << completeMsg << std::endl;
+	send(fd, completeMsg.c_str(), completeMsg.size(), 0);
 }
