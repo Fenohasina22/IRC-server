@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/08 09:40:26 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/08 13:21:25 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ void 	tryRegistration(Client &client)
 	if (client.getNickState() && client.getPassState() && client.getUserState())
 	{
 		client.setRegistrationState(true);
-		std::string msg001 = ":server 001 " + client.getNick() + " :Welcome " + client.getNick() + "\r\n";
+		std::string msg001 = ":server 001 " + client.getNick() + " :Welcome to the IRC " + client.getNick() + "\r\n";
 		std::string msg002 = ":server 002 " + client.getNick() + " :Your host is server\r\n";
 		std::string msg003 = ":server 003 " + client.getNick() + " :This server was created just now\r\n";
 		std::string msg004 = ":server 004 " + client.getNick() + " idk bro put all the infos abt our server\r\n";
 		// std::string all = msg001 + msg002 + msg003 + msg004;
-		std::cout << msg001 << std::endl;
+		send(client.getFd(), "\r\n", 2, 0);
 		send(client.getFd(), msg001.c_str(), msg001.size(), 0);
 		send(client.getFd(), msg002.c_str(), msg002.size(), 0);
 		send(client.getFd(), msg003.c_str(), msg003.size(), 0);
@@ -48,8 +48,6 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv)
 	}
     if (mess.args[0] != serv.getPass())
     {
-		std::cout << "given was " << "->"<< mess.args[0] << "<-"<< std::endl;
-		std::cout << "real was " <<"->" <<serv.getPass() << "<-"<< std::endl;
 	    send(client.getFd(), ":server 464 * :Password incorrect\r\n", 36, 0);
 		return (false);
 	}
