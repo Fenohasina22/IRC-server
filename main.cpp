@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 21:16:34 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/08 06:36:12 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ int main(int argc, char **argv)
 		return (1);
 	c_size = sizeof(sockaddr_in);
 	server.Initialize();
-
 	sock.events = POLLIN;
 	sock.fd =  server.getSockfd();
 	std::vector<pollfd>&	vecpol = server.getVecPoll();

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/08 06:17:37 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/08 06:49:15 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	Server::Initialize()
 	int opt;
 
 	this->_addr.sin_family = AF_INET;
-	this->_addr.sin_port = htons(6667);
+	this->_addr.sin_port = htons(this->_port);
 	this->_addr.sin_addr.s_addr = INADDR_ANY;
 	this->_sockfd = socket(AF_INET, SOCK_STREAM, 0); // Creates a socket IPv4, TCP
 	// bind adding info to the socket
