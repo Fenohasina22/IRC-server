@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/08 08:33:10 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/08 14:31:51 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ std::vector<std::string> splitCRLF(const std::string& str)
 		parts.push_back(str.substr(start, pos - start));
 		start = pos + delim.length();
 	}
-	// push remaining (if any)
 	if (start < str.size())
 		parts.push_back(str.substr(start));
 	return parts;
@@ -53,18 +52,16 @@ void	getPrefix(const std::vector<std::string> &splitMess, iRCMessage &parsedMess
 
 void	getCommand(const std::vector<std::string> &splitMess, iRCMessage &parsedMess, size_t &index)
 {
+	std::vector<std::string>	types;
+
 	if (splitMess.size() < index + 1)
 		return ;
 	std::string strCommand = splitMess[index];
 	index ++;
-	std::string tab[11] = {"CAP", "PASS", "NICK", "USER","KICK"
+	std::string tab[COM_NUM] = {"CAP", "PASS", "NICK", "USER","KICK"
 		, "TOPIC", "MODE", "JOIN", "PART" , "PRIVMSG", "QUIT"};
-	std::vector<std::string>types;
-
-	for (int i = 0; i < 11; i++)
-	{
+	for (int i = 0; i < COM_NUM; i++)
 		types.push_back(tab[i]);
-	}
 	for (unsigned int i = 0; i < types.size(); i++)
 	{
 		if (strCommand == types[i])

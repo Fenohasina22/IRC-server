@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/08 09:41:31 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/08 14:30:26 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,14 +101,20 @@ bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 	return (true);
 }
 
-void	printiRCMESS(iRCMessage mess)
+Client &Server::findClient(int fd)
 {
-	(void)mess;
-	// std::cout << "prefix = " << mess.prefix << std::endl;
-	// std::cout << "command = " << mess.cmd << std::endl;
-	// std::cout << "args = ";
-	// for (size_t i = 0; i < mess.args.size(); i++)
-	// 	std::cout << "-" << mess.args[i] << std::endl;
+	int	clientIndex = -1;
+
+	for (size_t idx = 0; idx < this->_allClients.size(); ++idx)
+	{
+		if (this->_allClients[idx].getFd() == fd)
+		{
+			clientIndex = static_cast<int>(idx);
+			return (this->_allClients[clientIndex]);
+		}
+	}
+	return (this->_allClients[clientIndex]);
+	/*maybe do an error return*/
 }
 
 void	Server::Processmessage (int i)
@@ -125,39 +131,19 @@ void	Server::Processmessage (int i)
 		std::cout << "Recv error" << std::endl;
 	}
 	std::cout << buff << std::endl;
-	int clientIndex = -1;
-	for (size_t idx = 0; idx < this->_allClients.size(); ++idx)
-	{
-		if (this->_allClients[idx].getFd() == this->_vecPoll[i].fd)
-		{
-			clientIndex = static_cast<int>(idx);
-			break;
-		}
-	}
-	if (clientIndex == -1)
-	{
-		std::cout << "Unknown client for fd " << this->_vecPoll[i].fd << std::endl;
-		return;
-	}
-	// if (!this->getAllClients()[clientIndex].isRegistered()
-	// 	&& parsedMess.command != PASS && parsedMess.command != NICK && parsedMess.command != USER)
-	// {
-	// 	send(this->getAllClients()[clientIndex].getFd(), ":server 451 :user not registered yet\r\n", 39, 0);
-	// 	return;
-	// }
 	std::string recvBuf(buff, retval);
 	std::vector<std::string> messages = splitCRLF(recvBuf);
 	for (size_t m = 0; m < messages.size(); ++m)
 	{
+		Client &c = this->findClient(this->_vecPoll[i].fd);
 		parsedMess = parseMessage(messages[m]);
-		// if (!this->getAllClients()[clientIndex].isRegistered()
-		// 	&& parsedMess.cmd != PASS && parsedMess.cmd != NICK && parsedMess.cmd != USER)
-		// {
-		// 	send(this->getAllClients()[clientIndex].getFd(), ":server 451 :user not registered yet\r\n", 39, 0);
-		// 	continue;
-		// }
-		printiRCMESS(parsedMess);
-		dispatchCommand(parsedMess, this->getAllClients()[clientIndex], *this);
+		if (!c.isRegistered()
+			&& parsedMess.cmd != PASS && parsedMess.cmd != NICK && parsedMess.cmd != USER)
+		{
+			send(c.getFd(), ":server 451 :user not registered yet\r\n", 39, 0);
+			continue;
+		}
+		dispatchCommand(parsedMess, c, *this);
 	}
 }
 

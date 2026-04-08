@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/08 13:21:25 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/08 14:27:43 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 	{
 		if (serv.getAllClients()[i].getNick() == newNick)
 		{
-			send(client.getFd(), ":server 433 :Nicknaem already taken\r\n", 44, 0);
+			send(client.getFd(), ":server 433 :Nickname already taken\r\n", 44, 0);
 			return (false);
 		}
 	}
