@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/08 14:30:26 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/08 14:34:17 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ void	Server::Processmessage (int i)
 	{
 		Client &c = this->findClient(this->_vecPoll[i].fd);
 		parsedMess = parseMessage(messages[m]);
-		if (!c.isRegistered()
+		if (!c.isRegistered() && parsedMess.cmd != CAP
 			&& parsedMess.cmd != PASS && parsedMess.cmd != NICK && parsedMess.cmd != USER)
 		{
 			send(c.getFd(), ":server 451 :user not registered yet\r\n", 39, 0);
