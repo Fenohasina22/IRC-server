@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 21:21:55 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/08 08:33:10 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,23 +23,45 @@ std::vector<std::string> split(const std::string& str, char delimiter)
     return (tokens);
 }
 
-void	getPrefix(const std::vector<std::string> &splitMess, iRCMessage &parsedMess)
+std::vector<std::string> splitCRLF(const std::string& str)
 {
-	if (splitMess.size() < 1)
-		return ;
-	parsedMess.prefix = splitMess[0];
+	std::vector<std::string> parts;
+	size_t pos = 0;
+	size_t start = 0;
+	const std::string delim = "\r\n";
+	while ((pos = str.find(delim, start)) != std::string::npos)
+	{
+		parts.push_back(str.substr(start, pos - start));
+		start = pos + delim.length();
+	}
+	// push remaining (if any)
+	if (start < str.size())
+		parts.push_back(str.substr(start));
+	return parts;
 }
 
-void	getCommand(const std::vector<std::string> &splitMess, iRCMessage &parsedMess)
+void	getPrefix(const std::vector<std::string> &splitMess, iRCMessage &parsedMess, size_t &index)
 {
-	if (splitMess.size() < 2)
+	if (splitMess.empty() || index >= splitMess.size())
 		return ;
-	std::string strCommand = splitMess[1];
-	std::string tab[10] = {"PASS", "NICK", "USER","KICK"
+	if (!splitMess[index].empty() && splitMess[index][0] == ':')
+	{
+		parsedMess.prefix = splitMess[index];
+		index++;
+	}
+}
+
+void	getCommand(const std::vector<std::string> &splitMess, iRCMessage &parsedMess, size_t &index)
+{
+	if (splitMess.size() < index + 1)
+		return ;
+	std::string strCommand = splitMess[index];
+	index ++;
+	std::string tab[11] = {"CAP", "PASS", "NICK", "USER","KICK"
 		, "TOPIC", "MODE", "JOIN", "PART" , "PRIVMSG", "QUIT"};
 	std::vector<std::string>types;
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 11; i++)
 	{
 		types.push_back(tab[i]);
 	}
@@ -47,29 +69,29 @@ void	getCommand(const std::vector<std::string> &splitMess, iRCMessage &parsedMes
 	{
 		if (strCommand == types[i])
 		{
-			parsedMess.command = static_cast<command>(i);
+			parsedMess.cmd = static_cast<command>(i);
 			return ;
 		}
 	}
-	parsedMess.command = UNKNOWN;
+	parsedMess.cmd = UNKNOWN;
 }
 
-void	getArgs(const std::vector<std::string> &splitMess, iRCMessage &parsedMess)
+void	getArgs(const std::vector<std::string> &splitMess, iRCMessage &parsedMess, size_t &index)
 {
-	bool trailing = false;
-
-	if (splitMess.size() < 3)
+	if (splitMess.size() <= index)
 		return ;
-	for (size_t i = 2; (i < splitMess.size() && splitMess[i] != "/r/n"); i++)
+	bool trailing = false;
+	for (size_t i = index; i < splitMess.size(); ++i)
 	{
-		if (trailing == false)
+		if (!trailing)
 		{
 			parsedMess.args.push_back(splitMess[i]);
-			if (splitMess[i][0] == ':')
+			if (!splitMess[i].empty() && splitMess[i][0] == ':')
 				trailing = true;
 		}
 		else
 			parsedMess.args.back().append(" " + splitMess[i]);
+		index++;
 	}
 }
 
@@ -84,15 +106,16 @@ iRCMessage parseMessage(const std::string &strMess)
 {
 	iRCMessage					parsedMess = {"", UNKNOWN, std::vector<std::string>(), "", 0, ""};
 	std::vector<std::string>	splitMess;
+	size_t 						index = 0;
 
 	if (strMess.empty())
 		return (parsedMess);
 	parsedMess.ogMess = strMess;
 	splitMess = split(strMess, ' ');
 	parsedMess.len = strMess.size();
-	getPrefix(splitMess, parsedMess);
-	getCommand(splitMess, parsedMess);
-	getArgs(splitMess, parsedMess);
+	getPrefix(splitMess, parsedMess, index);
+	getCommand(splitMess, parsedMess, index);
+	getArgs(splitMess, parsedMess, index);
 	getCRLF(splitMess, parsedMess);
 	return (parsedMess);
 }
@@ -103,10 +126,9 @@ bool	isMessValid(const iRCMessage &mess)
 		return (false);
 	if (mess.len == 0)
 		return (false);
-	if (mess.args.empty() && mess.command == UNKNOWN && mess.CRLF.empty()
-		&& mess.prefix.empty())
+	if (mess.args.empty() && mess.cmd == UNKNOWN && mess.CRLF.empty())
 		return (false);
-	if (mess.command == UNKNOWN)
+	if (mess.cmd == UNKNOWN)
 		return (false);
 	if (std::count(mess.args.back().begin(), mess.args.back().end(), ':') > 1)
 		return (false);
