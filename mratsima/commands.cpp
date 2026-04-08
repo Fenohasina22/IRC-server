@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 21:17:48 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/07 21:46:24 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@ void 	tryRegistration(Client &client)
 	}
 }
 
-bool	passCmd(Client &client, const iRCMessage &mess, Server &serv)
+bool	passCmd(Client &client, iRCMessage &mess, Server &serv)
 {
+	std::cout << "inpasscmd" <<std::endl;
     if (client.isRegistered())
     {
 	    send(client.getFd(), ":server 462 * :You may not reregister\r\n", 40, 0);
@@ -52,7 +53,7 @@ bool	passCmd(Client &client, const iRCMessage &mess, Server &serv)
 	return (true);
 }
 
-bool	nickCmd(Client &client, const iRCMessage &mess, Server &serv)
+bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 {
 	std::string newNick;
 
@@ -76,18 +77,18 @@ bool	nickCmd(Client &client, const iRCMessage &mess, Server &serv)
 	return (true);
 }
 
-bool	userCmd(Client &client, const iRCMessage &mess)
+bool	userCmd(Client &client, iRCMessage &mess)
 {
 	if (client.isRegistered())
     {
 		send(client.getFd(), ":server 462 * :You may not reregister\r\n", 40, 0);
 		return (false);
-	}   
+	}
     if (mess.args.size() < 4)
     {
 		send(client.getFd(), ":server 461 * USER :Not enough parameters\r\n", 44, 0);
 		return (false);
-	}   
+	}
     client.setUser(mess.args[0]);
     client.setReal(mess.args[3]);
     client.setUserState(true);

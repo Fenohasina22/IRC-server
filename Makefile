@@ -1,50 +1,32 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2026/04/07 21:06:09 by fsamy-an          #+#    #+#              #
-#    Updated: 2026/04/07 21:36:24 by fsamy-an         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
-
 NAME = ft_irc
 
-CPP = c++
+CXX = c++
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -g
 
-CPPFLAGS = -Wall -Wextra -Werror -std=c++98
+SRCS = Channel.cpp \
+       Client.cpp \
+       main.cpp \
+       Server.cpp \
+       mratsima/commands.cpp \
+       mratsima/dispatch.cpp \
+       mratsima/parser.cpp
 
-SRCS = Channel.cpp 				\
-		Client.cpp				\
-		main.cpp				\
-		Server.cpp				
+OBJS = $(SRCS:.cpp=.o)
 
-SRCC =	commands.cpp 	\
-		dispatch.cpp	\
-		parser.cpp		
+.PHONY: all clean fclean re
 
+all: $(NAME)
 
-OBJ = $(SRCS:%.cpp=%.o)
-OBJC = $(SRCC:%.cpp=%.o)
+$(NAME): $(OBJS)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
-all : $(NAME)
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(NAME): $(OBJ)  $(OBJC)
-	$(CPP) $(CPPFLAGS) $(OBJ) $(OBJC) -o $(NAME)
+clean:
+	rm -f $(OBJS)
 
-$(OBJ) : $(SRCS)
-	$(CPP) $(CPPFLAGS) -c $(SRCS)
+fclean: clean
+	rm -f $(NAME)
 
-$(OBJC) : $(SRCC)
-	$(CPP) $(CPPFLAGS) -c mratsima/$(SRCC)
-
-clean : 
-	rm -rf $(OBJ) $(OBJC)
-
-fclean : clean 
-	rm -rf $(NAME)
-
-re : fclean all
+re: fclean all

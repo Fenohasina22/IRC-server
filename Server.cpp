@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/07 21:16:07 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/08 06:17:37 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	Server::Initialize()
 		/*err handling here*/
 		return ;
 	}
-	if (bind(this->_sockfd, (struct sockaddr *)&(this->_addr), sizeof(this->_addr)) == 0) 
+	if (bind(this->_sockfd, (struct sockaddr *)&(this->_addr), sizeof(this->_addr)) == 0)
 		std::cout << "Binding successfull" << std::endl;
 	else
 		std::cout << "binding failed" << std::endl;
@@ -100,6 +100,15 @@ bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 	return (true);
 }
 
+void	printiRCMESS(iRCMessage mess)
+{
+	std::cout << "prefix = " << mess.prefix << std::endl;
+	std::cout << "command = " << mess.command << std::endl;
+	std::cout << "args = ";
+	for (size_t i = 0; i < mess.args.size(); i++)
+		std::cout << "-" << mess.args[i] << std::endl;
+}
+
 void	Server::Processmessage (int i)
 {
 	char				buff[MSG_BUFFERSIZE + 1];
@@ -112,7 +121,7 @@ void	Server::Processmessage (int i)
 	{
 		std::cout << "Recv error" << std::endl;
 	}
-	// std::cout << buff << std::endl;
+	std::cout << buff << std::endl;
 	parsedMess = parseMessage(buff);
 	if (!this->getAllClients()[i].isRegistered()
 		&& parsedMess.command != PASS && parsedMess.command != NICK && parsedMess.command != USER)
@@ -120,6 +129,7 @@ void	Server::Processmessage (int i)
 		send(this->getAllClients()[i].getFd(), ":server 451 :user not registered yet\r\n", 39, 0);
 		return;
 	}
+	printiRCMESS(parsedMess);
 	dispatchCommand(parsedMess, this->getAllClients()[i], *this);
 }
 
