@@ -67,13 +67,12 @@ Your server's welcome response after a successful handshake:
 |`INVITE`|Invite a user to a channel|
 |`MODE`|Change channel or user modes (see below)|
 
-**Keepalive:** (PS: je pense pas on a besoin de ca)
+**Keepalive:**
 
-| Command | What it does                                                        |
-| ------- | ------------------------------------------------------------------- |
-| `PING`  | Either side sends this to check the connection is alive             |
-| `PONG`  | Required response to PING — if you don't respond, connection closes |
-|         |                                                                     |
+| Command | What it does                                                        |     |
+| ------- | ------------------------------------------------------------------- | --- |
+| `PING`  | Either side sends this to check the connection is alive             |     |
+| `PONG`  | Required response to PING — if you don't respond, connection closes |     |
 
 ---
 

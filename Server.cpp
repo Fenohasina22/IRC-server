@@ -6,15 +6,13 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/08 15:27:15 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/08 15:44:12 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "mratsima/parser.hpp"
 
-
-/*SERVER*/
 Server::Server()
 {
 }
@@ -89,8 +87,8 @@ void	Server::Initialize()
 
 bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 {
-	struct pollfd tmp;
-	Client	client;
+	struct pollfd	tmp;
+	Client			client;
 
 	tmp.fd = accept(this->_sockfd, (sockaddr *)&clientinfo, &csize);
 	tmp.events = POLLIN;
@@ -150,10 +148,8 @@ void	Server::Processmessage (int i)
 std::string		BufferCleaning(char *buff)
 {
 	std::string	result;
+	int			i = 0;
 
-	int	i;
-
-	i = 0;
 	while (buff[i + 1])
 	{
 		result += buff[i];

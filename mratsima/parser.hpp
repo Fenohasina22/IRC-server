@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:40 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/08 14:55:03 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/08 15:42:31 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@
 
 //commands number
 # ifndef COM_NUM
-#  define COM_NUM 11
+#  define COM_NUM 12
 # endif
+
 # ifndef	CRLN
 # define CRLN "\r\n"
 # endif
@@ -42,6 +43,7 @@ typedef enum	command
 	PASS	,
 	NICK	,
 	USER	,
+	PING	,
 	KICK	,
 	TOPIC	,
 	MODE	,
