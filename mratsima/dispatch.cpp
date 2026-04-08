@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 21:50:40 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/08 08:23:33 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,17 @@
 void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 {
 	//1-if !registered && !registering_command:return;
-	std::cout << "indispatch" <<std::endl;
+	// std::cout << "indispatch" <<std::endl;
 	// if (!client.isRegistered()
 	// 	&& mess.command != PASS && mess.command != NICK && mess.command != USER)
 	// 	return ;
 	// if (!isMessValid(mess))
 	// 	return ;
-	switch (mess.command)
+	switch (mess.cmd)
 	{
+		case (CAP):
+			capCmd(client);
+			break ;
 		case (PASS):
 			passCmd(client, mess, serv);
 			break;

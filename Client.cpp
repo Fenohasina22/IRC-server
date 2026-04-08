@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:01:25 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 21:11:21 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/08 09:12:45 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
