@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/09 10:46:35 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/09 10:58:40 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,9 +150,11 @@ void	Server::Processmessage (int i)
 	{
 		std::cout << "Command incomplete ,needs CRLF" << std::endl;
 		stock += buff;
+		return ;
 	}
 	else
 	{
+		stock = buff;
 		std::cout << "Processing complete command" << std::endl;
 		std::string recvBuf;
 		recvBuf = stock;
