@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/09 13:02:58 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 13:57:00 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 # define COMMANDS_HPP
 # include <iostream>
 # include "parser.hpp"
-# include "../Client.hpp"
+# include "Client.hpp"
 # include <sys/socket.h>
-# include "../Server.hpp"
+# include "Server.hpp"
 
 # ifndef	CRLN
 # define CRLN "\r\n"

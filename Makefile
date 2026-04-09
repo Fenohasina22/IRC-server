@@ -7,9 +7,9 @@ SRCS = Channel.cpp \
        Client.cpp \
        main.cpp \
        Server.cpp \
-       mratsima/commands.cpp \
-       mratsima/dispatch.cpp \
-       mratsima/parser.cpp
+       commands.cpp \
+       dispatch.cpp \
+       parser.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 
