@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/09 13:43:32 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 14:14:23 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ void 	tryRegistration(Client &client)
 	if (client.getNickState() && client.getPassState() && client.getUserState())
 	{
 		client.setRegistrationState(true);
-		std::string msg001 = ":server 001 " + client.getNick() + " :Welcome to the IRC " + client.getNick() + CRLN;
-		std::string msg002 = ":server 002 " + client.getNick() + " :Your host is server" + CRLN;
-		std::string msg003 = ":server 003 " + client.getNick() + " :This server was created just now" + CRLN;
-		std::string msg004 = ":server 004 " + client.getNick() + " idk bro put all the infos abt our server" + CRLN;
+		std::string msg001 = ":server 001 " + client.getNick() + " :Welcome to the IRC " + client.getNick() + CRLF;
+		std::string msg002 = ":server 002 " + client.getNick() + " :Your host is server" + CRLF;
+		std::string msg003 = ":server 003 " + client.getNick() + " :This server was created just now" + CRLF;
+		std::string msg004 = ":server 004 " + client.getNick() + " idk bro put all the infos abt our server" + CRLF;
 		// std::string all = msg001 + msg002 + msg003 + msg004;
-		send(client.getFd(), CRLN , 2, 0);
+		send(client.getFd(), CRLF , 2, 0);
 		send(client.getFd(), msg001.c_str(), msg001.size(), 0);
 		send(client.getFd(), msg002.c_str(), msg002.size(), 0);
 		send(client.getFd(), msg003.c_str(), msg003.size(), 0);
@@ -121,9 +121,9 @@ bool	pongCmd(Client &client, iRCMessage &mess)
 	std::string pongstr;
 
 	if (mess.args.empty())
-		pongstr = CRLN;
+		pongstr = CRLF;
 	else
-		pongstr = mess.args[0] + CRLN;
+		pongstr = mess.args[0] + CRLF;
 	send(client.getFd(), pongstr.c_str(), pongstr.size(), 0);
 	return (true);
 }
@@ -142,10 +142,11 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 		return (false);
 	}
 	messageOutput += ":" + sender.getNick();
-	messageOutput += "PRIVMSG ";
+	messageOutput += " PRIVMSG ";
 	messageOutput += destination.getNick() + " ";
 	messageOutput += mess.args[1];
-	messageOutput += CRLN;
+	messageOutput += CRLF;
 	send(destination.getFd(), messageOutput.c_str(), messageOutput.size(), 0);
+	std::cout <<messageOutput<< std::endl;
 	return (true);
 }
