@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/08 15:55:10 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 09:22:41 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,21 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 		return (false);
 	}
 	newNick = mess.args[0];
+
+
+	/*---------------------------------fix this ----------------------------------------------*/
 	for (unsigned int i = 0; i < serv.getAllClients().size(); i++)
 	{
 		if (serv.getAllClients()[i].getNick() == newNick)
 		{
-			sendCodes(client.getFd(), "433", ":server", ":Nickname already taken");
+			if (!client.isRegistered())
+				sendCodes(client.getFd(), "433", ":server", "* " + newNick + " :Nickname is already in use");
+			else
+				sendCodes(client.getFd(), "433", ":server", client.getNick() + " " + newNick + " :Nickname is already in use");
 			return (false);
 		}
 	}
+	/*-------------------------------------------------------------------------------*/
 	std::cout <<"new nick = " << newNick << std::endl;
 	client.setNick(newNick);
 	client.setNickState(true);
@@ -102,6 +109,8 @@ bool	userCmd(Client &client, iRCMessage &mess)
 
 bool	capCmd(Client &client)
 {
+	if (client.isRegistered())
+		return (false);
     send(client.getFd(), ":server CAP * LS :\r\n", 21, 0);
     send(client.getFd(), ":server CAP * END\r\n", 20, 0);
     return (true);
