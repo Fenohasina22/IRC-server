@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:05 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/08 14:55:18 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 14:14:23 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 # include <iostream>
 # include "Client.hpp"
 
-# ifndef	CRLN
-# define CRLN "\r\n"
+# ifndef	CRLF
+# define CRLF "\r\n"
 # endif
 
 

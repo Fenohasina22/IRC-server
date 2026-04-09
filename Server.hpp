@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/09 13:56:13 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 14:14:23 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@
 # include "dispatch.hpp"
 # define	MSG_BUFFERSIZE 1024
 
-# ifndef	CRLN
-# define CRLN "\r\n"
+# ifndef	CRLF
+# define CRLF "\r\n"
 # endif
 
 

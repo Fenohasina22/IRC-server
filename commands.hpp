@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/09 13:57:00 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 14:14:23 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 # include <sys/socket.h>
 # include "Server.hpp"
 
-# ifndef	CRLN
-# define CRLN "\r\n"
+# ifndef	CRLF
+# define CRLF "\r\n"
 # endif
 
 class Server;
