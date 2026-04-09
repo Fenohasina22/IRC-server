@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/08 15:44:12 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 10:25:38 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,14 +99,34 @@ bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 	return (true);
 }
 
-Client &Server::findClient(int fd)
+Client &Server::findClient(int fd, bool	&success)
 {
 	int	clientIndex = -1;
+	success = false;
 
 	for (size_t idx = 0; idx < this->_allClients.size(); ++idx)
 	{
 		if (this->_allClients[idx].getFd() == fd)
 		{
+			success = true;
+			clientIndex = static_cast<int>(idx);
+			return (this->_allClients[clientIndex]);
+		}
+	}
+	return (this->_allClients[clientIndex]);
+	/*maybe do an error return*/
+}
+
+Client &Server::findClient(std::string nick, bool	&success)
+{
+	int	clientIndex = -1;
+	success = false;
+
+	for (size_t idx = 0; idx < this->_allClients.size(); ++idx)
+	{
+		if (this->_allClients[idx].getNick() == nick)
+		{
+			success = true;
 			clientIndex = static_cast<int>(idx);
 			return (this->_allClients[clientIndex]);
 		}
@@ -131,9 +151,15 @@ void	Server::Processmessage (int i)
 	std::cout << buff << std::endl;
 	std::string recvBuf(buff, retval);
 	std::vector<std::string> messages = splitCRLF(recvBuf);
+	bool foundClnt;
 	for (size_t m = 0; m < messages.size(); ++m)
 	{
-		Client &c = this->findClient(this->_vecPoll[i].fd);
+		Client &c = this->findClient(this->_vecPoll[i].fd, foundClnt);
+		if (!foundClnt)
+		{
+			std::cout << "no such client" << std::endl;
+			return ;
+		}
 		parsedMess = parseMessage(messages[m]);
 		if (!c.isRegistered() && parsedMess.cmd != CAP
 			&& parsedMess.cmd != PASS && parsedMess.cmd != NICK && parsedMess.cmd != USER)

@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/09 09:22:41 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 13:43:32 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ bool	capCmd(Client &client)
     return (true);
 }
 
-bool	PongCmd(Client &client, iRCMessage &mess)
+bool	pongCmd(Client &client, iRCMessage &mess)
 {
 	std::string pongstr;
 
@@ -125,5 +125,27 @@ bool	PongCmd(Client &client, iRCMessage &mess)
 	else
 		pongstr = mess.args[0] + CRLN;
 	send(client.getFd(), pongstr.c_str(), pongstr.size(), 0);
+	return (true);
+}
+
+bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
+{
+	/*need to add option to send to channels too*/
+	bool			foundClient 	= false;
+	Client			&destination 	= serv.findClient(mess.args[0], foundClient);
+	const Client 	&sender = client;
+	std::string 	messageOutput;
+	if (!foundClient)
+	{
+		// :<server> 401 <client> <target> :No such nick/channel\r\n
+		sendCodes(client.getFd(), "401", ":server", client.getNick() + " " + mess.args[0] + " :No such nick/channel");
+		return (false);
+	}
+	messageOutput += ":" + sender.getNick();
+	messageOutput += "PRIVMSG ";
+	messageOutput += destination.getNick() + " ";
+	messageOutput += mess.args[1];
+	messageOutput += CRLN;
+	send(destination.getFd(), messageOutput.c_str(), messageOutput.size(), 0);
 	return (true);
 }

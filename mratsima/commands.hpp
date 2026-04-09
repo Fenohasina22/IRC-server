@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/08 15:36:54 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 13:02:58 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ bool	capCmd(Client &client);
 bool	passCmd(Client &client, iRCMessage &mess, Server &serv);
 bool	nickCmd(Client &client, iRCMessage &mess, Server &serv);
 bool	userCmd(Client &client, iRCMessage &mess);
-bool	PongCmd(Client &client, iRCMessage &mess);
+bool	pongCmd(Client &client, iRCMessage &mess);
+bool	privmsgCmd(Client &client, iRCMessage &mess, Server &Serv);
 
 #endif
