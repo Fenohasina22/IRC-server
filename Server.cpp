@@ -6,14 +6,13 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/07 20:45:47 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 13:59:13 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "parser.hpp"
 
-
-/*SERVER*/
 Server::Server()
 {
 }
@@ -40,12 +39,12 @@ void 					Server::setPass(std::string newPass)
 	this->_password = newPass;
 }
 
-int						Server::setPort(int newPort)
+void						Server::setPort(int newPort)
 {
 	this->_port = newPort;
 }
 
-const int						Server::getPort() const
+int						Server::getPort() const
 {
 	return (this->_port);
 }
@@ -62,11 +61,20 @@ sockaddr_in	Server::getSocketstats() const
 
 void	Server::Initialize()
 {
+	int opt;
+
 	this->_addr.sin_family = AF_INET;
-	this->_addr.sin_port = htons(6667);
+	this->_addr.sin_port = htons(this->_port);
 	this->_addr.sin_addr.s_addr = INADDR_ANY;
 	this->_sockfd = socket(AF_INET, SOCK_STREAM, 0); // Creates a socket IPv4, TCP
 	// bind adding info to the socket
+	opt = 1;
+	if (setsockopt(this->_sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
+	{
+		std::cout << "setsockopt error" << std::endl;
+		/*err handling here*/
+		return ;
+	}
 	if (bind(this->_sockfd, (struct sockaddr *)&(this->_addr), sizeof(this->_addr)) == 0)
 		std::cout << "Binding successfull" << std::endl;
 	else
@@ -77,10 +85,10 @@ void	Server::Initialize()
 		std::cout << "Listen failed" << std::endl;
 }
 
-bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize, int i)
+bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 {
-	struct pollfd tmp;
-	Client	client;
+	struct pollfd	tmp;
+	Client			client;
 
 	tmp.fd = accept(this->_sockfd, (sockaddr *)&clientinfo, &csize);
 	tmp.events = POLLIN;
@@ -91,11 +99,48 @@ bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize, int i)
 	return (true);
 }
 
+Client &Server::findClient(int fd, bool	&success)
+{
+	int	clientIndex = -1;
+	success = false;
+
+	for (size_t idx = 0; idx < this->_allClients.size(); ++idx)
+	{
+		if (this->_allClients[idx].getFd() == fd)
+		{
+			success = true;
+			clientIndex = static_cast<int>(idx);
+			return (this->_allClients[clientIndex]);
+		}
+	}
+	return (this->_allClients[clientIndex]);
+	/*maybe do an error return*/
+}
+
+Client &Server::findClient(std::string nick, bool	&success)
+{
+	int	clientIndex = -1;
+	success = false;
+
+	for (size_t idx = 0; idx < this->_allClients.size(); ++idx)
+	{
+		if (this->_allClients[idx].getNick() == nick)
+		{
+			success = true;
+			clientIndex = static_cast<int>(idx);
+			return (this->_allClients[clientIndex]);
+		}
+	}
+	return (this->_allClients[clientIndex]);
+	/*maybe do an error return*/
+}
+
 void	Server::Processmessage (int i)
 {
-	char				buff[MSG_BUFFERSIZE + 1];
-	int					retval;
-	iRCMessage			parsedMess;
+	char						buff[MSG_BUFFERSIZE + 1];
+	int							retval;
+	iRCMessage					parsedMess;
+	std::vector<std::string> 	allMess;
 
 	memset (buff, 0, MSG_BUFFERSIZE);
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
@@ -104,23 +149,33 @@ void	Server::Processmessage (int i)
 		std::cout << "Recv error" << std::endl;
 	}
 	std::cout << buff << std::endl;
-	parsedMess = parseMessage(buff);
-	if (!this->getAllClients()[i].isRegistered()
-		&& parsedMess.command != PASS && parsedMess.command != NICK && parsedMess.command != USER)
+	std::string recvBuf(buff, retval);
+	std::vector<std::string> messages = splitCRLF(recvBuf);
+	bool foundClnt;
+	for (size_t m = 0; m < messages.size(); ++m)
 	{
-		send(this->getAllClients()[i].getFd(), ":server 451 :user not registered yet\r\n", 39, 0);
-		return;
+		Client &c = this->findClient(this->_vecPoll[i].fd, foundClnt);
+		if (!foundClnt)
+		{
+			std::cout << "no such client" << std::endl;
+			return ;
+		}
+		parsedMess = parseMessage(messages[m]);
+		if (!c.isRegistered() && parsedMess.cmd != CAP
+			&& parsedMess.cmd != PASS && parsedMess.cmd != NICK && parsedMess.cmd != USER)
+		{
+			sendCodes(c.getFd(), "451", ":server", ":user not registered yet");
+			continue;
+		}
+		dispatchCommand(parsedMess, c, *this);
 	}
-	dispatchCommand(parsedMess, this->getAllClients()[i], *this);
 }
 
 std::string		BufferCleaning(char *buff)
 {
 	std::string	result;
+	int			i = 0;
 
-	int	i;
-
-	i = 0;
 	while (buff[i + 1])
 	{
 		result += buff[i];

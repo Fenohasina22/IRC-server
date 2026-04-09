@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:01:25 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 18:49:09 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/08 09:12:45 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,42 +32,42 @@ Client::~Client()
 {
 }
 
-const int 			Client::getFd() const
+int 			Client::getFd() const
 {
 	return (this->fd);
 }
 
-const std::string	Client::getNick() const
+std::string	Client::getNick() const
 {
 	return (this->nickname);
 }
 
-const std::string	Client::getUser() const
+std::string	Client::getUser() const
 {
 	return (this->username);
 }
 
-const std::string	Client::getReal() const
+std::string	Client::getReal() const
 {
 	return (this->realname);
 }
 
-const bool			Client::getNickState() const
+bool			Client::getNickState() const
 {
 	return (this->isNickOk);
 }
 
-const bool			Client::getUserState() const
+bool			Client::getUserState() const
 {
 	return (this->isUserOk);
 }
 
-const bool			Client::getPassState() const
+bool			Client::getPassState() const
 {
 	return (this->isPassOk);
 }
 
-const bool			Client::isRegistered() const
+bool			Client::isRegistered() const
 {
 	return (this->userIsRegistered);
 }

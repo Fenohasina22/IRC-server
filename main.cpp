@@ -6,13 +6,13 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 19:31:21 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 13:56:01 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include "mratsima/dispatch.hpp"
-#include "mratsima/parser.hpp"
+#include "dispatch.hpp"
+#include "parser.hpp"
 
 bool	getParams(char **argv, Server &serv)
 {
@@ -47,7 +47,6 @@ int main(int argc, char **argv)
 		return (1);
 	c_size = sizeof(sockaddr_in);
 	server.Initialize();
-
 	sock.events = POLLIN;
 	sock.fd =  server.getSockfd();
 	std::vector<pollfd>&	vecpol = server.getVecPoll();
@@ -61,11 +60,11 @@ int main(int argc, char **argv)
 			std::cout << "error: poll"<< std::endl;
 			return (0);
 		}
-		for (int i = 0; i < vecpol.size(); i++)
+		for (unsigned int i = 0; i < vecpol.size(); i++)
 		{
 			if (vecpol[i].fd == server.getSockfd() && (vecpol[i].revents & POLLIN))
 			{
-				server.NewUserHandling(clientinfo, c_size, i);
+				server.NewUserHandling(clientinfo, c_size);
 			}
 			else if (vecpol[i].revents & POLLIN)
 			{

@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:40 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 16:48:31 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 13:50:46 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,18 @@
 # include <string>
 # include <algorithm>
 
+//commands number
+# ifndef COM_NUM
+#  define COM_NUM 12
+# endif
+
+# ifndef	CRLN
+# define CRLN "\r\n"
+# endif
+
+
+
+
 //KICK - Eject a client from the channel
 //TOPIC - Change or view the channel topic
 //MODE - Change the channel’s mode:
@@ -27,9 +39,11 @@
 //TOPIC	View or set channel topic — only ops can set if mode +t
 typedef enum	command
 {
+	CAP     ,
 	PASS	,
 	NICK	,
 	USER	,
+	PING	,
 	KICK	,
 	TOPIC	,
 	MODE	,
@@ -43,7 +57,7 @@ typedef enum	command
 struct iRCMessage
 {
 	std::string 				prefix;
-	command						command;
+	command						cmd;
 	std::vector<std::string>	args;
 	std::string 				CRLF;
 	size_t						len;
@@ -51,8 +65,10 @@ struct iRCMessage
 };
 
 
-iRCMessage	parseMessage(const std::string &strMess);
-bool		isMessValid(const iRCMessage &mess);
+iRCMessage					parseMessage(const std::string &strMess);
+bool						isMessValid(const iRCMessage &mess);
+std::vector<std::string>	split(const std::string& str, char delimiter);
+std::vector<std::string>	splitCRLF(const std::string& str);
 
 
 #endif

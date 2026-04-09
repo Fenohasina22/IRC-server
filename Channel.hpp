@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:05 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 16:34:25 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/08 14:55:18 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,15 @@
 # define CHANNEL_HPP
 # include <iostream>
 # include "Client.hpp"
+
+# ifndef	CRLN
+# define CRLN "\r\n"
+# endif
+
+
+
+
+class Client;
 
 class Channel
 {

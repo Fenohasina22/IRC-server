@@ -10,7 +10,7 @@ Second because every command handler calls it. Build it, test it with raw string
 
 ---
 
-- [ ] **3. Registration flow — PASS, NICK, USER, welcome sequence**
+- [x] **3. Registration flow — PASS, NICK, USER, welcome sequence**
 
 Third because every other command requires a registered client. Get irssi to successfully connect to your server and see the welcome message before writing any other command. This is your first major milestone — **irssi connects and shows you as online**.
 

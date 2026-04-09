@@ -6,24 +6,31 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/07 19:31:08 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 13:56:13 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef	SERVER_HPP
-#define SERVER_HPP
+# define SERVER_HPP
 
-#include <iostream>
-#include <poll.h> // pour poll
-#include <sys/socket.h> // pour socket , bind , etc
-#include <netinet/in.h>
-#include <unistd.h>
-#include <vector>
-#include "Client.hpp"
-#include <cstring>
-#include <errno.h>
-#include "mratsima/dispatch.hpp"
-#define	MSG_BUFFERSIZE 1024
+# include <iostream>
+# include <poll.h> // pour poll
+# include <sys/socket.h> // pour socket , bind , etc
+# include <netinet/in.h>
+# include <unistd.h>
+# include <vector>
+# include "Client.hpp"
+# include <cstring>
+# include <errno.h>
+# include "dispatch.hpp"
+# define	MSG_BUFFERSIZE 1024
+
+# ifndef	CRLN
+# define CRLN "\r\n"
+# endif
+
+
+
 
 class Server
 {
@@ -43,13 +50,15 @@ class Server
 		std::vector<pollfd>&	getVecPoll();
 		int						getSockfd() const;
 		sockaddr_in				getSocketstats() const;
-		const int				getPort() const;
+		int						getPort() const;
 		const std::string		getPass() const;
 		void					Initialize();
 		void 					setPass(std::string newPass);
-		int						setPort(int newPort);
+		void					setPort(int newPort);
 		std::vector<Client>&	getAllClients();
-		bool					NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize, int i);
+		Client 					&findClient(int fd, bool &success);
+		Client 					&findClient(std::string nick, bool &success);
+		bool					NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize);
 		void					Processmessage (int i);
 };
 
