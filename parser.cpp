@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/08 14:31:51 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 14:18:05 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	getCommand(const std::vector<std::string> &splitMess, iRCMessage &parsedMes
 		return ;
 	std::string strCommand = splitMess[index];
 	index ++;
-	std::string tab[COM_NUM] = {"CAP", "PASS", "NICK", "USER","KICK"
+	std::string tab[COM_NUM] = {"CAP", "PASS", "NICK", "USER", "PING", "KICK"
 		, "TOPIC", "MODE", "JOIN", "PART" , "PRIVMSG", "QUIT"};
 	for (int i = 0; i < COM_NUM; i++)
 		types.push_back(tab[i]);
@@ -96,7 +96,7 @@ void	getCRLF(const std::vector<std::string> &splitMess, iRCMessage &parsedMess)
 {
 	if (splitMess.empty())
 		return ;
-	parsedMess.CRLF = splitMess.back();
+	parsedMess.crlf = splitMess.back();
 }
 
 iRCMessage parseMessage(const std::string &strMess)
@@ -119,15 +119,15 @@ iRCMessage parseMessage(const std::string &strMess)
 
 bool	isMessValid(const iRCMessage &mess)
 {
-	if (mess.CRLF != "/r/n")
+	if (mess.crlf != "/r/n")
 		return (false);
 	if (mess.len == 0)
 		return (false);
-	if (mess.args.empty() && mess.cmd == UNKNOWN && mess.CRLF.empty())
+	if (mess.args.empty() && mess.cmd == UNKNOWN && mess.crlf.empty())
 		return (false);
 	if (mess.cmd == UNKNOWN)
 		return (false);
-	if (std::count(mess.args.back().begin(), mess.args.back().end(), ':') > 1)
+	if (std::count(mess.args.back().begin() + 1, mess.args.back().end(), ':') > 1)
 		return (false);
 	if (std::count(mess.ogMess.begin(), mess.ogMess.end(), '\r') > 1
 		|| std::count(mess.ogMess.begin(), mess.ogMess.end(), '\n') > 1)

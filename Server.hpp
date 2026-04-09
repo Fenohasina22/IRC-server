@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/08 14:55:54 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 14:14:23 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@
 # include "Client.hpp"
 # include <cstring>
 # include <errno.h>
-# include "mratsima/dispatch.hpp"
+# include "dispatch.hpp"
 # define	MSG_BUFFERSIZE 1024
 
-# ifndef	CRLN
-# define CRLN "\r\n"
+# ifndef	CRLF
+# define CRLF "\r\n"
 # endif
 
 
@@ -56,7 +56,8 @@ class Server
 		void 					setPass(std::string newPass);
 		void					setPort(int newPort);
 		std::vector<Client>&	getAllClients();
-		Client 					&findClient(int fd);
+		Client 					&findClient(int fd, bool &success);
+		Client 					&findClient(std::string nick, bool &success);
 		bool					NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize);
 		void					Processmessage (int i);
 };

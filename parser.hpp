@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:40 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/08 15:42:31 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 14:18:24 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 #  define COM_NUM 12
 # endif
 
-# ifndef	CRLN
-# define CRLN "\r\n"
+# ifndef	CRLF
+# define CRLF "\r\n"
 # endif
 
 
@@ -59,7 +59,7 @@ struct iRCMessage
 	std::string 				prefix;
 	command						cmd;
 	std::vector<std::string>	args;
-	std::string 				CRLF;
+	std::string 				crlf;
 	size_t						len;
 	std::string					ogMess;
 };

@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:56:54 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/08 15:14:13 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 14:14:23 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 # include <iostream>
 # include "parser.hpp"
 # include "commands.hpp"
-# include "../Server.hpp"
-# ifndef	CRLN
-# define CRLN "\r\n"
+# include "Server.hpp"
+# ifndef	CRLF
+# define CRLF "\r\n"
 # endif
 
 class Server ;

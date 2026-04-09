@@ -6,13 +6,13 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/08 14:08:50 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 13:56:01 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include "mratsima/dispatch.hpp"
-#include "mratsima/parser.hpp"
+#include "dispatch.hpp"
+#include "parser.hpp"
 
 bool	getParams(char **argv, Server &serv)
 {
