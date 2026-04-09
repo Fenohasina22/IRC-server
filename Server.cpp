@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/08 15:44:12 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 10:46:35 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,12 +115,27 @@ Client &Server::findClient(int fd)
 	/*maybe do an error return*/
 }
 
+bool		HasCRLF(char*	str)
+{
+	std::string		tmp;
+	size_t			ret;
+
+	tmp = str;
+	ret = tmp.find("\r\n");
+	if (ret != std::string::npos)
+	{
+		std::cout << "This str has CRLF" << std::endl;
+		return (1);
+	}
+	return (0);
+}
 void	Server::Processmessage (int i)
 {
 	char						buff[MSG_BUFFERSIZE + 1];
 	int							retval;
 	iRCMessage					parsedMess;
 	std::vector<std::string> 	allMess;
+	static	std::string			stock;
 
 	memset (buff, 0, MSG_BUFFERSIZE);
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
@@ -128,20 +143,39 @@ void	Server::Processmessage (int i)
 	{
 		std::cout << "Recv error" << std::endl;
 	}
-	std::cout << buff << std::endl;
-	std::string recvBuf(buff, retval);
-	std::vector<std::string> messages = splitCRLF(recvBuf);
-	for (size_t m = 0; m < messages.size(); ++m)
+	std::cout << "Buff = " << buff << std::endl;
+	
+
+	if (!HasCRLF(buff))
 	{
-		Client &c = this->findClient(this->_vecPoll[i].fd);
-		parsedMess = parseMessage(messages[m]);
-		if (!c.isRegistered() && parsedMess.cmd != CAP
-			&& parsedMess.cmd != PASS && parsedMess.cmd != NICK && parsedMess.cmd != USER)
+		std::cout << "Command incomplete ,needs CRLF" << std::endl;
+		stock += buff;
+	}
+	else
+	{
+		std::cout << "Processing complete command" << std::endl;
+		std::string recvBuf;
+		recvBuf = stock;
+		std::vector<std::string> messages = splitCRLF(recvBuf);
+		for (size_t m = 0; m < messages.size(); ++m)
 		{
-			sendCodes(c.getFd(), "451", ":server", ":user not registered yet");
-			continue;
+			Client &c = this->findClient(this->_vecPoll[i].fd);
+			parsedMess = parseMessage(messages[m]);
+			if (!c.isRegistered() && parsedMess.cmd != CAP
+				&& parsedMess.cmd != PASS && parsedMess.cmd != NICK && parsedMess.cmd != USER)
+			{
+				sendCodes(c.getFd(), "451", ":server", ":user not registered yet");
+				continue;
+			}
+			dispatchCommand(parsedMess, c, *this);
 		}
-		dispatchCommand(parsedMess, c, *this);
+		size_t		pos;
+
+		pos = stock.rfind("\r\n");
+		if (pos != std::string::npos)
+		{
+			stock = &recvBuf[i + 2];
+		}
 	}
 }
 
