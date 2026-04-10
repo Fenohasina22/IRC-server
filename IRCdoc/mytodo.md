@@ -22,13 +22,13 @@ Do this right after registration, not at the end. You'll be connecting and disco
 
 ---
 
-- [ ] **5. Command dispatcher**
+- [/] **5. Command dispatcher**
 
 Now that you have a parser and at least PASS/NICK/USER/QUIT working, build the full dispatcher. Add all the command strings, route to stub functions that just print "command received" for now. This gives you the skeleton everything else plugs into.
 
 ---
 
-- [ ] **6. Message delivery — PRIVMSG, NOTICE, broadcast**
+- [/] **6. Message delivery — PRIVMSG, NOTICE, broadcast**
 
 Before channels, do direct user-to-user PRIVMSG. It's simpler — no channel lookup, just find the target nick and send. Then build broadcast which channels will rely on heavily.
 

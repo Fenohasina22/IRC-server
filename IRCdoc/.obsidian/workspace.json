@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "RFC 1459 — What matters for your server.md",
-                "mode": "preview",
+                "file": "mytodo.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "RFC 1459 — What matters for your server"
+              "title": "mytodo"
             }
           }
         ]
@@ -185,10 +185,10 @@
   },
   "active": "a199c44215756fc0",
   "lastOpenFiles": [
+    "RFC 1459 — What matters for your server.md",
     "InitialIRCFamiliarisation.md",
     "InitialBuildPlan.md",
     "mytodo.md",
-    "RFC 1459 — What matters for your server.md",
     "main.cpp",
     "Functions.md",
     "pollAndEquivalent.md",
