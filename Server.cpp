@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/09 14:21:30 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/10 10:02:20 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,23 +159,25 @@ void	Server::Processmessage (int i)
 
 	memset (buff, 0, MSG_BUFFERSIZE);
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
-	if (retval == -1)
+	if (retval == -1 || retval == 0)
 	{
 		std::cout << "Recv error" << std::endl;
+		/*disconnect*/
 	}
-	std::cout << "Buff = " << buff << std::endl;
 	
-
+	std::cout << GREEN << "Current Buffer = " << buff << std::endl;
 	if (!HasCRLF(buff))
 	{
 		std::cout << "Command incomplete ,needs CRLF" << std::endl;
 		stock += buff;
+		std::cout << RED << "stack = " << stock << RESET << std::endl;
+		std::cout << "-------------------------- get the next buffer  -------------------------" << std::endl;
 		return ;
 	}
 	else
 	{
 		stock = buff;
-		std::cout << "Processing complete command" << std::endl;
+		//std::cout << "Processing complete command" << std::endl;
 		std::string recvBuf;
 		recvBuf = stock;
 		std::vector<std::string> messages = splitCRLF(recvBuf);
@@ -197,13 +199,20 @@ void	Server::Processmessage (int i)
 			}
 			dispatchCommand(parsedMess, c, *this);
 		}
+		std::cout << BLUE << std::endl;
+		std::cout << " == Processing the current command == " << std::endl;
+		std::cout  <<"Current command = " << stock  << std::endl;
+		std::cout << RESET << std::endl;
 		size_t		pos;
 
 		pos = stock.rfind("\r\n");
 		if (pos != std::string::npos)
 		{
-			stock = &recvBuf[i + 2];
+			stock = &recvBuf[pos + 2];
 		}
+		std::cout << "-----------------------------------------------" << std::endl;
+		std::cout << GREEN << " Updated " << stock << RESET << std::endl;
+		std::cout << "-----------------------------------------------" << std::endl;
 	}
 }
 

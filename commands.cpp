@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/09 14:14:23 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/09 15:02:52 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,9 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 		sendCodes(client.getFd(), "401", ":server", client.getNick() + " " + mess.args[0] + " :No such nick/channel");
 		return (false);
 	}
+	/*
+	: <nick> PRIVMSG <dnick> <message> CRLF
+	*/
 	messageOutput += ":" + sender.getNick();
 	messageOutput += " PRIVMSG ";
 	messageOutput += destination.getNick() + " ";
