@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/09 15:02:52 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/10 14:59:33 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,6 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 	messageOutput += mess.args[1];
 	messageOutput += CRLF;
 	send(destination.getFd(), messageOutput.c_str(), messageOutput.size(), 0);
-	std::cout <<messageOutput<< std::endl;
+	std::cout << messageOutput << std::endl;
 	return (true);
 }

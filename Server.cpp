@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/10 10:10:29 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/10 15:09:39 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,6 @@ bool		HasCRLF(char*	str)
 	ret = tmp.find("\r\n");
 	if (ret != std::string::npos)
 	{
-		std::cout << "This str has CRLF" << std::endl;
 		return (1);
 	}
 	return (0);
@@ -165,13 +164,9 @@ void	Server::Processmessage (int i)
 		/*disconnect*/
 	}
 	
-	std::cout << GREEN << "Current Buffer = " << buff << std::endl;
 	if (!HasCRLF(buff))
 	{
-		std::cout << "Command incomplete ,needs CRLF" << std::endl;
 		stock += buff;
-		std::cout << RED << "stack = " << stock << RESET << std::endl;
-		std::cout << "-------------------------- get the next buffer  -------------------------" << std::endl;
 		return ;
 	}
 	else
@@ -210,9 +205,6 @@ void	Server::Processmessage (int i)
 		{
 			stock = &recvBuf[pos + 2];
 		}
-		std::cout << "-----------------------------------------------" << std::endl;
-		std::cout << GREEN << " Updated " << stock << RESET << std::endl;
-		std::cout << "-----------------------------------------------" << std::endl;
 	}
 }
 
