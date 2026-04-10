@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/09 15:02:52 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/10 14:06:16 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,14 +128,29 @@ bool	pongCmd(Client &client, iRCMessage &mess)
 	return (true);
 }
 
+std::string	formMess(const Client	&sender,const Client &destCli,const iRCMessage &mess)
+{
+	std::string 	messageOutput;
+
+	messageOutput += ":" + sender.getNick();
+	messageOutput += " PRIVMSG ";
+	messageOutput += destCli.getNick() + " ";
+	messageOutput += mess.args[1];
+	messageOutput += CRLF;
+	return (messageOutput);
+}
+
 bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 {
 	/*need to add option to send to channels too*/
 	bool			foundClient 	= false;
-	Client			&destination 	= serv.findClient(mess.args[0], foundClient);
-	const Client 	&sender = client;
+	bool			foundChan	 	= false;
+	Client			&destCli	 	= serv.findClient(mess.args[0], foundClient);
+	Channel			&destChan		= serv.findChan(mess.args[0], foundChan);
+	const Client 	&sender 		= client;
 	std::string 	messageOutput;
-	if (!foundClient)
+
+	if (!foundClient && !foundChan)
 	{
 		// :<server> 401 <client> <target> :No such nick/channel\r\n
 		sendCodes(client.getFd(), "401", ":server", client.getNick() + " " + mess.args[0] + " :No such nick/channel");
@@ -144,12 +159,20 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 	/*
 	: <nick> PRIVMSG <dnick> <message> CRLF
 	*/
-	messageOutput += ":" + sender.getNick();
-	messageOutput += " PRIVMSG ";
-	messageOutput += destination.getNick() + " ";
-	messageOutput += mess.args[1];
-	messageOutput += CRLF;
-	send(destination.getFd(), messageOutput.c_str(), messageOutput.size(), 0);
+	if (foundClient)
+	{
+		messageOutput = formMess(sender, destCli, mess);
+		send(destCli.getFd(), messageOutput.c_str(), messageOutput.size(), 0);
+	}
+	else
+	{
+		std::set<Client *> members = destChan.getMembers();
+		for (std::set<Client*>::iterator it = members.begin(); it != members.end(); ++it)
+		{
+			messageOutput = formMess(sender, **it, mess);
+			send((**it).getFd(), messageOutput.c_str(), messageOutput.size(), 0);
+		}
+	}
 	std::cout <<messageOutput<< std::endl;
 	return (true);
 }

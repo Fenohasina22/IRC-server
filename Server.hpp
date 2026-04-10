@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/10 10:05:34 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/10 13:33:33 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ class Server
 		int						_sockfd;
 		std::vector<pollfd>		_vecPoll;
 		std::vector<Client>  	_allClients;
+		std::vector<Channel>	_allChannels;
 		std::string				_password;
 		int						_port;
 
@@ -66,8 +67,10 @@ class Server
 		std::vector<Client>&	getAllClients();
 		Client 					&findClient(int fd, bool &success);
 		Client 					&findClient(std::string nick, bool &success);
+		Channel 				&findChan(std::string name, bool &success);
 		bool					NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize);
 		void					Processmessage (int i);
+		void					broadcast(std::string &mess, const Client &caster, const Channel &chan);
 };
 
 std::string		BufferCleaning(char *buff);

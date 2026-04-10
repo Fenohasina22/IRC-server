@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/10 10:10:29 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/10 13:49:31 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,22 @@ Client &Server::findClient(std::string nick, bool	&success)
 		}
 	}
 	return (this->_allClients[clientIndex]);
-	/*maybe do an error return*/
+}
+Channel &Server::findChan(std::string name, bool &success)
+{
+	int		chanIndex 	= -1;
+	bool	success 	= false;
+
+	for (size_t idx = 0; idx < this->_allChannels.size(); ++idx)
+	{
+		if (this->_allChannels[idx].getName() == name)
+		{
+			success = true;
+			chanIndex = static_cast<int>(idx);
+			return (this->_allChannels[chanIndex]);
+		}
+	}
+	return (this->_allChannels[chanIndex]);
 }
 
 bool		HasCRLF(char*	str)
@@ -164,7 +179,7 @@ void	Server::Processmessage (int i)
 		std::cout << "Recv error" << std::endl;
 		/*disconnect*/
 	}
-	
+
 	std::cout << GREEN << "Current Buffer = " << buff << std::endl;
 	if (!HasCRLF(buff))
 	{
@@ -216,6 +231,17 @@ void	Server::Processmessage (int i)
 	}
 }
 
+void	Server::broadcast(std::string &mess, const Client &caster, const Channel &chan)
+{
+	std::set<Client*> members = chan.getMembers();
+
+	for (std::set<Client*>::iterator it = members.begin(); it != members.end(); ++it)
+	{
+		if (*it && (*it)->getFd() != caster.getFd())
+			send((*it)->getFd(), mess.c_str(), mess.length(), 0);
+	}
+}
+
 std::string		BufferCleaning(char *buff)
 {
 	std::string	result;
@@ -233,4 +259,5 @@ std::string		BufferCleaning(char *buff)
 	}
 	return (result);
 }
+
 
