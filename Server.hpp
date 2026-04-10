@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/10 09:53:11 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/10 10:05:34 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <errno.h>
 # include "dispatch.hpp"
 #include <signal.h>
-# define	MSG_BUFFERSIZE 1024
+# define	MSG_BUFFERSIZE 10
 
 # ifndef	CRLF
 # define CRLF "\r\n"

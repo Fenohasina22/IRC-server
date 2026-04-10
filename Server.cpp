@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/10 10:02:20 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/10 10:10:29 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ void	Server::Processmessage (int i)
 	}
 	else
 	{
-		stock = buff;
+		stock += buff;
 		//std::cout << "Processing complete command" << std::endl;
 		std::string recvBuf;
 		recvBuf = stock;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dispatch.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/09 14:14:23 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/10 10:07:47 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 			break;
 		default:
 			//HANDLE AS UNKNOWN COMMAND 421
+			std::cout << RED << "UNKNOWN COMMAND" << RESET << std::endl;
 			break;
 	}
 }
