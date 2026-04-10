@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/10 13:33:33 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/10 15:21:17 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ class Server
 		void					Initialize();
 		void 					setPass(std::string newPass);
 		void					setPort(int newPort);
-		std::vector<Client>&	getAllClients();
+		std::vector<Client>		&getAllClients();
+		std::vector<Channel>	&getAllChans();
 		Client 					&findClient(int fd, bool &success);
 		Client 					&findClient(std::string nick, bool &success);
 		Channel 				&findChan(std::string name, bool &success);

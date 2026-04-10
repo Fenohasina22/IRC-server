@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/10 13:49:31 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/10 15:22:15 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,12 @@ std::vector<Client>& Server::getAllClients()
 {
 	return (this->_allClients);
 }
+
+std::vector<Channel>& Server::getAllChans()
+{
+	return (this->_allChannels);
+}
+
 int			Server::getSockfd() const
 {
 	return (this->_sockfd);
@@ -138,6 +144,8 @@ Channel &Server::findChan(std::string name, bool &success)
 	int		chanIndex 	= -1;
 	bool	success 	= false;
 
+	if (this->_allChannels.empty())
+		return (this->_allChannels[chanIndex]);
 	for (size_t idx = 0; idx < this->_allChannels.size(); ++idx)
 	{
 		if (this->_allChannels[idx].getName() == name)

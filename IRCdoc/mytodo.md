@@ -28,7 +28,7 @@ Now that you have a parser and at least PASS/NICK/USER/QUIT working, build the f
 
 ---
 
-- [/] **6. Message delivery — PRIVMSG, NOTICE, broadcast**
+- [x] **6. Message delivery — PRIVMSG, NOTICE, broadcast**
 
 Before channels, do direct user-to-user PRIVMSG. It's simpler — no channel lookup, just find the target nick and send. Then build broadcast which channels will rely on heavily.
 
@@ -58,7 +58,11 @@ You'll have been adding these as you go. At this point do a full pass — check 
 Last because it's the most complex and the least critical for basic functionality. Start with the modes you actually need — `+o` (operator), `+t` (topic lock), `+k` (channel key), `+i` (invite only). Leave the rest for after everything else works.
 
 ---
+- [ ] **10. Handle multi-args /join and /privmsg 
 
+like join a,b,c or msg a,b,c
+
+--------------------------------------
 **In short:**
 
 ```

@@ -6,13 +6,23 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:09 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/10 13:09:59 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/10 15:31:13 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 
 Channel::Channel()
+: name("")
+, topic("")
+, members()
+, ops()
+{
+}
+
+Channel::Channel(std::string n, std::string t)
+: name(n)
+, topic(t)
 {
 }
 
