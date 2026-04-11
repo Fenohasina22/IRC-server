@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dispatch.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 17:39:13 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 19:20:53 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 	switch (mess.cmd)
 	{
 		case (CAP):
-			capCmd(client); // concatenated 
+			capCmd(client); // concatenated
 			break ;
 		case (PASS):
 			passCmd(client, mess, serv); // concatenated
@@ -36,7 +36,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 			userCmd(client, mess); // concatenated
 			break;
 		case (PING):
-			pongCmd(client, mess); // concatenated 
+			pongCmd(client, mess); // concatenated
 			break;
 		case (KICK):
 			//KICK command handler;
@@ -51,7 +51,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 			joinCmd(client, mess, serv);
 			break;
 		case (PART):
-			//PART command handler
+			partCmd(client, mess, serv);
 			break;
 		case (PRIVMSG):
 			privmsgCmd(client, mess, serv); // concatenated

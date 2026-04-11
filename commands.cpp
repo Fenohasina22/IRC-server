@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 19:08:37 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 19:23:42 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,11 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 	bool		foundChan = false;
 	std::string broadcastMess;
 
+	if (mess.args.empty())
+	{
+		client.ConcatenateWBuffer(FormatedMessage("461", ":server", "* JOIN :Not enough parameters"));
+		return (false);
+	}
 	if (!chanExists(mess.args[0], serv))
 	{
 		if (mess.args[0][0] != '#')
@@ -219,4 +224,9 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 	//4-send channel state (topic+userlist)
 	sendChannelState(client, *destChan);
 	return (true);
+}
+
+bool	partCmd(Client &client, iRCMessage &mess, Server &serv)
+{
+
 }
