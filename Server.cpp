@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/11 18:01:13 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 19:22:42 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,7 +217,8 @@ void	Server::Processmessage (int i)
 	bool a;
 	Client& cl = this->findClient(this->_vecPoll[i].fd, a);
 
-	if (!HasCRLF(cl.getReadBuffer()))
+	//cl.setReadBuffer(buff);
+	if (!HasCRLF(buff))
 	{
 		cl.ConcatenateRBuffer(buff);
 		return ;
@@ -241,7 +242,7 @@ void	Server::Processmessage (int i)
 		parsedMess = parseMessage(messages[m]);
 		dispatchCommand(parsedMess, c, *this);
 	}
-	std::cout << BLUE << recvBuf << RESET << std::endl;
+	std::cout << BLUE << "Processed = " << recvBuf << RESET << std::endl;
 	size_t		pos;
 	pos = cl.getReadBuffer().rfind("\r\n");
 	if (pos != std::string::npos)
@@ -261,7 +262,6 @@ void	Server::broadcast(std::string &mess, const Client &caster, const Channel &c
 		Client &cl = this->findClient(*it, found);
 		if (found && cl.getFd() != caster.getFd())
 		{
-			//send(cl.getFd(), mess.c_str(), mess.length(), 0);
 			cl.ConcatenateWBuffer(mess);
 		}
 	}
