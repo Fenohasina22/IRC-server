@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 13:16:47 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 14:22:07 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 	struct pollfd		sock; // for initialization of the first element of vecpol
 	socklen_t			c_size;
 	Server				server;
-	Client				c;
+	//Client				c;
 
 	if (!getParams(argv, server))
 		return (1);
@@ -69,18 +69,17 @@ int main(int argc, char **argv)
 			}
 			else if (vecpol[i].revents & POLLIN)
 			{
-				server.Processmessage(c, i);
+				server.Processmessage(i);
 			}
 			if (vecpol[i].revents & POLLOUT)
 			{
+				bool success;
 				/* Send message */
+				Client &c = server.findClient(vecpol[i].fd,success);
 				send(vecpol[i].fd, c.getWriteBuffer().c_str(), c.getWriteBuffer().size(), 0);
 				/*Disable POLLOUT*/
-				//std::cout << RED << "CLOSE POLLOUT" << std::endl;
+				c.setWriteBuffer("");
 				vecpol[i].events &= ~POLLOUT;
-				//std::cout << "--------------------" << std::endl;
-				//std::cout << RED << c.getWriteBuffer() << RESET << std::endl;
-				//std::cout << "--------------------" << std::endl;
 			}
 		}
 	}

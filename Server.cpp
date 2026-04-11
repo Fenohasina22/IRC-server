@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/11 13:16:09 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 14:25:43 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ bool		HasCRLF(char*	str)
 	}
 	return (0);
 }
-void	Server::Processmessage (Client &c, int i)
+void	Server::Processmessage (int i)
 {
 	char						buff[MSG_BUFFERSIZE + 1];
 	int							retval;
@@ -185,7 +185,7 @@ void	Server::Processmessage (Client &c, int i)
 		bool foundClnt;
 		for (size_t m = 0; m < messages.size(); ++m)
 		{
-			c = this->findClient(this->_vecPoll[i].fd, foundClnt);
+			Client& c = this->findClient(this->_vecPoll[i].fd, foundClnt);
 			if (!foundClnt)
 			{
 				std::cout << "no such client" << std::endl;
@@ -214,11 +214,11 @@ void	Server::Processmessage (Client &c, int i)
 			stock = &recvBuf[pos + 2];
 		}
 		/*activate POLLOUt*/
-		if (!c.getWriteBuffer().empty())
-		{
+		//if (!c.getWriteBuffer().empty())
+		//{
 			//std::cout << GREEN << "ACTIVATE POLLOUT" << std::endl;
 			this->_vecPoll[i].events |= POLLOUT;
-		}
+		//}
 		//std::cout << YELLOW << " == Message to be send == \n" << c.getWriteBuffer() << RESET << std::endl;
 	}
 }
