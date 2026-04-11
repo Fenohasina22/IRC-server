@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 18:40:52 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 19:08:37 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,12 +173,10 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 }
 
 //add these:
-// 403 nick #channel :No such channel
 // 473 nick #channel :Cannot join channel (+i)
 // 471 nick #channel :Cannot join channel (+l)
 // 475 nick #channel :Cannot join channel (+k)
 // 474 nick #channel :Cannot join channel (+b)
-// 443 nick #channel :is already on channel ??? does irssi need this?
 bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 {
 	Channel 	*destChan;
@@ -187,6 +185,11 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 
 	if (!chanExists(mess.args[0], serv))
 	{
+		if (mess.args[0][0] != '#')
+		{
+			client.ConcatenateWBuffer(FormatedMessage("403", ":server", client.getNick() + " " + mess.args[0] + " :No such channel"));
+			return (false);
+		}
 		serv.getAllChans().push_back(Channel(mess.args[0], ""));
 		destChan = &(serv.getAllChans().back());
 	}
@@ -196,7 +199,10 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 	//if allowed
 	//1-adduser to channel;
 	if (client.isInChannel(mess.args[0]))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("443", ":server", client.getNick() + " " + mess.args[0] + " :is already on channel"));
 		return (false);
+	}
 	destChan->addClient(&client);
 	//2-if 1st user make user operator
 	if (destChan->getMembers().size() == 1)
@@ -210,7 +216,7 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 	// send(client.getFd(), broadcastMess.c_str(), broadcastMess.size(), 0);
 	client.ConcatenateWBuffer(broadcastMess);
 	serv.broadcast(broadcastMess, client, *destChan);
-	//4-send channel stae (topic+userlist)
+	//4-send channel state (topic+userlist)
 	sendChannelState(client, *destChan);
 	return (true);
 }
