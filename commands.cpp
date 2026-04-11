@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 12:51:14 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 16:04:55 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,11 +128,16 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 	}
 	else
 	{
-		std::set<Client *> members = destChan.getMembers();
-		for (std::set<Client*>::iterator it = members.begin(); it != members.end(); ++it)
+		std::set<std::string> members = destChan.getMembers();
+		for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)
 		{
-			messageOutput = formMess(sender, **it, mess);
-			send((**it).getFd(), messageOutput.c_str(), messageOutput.size(), 0);
+			bool found = false;
+			Client &target = serv.findClient(*it, found);
+			if (!found)
+				continue;
+			messageOutput = formMess(sender, target, mess);
+			if (target.getNick() != client.getNick())
+				send(target.getFd(), messageOutput.c_str(), messageOutput.size(), 0);
 		}
 	}
 	std::cout <<messageOutput<< std::endl;
@@ -148,20 +153,22 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 // 443 nick #channel :is already on channel ??? does irssi need this?
 bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 {
-	Channel *destChan = NULL;
-	bool	foundChan = false;
+	Channel 	*destChan;
+	bool		foundChan = false;
 	std::string broadcastMess;
 
 	if (!chanExists(mess.args[0], serv))
 	{
 		serv.getAllChans().push_back(Channel(mess.args[0], ""));
-		*destChan = serv.getAllChans().back();
+		destChan = &(serv.getAllChans().back());
 	}
 	else
-		*destChan = serv.findChan(mess.args[0], foundChan);
+		destChan = &(serv.findChan(mess.args[0], foundChan));
 	//chck channel restrictions
 	//if allowed
 	//1-adduser to channel;
+	if (client.isInChannel(mess.args[0]))
+		return (false);
 	destChan->addClient(&client);
 	//2-if 1st user make user operator
 	if (destChan->getMembers().size() == 1)
@@ -171,6 +178,7 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
 	broadcastMess += " JOIN ";
 	broadcastMess += destChan->getName();
+	broadcastMess += CRLF;
 	send(client.getFd(), broadcastMess.c_str(), broadcastMess.size(), 0);
 	serv.broadcast(broadcastMess, client, *destChan);
 	//4-send channel stae (topic+userlist)

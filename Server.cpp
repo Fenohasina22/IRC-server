@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/11 12:46:41 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 16:00:47 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 
 	tmp.fd = accept(this->_sockfd, (sockaddr *)&clientinfo, &csize);
 	tmp.events = POLLIN;
+	tmp.revents = 0;
 	std::cout << "New user connected from port : " << clientinfo.sin_port << std::endl;
 	this->_vecPoll.push_back(tmp);
 	client.setFd(tmp.fd);
@@ -107,37 +108,36 @@ bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 
 Client &Server::findClient(int fd, bool	&success)
 {
-	int	clientIndex = -1;
-	success = false;
+	int		fakeIdx = this->_allClients.size() - 1;
 
+	success = false;
 	for (size_t idx = 0; idx < this->_allClients.size(); ++idx)
 	{
 		if (this->_allClients[idx].getFd() == fd)
 		{
 			success = true;
-			clientIndex = static_cast<int>(idx);
-			return (this->_allClients[clientIndex]);
+			return (this->_allClients[idx]);
 		}
+		fakeIdx = idx;
 	}
-	return (this->_allClients[clientIndex]);
-	/*maybe do an error return*/
+	return (this->_allClients[fakeIdx]);
 }
 
 Client &Server::findClient(std::string nick, bool	&success)
 {
-	int	clientIndex = -1;
-	success = false;
+	int		fakeIdx = this->_allClients.size() - 1;
 
+	success = false;
 	for (size_t idx = 0; idx < this->_allClients.size(); ++idx)
 	{
 		if (this->_allClients[idx].getNick() == nick)
 		{
 			success = true;
-			clientIndex = static_cast<int>(idx);
-			return (this->_allClients[clientIndex]);
+			return (this->_allClients[idx]);
+			fakeIdx = idx;
 		}
 	}
-	return (this->_allClients[clientIndex]);
+	return (this->_allClients[fakeIdx]);
 }
 Channel &Server::findChan(std::string name, bool &success)
 {
@@ -180,7 +180,7 @@ void	Server::Processmessage (int i)
 	std::vector<std::string> 	allMess;
 	static	std::string			stock;
 
-	memset (buff, 0, MSG_BUFFERSIZE);
+	memset (buff, 0, MSG_BUFFERSIZE + 1);
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
 	if (retval == -1 || retval == 0)
 	{
@@ -241,12 +241,13 @@ void	Server::Processmessage (int i)
 
 void	Server::broadcast(std::string &mess, const Client &caster, const Channel &chan)
 {
-	std::set<Client*> members = chan.getMembers();
-
-	for (std::set<Client*>::iterator it = members.begin(); it != members.end(); ++it)
+	std::set<std::string> members = chan.getMembers();
+	for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)
 	{
-		if (*it && (*it)->getFd() != caster.getFd())
-			send((*it)->getFd(), mess.c_str(), mess.length(), 0);
+		bool found = false;
+		Client &cl = this->findClient(*it, found);
+		if (found && cl.getFd() != caster.getFd())
+			send(cl.getFd(), mess.c_str(), mess.length(), 0);
 	}
 }
 

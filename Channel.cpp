@@ -6,11 +6,12 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:09 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 12:46:06 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 15:43:07 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
+#include "Client.hpp"
 
 Channel::Channel()
 : name("")
@@ -40,7 +41,7 @@ const std::string	Channel::getTopic() const
 	return (this->topic);
 }
 
-const std::set<Client*>	&Channel::getMembers() const
+const std::set<std::string> &Channel::getMembers() const
 {
 	return (this->members);
 }
@@ -64,31 +65,27 @@ bool	Channel::operator==(const Channel &other)
 
 void	Channel::addClient(Client* c)
 {
-	this->members.insert(c);
-	c->addChannel(this);
+	this->members.insert(c->getNick());
+	c->addChannel(this->name);
 }
 
 void	Channel::addOperator(Client* c)
 {
-	this->ops.insert(c);
+	this->ops.insert(c->getNick());
 }
 
 void	Channel::removeClient(Client* c)
 {
-	this->members.erase(c);
-	c->removeChannel(this);
+	this->members.erase(c->getNick());
+	c->removeChannel(this->name);
 }
 
 bool	Channel::isOps(Client &c)
 {
-	std::set<Client*>::iterator itBegin 	= this->ops.begin();
-	std::set<Client*>::iterator itEnd 	= this->ops.end();
+	return (this->ops.count(c.getNick()) > 0);
+}
 
-	for (std::set<Client*>::iterator it = itBegin; it != itEnd ; it++)
-	{
-		Client &curr = (**it);
-		if (curr.getNick() == c.getNick())
-			return (true);
-	}
-	return (false);
+bool	Channel::isOps(const std::string &nick) const
+{
+	return (this->ops.count(nick) > 0);
 }

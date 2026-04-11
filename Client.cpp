@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:01:25 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/08 09:12:45 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 15:47:05 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,19 +117,28 @@ bool 	Client::isInChannel(Channel* c) const
 {
 	if (!c)
 		return (false);
-	if (std::find(this->joinedChannels.begin(), this->joinedChannels.end(), c) != this->joinedChannels.end())
+	// check by channel name
+	if (joinedChannels.count(c->getName()) > 0)
 		return (true);
 	return (false);
 }
 
-/*never call this*/
-void	Client::addChannel(Channel *c)
+
+bool 	Client::isInChannel(std::string name) const
 {
-	this->joinedChannels.insert(c);
+	if (name.empty())
+		return (false);
+	return (this->joinedChannels.count(name) > 0);
 }
 
 /*never call this*/
-void	Client::removeChannel(Channel *c)
+void	Client::addChannel(std::string chanName)
 {
-	this->joinedChannels.erase(c);
+	this->joinedChannels.insert(chanName);
+}
+
+/*never call this*/
+void	Client::removeChannel(std::string chanName)
+{
+	this->joinedChannels.erase(chanName);
 }

@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 12:52:52 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 16:15:37 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,19 @@ bool 	chanExists(const std::string &chanName, Server &serv)
 
 std::string	formNameList(Channel &destChan)
 {
-	std::set<Client*> 			members = destChan.getMembers();
-	std::set<Client*>::iterator itBegin = members.begin();
-	std::set<Client*>::iterator itEnd 	= members.end();
-	std::string					nameList;
-	for (std::set<Client*>::iterator it = itBegin; it != itEnd ; it++)
+	std::set<std::string> 			members = destChan.getMembers();
+	std::set<std::string>::iterator itBegin = members.begin();
+	std::set<std::string>::iterator itEnd 	= members.end();
+	std::string						nameList;
+	for (std::set<std::string>::iterator it = itBegin; it != itEnd ; it++)
 	{
-		std::string name = (*it)->getNick();
-		if (destChan.isOps((**it)))
+		std::string name = *it;
+		if (destChan.isOps(name))
 			name = "@" + name;
 		nameList.append(name + " ");
 	}
-	nameList[nameList.size() - 1] = 0;
+	if (!nameList.empty())
+		nameList.resize(nameList.size() - 1);
 	return (nameList);
 }
 
