@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:01:25 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 15:47:05 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 17:24:23 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,6 @@ bool 	Client::isInChannel(Channel* c) const
 {
 	if (!c)
 		return (false);
-	// check by channel name
 	if (joinedChannels.count(c->getName()) > 0)
 		return (true);
 	return (false);
