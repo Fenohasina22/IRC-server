@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 17:53:36 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 18:40:52 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv)
     {
 		//sendCodes(client.getFd(), "464", ":server", ":Password incorrect");
 		client.ConcatenateWBuffer(FormatedMessage("464", ":server", ":Password incorrect"));
-		
+
 		return (false);
 	}
     client.setPassState(true);
@@ -92,7 +92,7 @@ bool	userCmd(Client &client, iRCMessage &mess)
 		//sendCodes(client.getFd(), "461" , ":server", "* USER :Not enough parameters");
 		printiRCMESS(mess);
 		client.ConcatenateWBuffer(FormatedMessage("461" , ":server", "* USER :Not enough parameters"));
-		
+
 		return (false);
 	}
     client.setUser(mess.args[0]);
@@ -207,7 +207,8 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 	broadcastMess += " JOIN ";
 	broadcastMess += destChan->getName();
 	broadcastMess += CRLF;
-	send(client.getFd(), broadcastMess.c_str(), broadcastMess.size(), 0);
+	// send(client.getFd(), broadcastMess.c_str(), broadcastMess.size(), 0);
+	client.ConcatenateWBuffer(broadcastMess);
 	serv.broadcast(broadcastMess, client, *destChan);
 	//4-send channel stae (topic+userlist)
 	sendChannelState(client, *destChan);
