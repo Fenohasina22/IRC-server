@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 11:36:32 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 12:52:52 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,11 @@ std::string	formNameList(Channel &destChan)
 			name = "@" + name;
 		nameList.append(name + " ");
 	}
-	nameList.back() = 0;
+	nameList[nameList.size() - 1] = 0;
 	return (nameList);
 }
 
-void	sendChannelState(Client &client, Channel &destChan, Server &serv)
+void	sendChannelState(Client &client, Channel &destChan)
 {
 	std::string mess;
 

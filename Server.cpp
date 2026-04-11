@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/10 15:22:15 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 12:46:41 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ Client &Server::findClient(std::string nick, bool	&success)
 Channel &Server::findChan(std::string name, bool &success)
 {
 	int		chanIndex 	= -1;
-	bool	success 	= false;
+	success 	= false;
 
 	if (this->_allChannels.empty())
 		return (this->_allChannels[chanIndex]);

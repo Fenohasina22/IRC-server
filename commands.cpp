@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 11:39:11 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 12:51:14 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 // 443 nick #channel :is already on channel ??? does irssi need this?
 bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 {
-	Channel *destChan;
+	Channel *destChan = NULL;
 	bool	foundChan = false;
 	std::string broadcastMess;
 
@@ -174,5 +174,6 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 	send(client.getFd(), broadcastMess.c_str(), broadcastMess.size(), 0);
 	serv.broadcast(broadcastMess, client, *destChan);
 	//4-send channel stae (topic+userlist)
-	sendChannelState(client, *destChan, serv);
+	sendChannelState(client, *destChan);
+	return (true);
 }

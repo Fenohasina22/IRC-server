@@ -3,12 +3,13 @@ NAME = ft_irc
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -g
 
-SRCS = Channel.cpp \
-       Client.cpp \
-       main.cpp \
-       Server.cpp \
-       commands.cpp \
-       dispatch.cpp \
+SRCS = Channel.cpp          \
+       Client.cpp           \
+       main.cpp             \
+       Server.cpp           \
+       commandUtils.cpp     \
+       commands.cpp         \
+       dispatch.cpp         \
        parser.cpp
 
 OBJS = $(SRCS:.cpp=.o)
