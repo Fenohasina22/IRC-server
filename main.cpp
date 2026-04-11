@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 15:00:35 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 19:24:39 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ int main(int argc, char **argv)
 			}
 			else if (vecpol[i].revents & POLLIN)
 			{
-				/**/
 				server.Processmessage(i);
 			}
 			if (vecpol[i].revents & POLLOUT)
