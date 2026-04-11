@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:01:25 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/08 09:12:45 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 17:33:35 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ Client::Client()
 , isNickOk(false)
 , isUserOk(false)
 , userIsRegistered(false)
-, readBuffer("")
-, writeBuffer("")
+, _readBuffer("")
+, _writeBuffer("")
 
 {
 }
@@ -117,19 +117,77 @@ bool 	Client::isInChannel(Channel* c) const
 {
 	if (!c)
 		return (false);
-	if (std::find(this->joinedChannels.begin(), this->joinedChannels.end(), c) != this->joinedChannels.end())
+	if (joinedChannels.count(c->getName()) > 0)
 		return (true);
 	return (false);
 }
 
-/*never call this*/
-void	Client::addChannel(Channel *c)
+
+bool 	Client::isInChannel(std::string name) const
 {
-	this->joinedChannels.insert(c);
+	if (name.empty())
+		return (false);
+	return (this->joinedChannels.count(name) > 0);
 }
 
 /*never call this*/
-void	Client::removeChannel(Channel *c)
+void	Client::addChannel(std::string chanName)
 {
-	this->joinedChannels.erase(c);
+	this->joinedChannels.insert(chanName);
+}
+
+/*never call this*/
+void	Client::removeChannel(std::string chanName)
+{
+	this->joinedChannels.erase(chanName);
+}
+
+std::string	Client::getWriteBuffer() const 
+{
+	return (this->_writeBuffer);	
+}
+
+std::string	Client::getReadBuffer() const 
+{
+	return (this->_readBuffer);
+}
+
+void	Client::setReadBuffer(std::string str)
+{
+	this->_readBuffer = str;
+}
+
+void	Client::setWriteBuffer(std::string str)
+{
+	this->_writeBuffer = str;
+}
+
+void	Client::ConcatenateWBuffer(std::string str)
+{
+	this->_writeBuffer += str;
+}
+
+void	Client::ConcatenateRBuffer(std::string str)
+{
+	this->_readBuffer += str;
+}
+
+Client&	Client::operator=(const Client& c)
+{
+    if (this != &c)
+    {
+        this->fd = c.fd;
+        this->nickname = c.nickname;
+        this->username = c.username;
+        this->realname = c.realname;
+        this->isPassOk = c.isPassOk;
+        this->isNickOk = c.isNickOk;
+        this->isUserOk = c.isUserOk;
+        this->userIsRegistered = c.userIsRegistered;
+        this->_readBuffer = c._readBuffer;
+        this->_writeBuffer = c._writeBuffer;
+        // Copying the set of channels. This performs a shallow copy of the pointers.
+        this->joinedChannels = c.joinedChannels; 
+    }
+    return (*this);
 }

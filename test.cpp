@@ -11,5 +11,5 @@ void	sendCodes(const int &fd, std::string code, const std::string &prefix, const
 
 int main()
 {
-		sendCodes(3, "401",":server", "sender destination :No such nick/channel");
+		sendCodes(3, "331", ":server", "client.getNick() destChan.getName :No topic is set");
 }

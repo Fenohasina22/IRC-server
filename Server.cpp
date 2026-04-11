@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/09 13:59:13 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 21:33:31 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,12 @@ std::vector<Client>& Server::getAllClients()
 {
 	return (this->_allClients);
 }
+
+std::vector<Channel>& Server::getAllChans()
+{
+	return (this->_allChannels);
+}
+
 int			Server::getSockfd() const
 {
 	return (this->_sockfd);
@@ -78,7 +84,7 @@ void	Server::Initialize()
 	if (bind(this->_sockfd, (struct sockaddr *)&(this->_addr), sizeof(this->_addr)) == 0)
 		std::cout << "Binding successfull" << std::endl;
 	else
-		std::cout << "binding failed" << std::endl;
+		std::cout << "Binding failed" << std::endl;
 	if (listen(this->_sockfd, 10) == 0) // socket is in listen mode 10 en file d'attente
 		std::cout << "Listen successful"<<  std::endl;
 	else
@@ -92,6 +98,7 @@ bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 
 	tmp.fd = accept(this->_sockfd, (sockaddr *)&clientinfo, &csize);
 	tmp.events = POLLIN;
+	tmp.revents = 0;
 	std::cout << "New user connected from port : " << clientinfo.sin_port << std::endl;
 	this->_vecPoll.push_back(tmp);
 	client.setFd(tmp.fd);
@@ -101,39 +108,118 @@ bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 
 Client &Server::findClient(int fd, bool	&success)
 {
-	int	clientIndex = -1;
-	success = false;
+	int		fakeIdx = this->_allClients.size() - 1;
 
+	success = false;
 	for (size_t idx = 0; idx < this->_allClients.size(); ++idx)
 	{
 		if (this->_allClients[idx].getFd() == fd)
 		{
 			success = true;
-			clientIndex = static_cast<int>(idx);
-			return (this->_allClients[clientIndex]);
+			return (this->_allClients[idx]);
 		}
+		fakeIdx = idx;
 	}
-	return (this->_allClients[clientIndex]);
-	/*maybe do an error return*/
+	return (this->_allClients[fakeIdx]);
 }
 
 Client &Server::findClient(std::string nick, bool	&success)
 {
-	int	clientIndex = -1;
-	success = false;
+	int		fakeIdx = this->_allClients.size() - 1;
 
+	success = false;
 	for (size_t idx = 0; idx < this->_allClients.size(); ++idx)
 	{
 		if (this->_allClients[idx].getNick() == nick)
 		{
 			success = true;
-			clientIndex = static_cast<int>(idx);
-			return (this->_allClients[clientIndex]);
+			return (this->_allClients[idx]);
+			fakeIdx = idx;
 		}
 	}
-	return (this->_allClients[clientIndex]);
-	/*maybe do an error return*/
+	return (this->_allClients[fakeIdx]);
 }
+Channel &Server::findChan(std::string name, bool &success)
+{
+	int		chanIndex 	= -1;
+	success 	= false;
+
+	if (this->_allChannels.empty())
+		return (this->_allChannels[chanIndex]);
+	for (size_t idx = 0; idx < this->_allChannels.size(); ++idx)
+	{
+		if (this->_allChannels[idx].getName() == name)
+		{
+			success = true;
+			chanIndex = static_cast<int>(idx);
+			return (this->_allChannels[chanIndex]);
+		}
+	}
+	return (this->_allChannels[chanIndex]);
+}
+
+bool		HasCRLF(std::string	str)
+{
+	std::string		tmp;
+	size_t			ret;
+
+	ret = str.find("\r\n");
+	if (ret != std::string::npos)
+	{
+		return (1);
+	}
+	return (0);
+}
+
+//std::string	getCommandCRLF(std::string str)
+//{
+//	size_t pos;
+//	std::string result;
+
+//	pos = str.find(CRLF);
+//	result = str.substr(0, pos);
+
+//	std::cout << RED << result << RESET << std::endl;
+//	return (result);
+//}
+
+int countOccurrences(const std::string& text, const std::string& target) {
+    int count = 0;
+    size_t pos = text.find(target, 0); // Start searching from index 0
+    while (pos != std::string::npos) {
+        count++;
+        pos = text.find(target, pos + target.length()); // Move past current match
+    }
+    return count;
+}
+
+
+void	ParseAndExecute(int i, char *buff, Client& cl, Server& server)
+{
+
+	std::vector<std::string>	messages;
+	iRCMessage					parsedMess;
+	std::string					recvBuf;
+	size_t						count;
+	bool						foundClnt;
+
+	cl.ConcatenateRBuffer(buff);
+	recvBuf = cl.getReadBuffer();
+	count = countOccurrences(recvBuf, CRLF);
+	messages = splitCRLF(recvBuf);
+	for (size_t m = 0; m < count; ++m)
+	{
+		Client& c = server.findClient(server.getVecPoll()[i].fd, foundClnt);
+		if (!foundClnt)
+		{
+			std::cout << "no such client" << std::endl;
+			return ;
+		}
+		parsedMess = parseMessage(messages[m]);
+		dispatchCommand(parsedMess, c, server);
+	}
+}
+
 
 void	Server::Processmessage (int i)
 {
@@ -141,51 +227,96 @@ void	Server::Processmessage (int i)
 	int							retval;
 	iRCMessage					parsedMess;
 	std::vector<std::string> 	allMess;
+	static	std::string			stock;
 
-	memset (buff, 0, MSG_BUFFERSIZE);
+	memset (buff, 0, MSG_BUFFERSIZE + 1);
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
 	if (retval == -1)
 	{
 		std::cout << "Recv error" << std::endl;
+		/*disconnect*/
 	}
-	std::cout << buff << std::endl;
-	std::string recvBuf(buff, retval);
-	std::vector<std::string> messages = splitCRLF(recvBuf);
-	bool foundClnt;
-	for (size_t m = 0; m < messages.size(); ++m)
+	else if (retval == 0)
 	{
-		Client &c = this->findClient(this->_vecPoll[i].fd, foundClnt);
-		if (!foundClnt)
-		{
-			std::cout << "no such client" << std::endl;
-			return ;
-		}
-		parsedMess = parseMessage(messages[m]);
-		if (!c.isRegistered() && parsedMess.cmd != CAP
-			&& parsedMess.cmd != PASS && parsedMess.cmd != NICK && parsedMess.cmd != USER)
-		{
-			sendCodes(c.getFd(), "451", ":server", ":user not registered yet");
-			continue;
-		}
-		dispatchCommand(parsedMess, c, *this);
+		std::cout << "Disconnected client" << std::endl;
+		/*disconnnect*/
 	}
+
+	bool a;
+	Client& cl = this->findClient(this->_vecPoll[i].fd, a);
+
+	//cl.setReadBuffer(buff);
+	if (!HasCRLF(buff))
+	{
+		cl.ConcatenateRBuffer(buff);
+		return ;
+	}
+
+	//std::string recvBuf;
+
+	//cl.ConcatenateRBuffer(buff);
+	//recvBuf = cl.getReadBuffer();
+
+
+	//size_t		count;
+	//std::vector<std::string> messages = splitCRLF(recvBuf);
+	//bool foundClnt;
+
+	//count = countOccurrences(recvBuf, CRLF);
+	//for (size_t m = 0; m < count; ++m)
+	//{
+	//	Client& c = this->findClient(this->_vecPoll[i].fd, foundClnt);
+	//	if (!foundClnt)
+	//	{
+	//		std::cout << "no such client" << std::endl;
+	//		return ;
+	//	}
+	//	parsedMess = parseMessage(messages[m]);
+	//	dispatchCommand(parsedMess, c, *this);
+	//}
+	ParseAndExecute(i, buff, cl, *this);
+	size_t		pos;
+	pos = cl.getReadBuffer().rfind("\r\n");
+	if (pos != std::string::npos)
+	{
+		std::cout << "UPDATE RBUFF = " << &cl.getReadBuffer()[pos + 2] << std::endl;
+		cl.setReadBuffer(&cl.getReadBuffer()[pos + 2]);
+	}
+	this->_vecPoll[i].events |= POLLOUT;
 }
 
-std::string		BufferCleaning(char *buff)
+void	Server::deleteChan(std::string &chanName)
 {
-	std::string	result;
-	int			i = 0;
-
-	while (buff[i + 1])
+	for (std::vector<Channel>::iterator it = this->_allChannels.begin();
+		it != this->_allChannels.end(); )
 	{
-		result += buff[i];
-		if (buff[i] == '\r' && buff[i + 1] == '\n')
+		if (it->getName() == chanName)
 		{
-			result += "\r\n";
-			return (result);
+			std::set<std::string> members = it->getMembers();
+			for (std::set<std::string>::iterator mit = members.begin(); mit != members.end(); ++mit)
+			{
+				bool found = false;
+				Client &cl = this->findClient(*mit, found);
+				if (found)
+					cl.removeChannel(chanName);
+			}
+			it = this->_allChannels.erase(it);
 		}
-		i++;
+		else
+			++it;
 	}
-	return (result);
 }
 
+void	Server::broadcast(std::string &mess, const Client &caster, const Channel &chan)
+{
+	std::set<std::string> members = chan.getMembers();
+	for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)
+	{
+		bool found = false;
+		Client &cl = this->findClient(*it, found);
+		if (found && cl.getFd() != caster.getFd())
+		{
+			cl.ConcatenateWBuffer(mess);
+		}
+	}
+}

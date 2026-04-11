@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/09 13:56:01 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 19:24:39 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ int main(int argc, char **argv)
 	server.Initialize();
 	sock.events = POLLIN;
 	sock.fd =  server.getSockfd();
+	// ensure revents is initialized to avoid valgrind uninitialized use
+	sock.revents = 0;
 	std::vector<pollfd>&	vecpol = server.getVecPoll();
 	vecpol.push_back(sock);
 	std::string			message;
@@ -69,6 +71,15 @@ int main(int argc, char **argv)
 			else if (vecpol[i].revents & POLLIN)
 			{
 				server.Processmessage(i);
+			}
+			if (vecpol[i].revents & POLLOUT)
+			{
+				bool success;
+				Client &c = server.findClient(vecpol[i].fd, success);
+				send(vecpol[i].fd, c.getWriteBuffer().c_str(), c.getWriteBuffer().size(), 0);
+				std::cout << YELLOW << c.getWriteBuffer() << RESET << std::endl;
+				c.setWriteBuffer("");
+				vecpol[i].events &= ~POLLOUT;
 			}
 		}
 	}
