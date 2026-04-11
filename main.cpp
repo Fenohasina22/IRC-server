@@ -49,6 +49,8 @@ int main(int argc, char **argv)
 	server.Initialize();
 	sock.events = POLLIN;
 	sock.fd =  server.getSockfd();
+	// ensure revents is initialized to avoid valgrind uninitialized use
+	sock.revents = 0;
 	std::vector<pollfd>&	vecpol = server.getVecPoll();
 	vecpol.push_back(sock);
 	std::string			message;

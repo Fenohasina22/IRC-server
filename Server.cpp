@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/11 16:31:53 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 18:01:13 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,12 @@ std::vector<Client>& Server::getAllClients()
 {
 	return (this->_allClients);
 }
+
+std::vector<Channel>& Server::getAllChans()
+{
+	return (this->_allChannels);
+}
+
 int			Server::getSockfd() const
 {
 	return (this->_sockfd);
@@ -92,6 +98,7 @@ bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 
 	tmp.fd = accept(this->_sockfd, (sockaddr *)&clientinfo, &csize);
 	tmp.events = POLLIN;
+	tmp.revents = 0;
 	std::cout << "New user connected from port : " << clientinfo.sin_port << std::endl;
 	this->_vecPoll.push_back(tmp);
 	client.setFd(tmp.fd);
@@ -101,42 +108,59 @@ bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 
 Client &Server::findClient(int fd, bool	&success)
 {
-	int	clientIndex = -1;
-	success = false;
+	int		fakeIdx = this->_allClients.size() - 1;
 
+	success = false;
 	for (size_t idx = 0; idx < this->_allClients.size(); ++idx)
 	{
 		if (this->_allClients[idx].getFd() == fd)
 		{
 			success = true;
-			clientIndex = static_cast<int>(idx);
-			return (this->_allClients[clientIndex]);
+			return (this->_allClients[idx]);
 		}
+		fakeIdx = idx;
 	}
-	return (this->_allClients[clientIndex]);
-	/*maybe do an error return*/
+	return (this->_allClients[fakeIdx]);
 }
 
 Client &Server::findClient(std::string nick, bool	&success)
 {
-	int	clientIndex = -1;
-	success = false;
+	int		fakeIdx = this->_allClients.size() - 1;
 
+	success = false;
 	for (size_t idx = 0; idx < this->_allClients.size(); ++idx)
 	{
 		if (this->_allClients[idx].getNick() == nick)
 		{
 			success = true;
-			clientIndex = static_cast<int>(idx);
-			return (this->_allClients[clientIndex]);
+			return (this->_allClients[idx]);
+			fakeIdx = idx;
 		}
 	}
-	return (this->_allClients[clientIndex]);
-	/*maybe do an error return*/
+	return (this->_allClients[fakeIdx]);
+}
+Channel &Server::findChan(std::string name, bool &success)
+{
+	int		chanIndex 	= -1;
+	success 	= false;
+
+	if (this->_allChannels.empty())
+		return (this->_allChannels[chanIndex]);
+	for (size_t idx = 0; idx < this->_allChannels.size(); ++idx)
+	{
+		if (this->_allChannels[idx].getName() == name)
+		{
+			success = true;
+			chanIndex = static_cast<int>(idx);
+			return (this->_allChannels[chanIndex]);
+		}
+	}
+	return (this->_allChannels[chanIndex]);
 }
 
 bool		HasCRLF(std::string	str)
 {
+	std::string		tmp;
 	size_t			ret;
 
 	ret = str.find("\r\n");
@@ -228,3 +252,17 @@ void	Server::Processmessage (int i)
 	this->_vecPoll[i].events |= POLLOUT;
 }
 
+void	Server::broadcast(std::string &mess, const Client &caster, const Channel &chan)
+{
+	std::set<std::string> members = chan.getMembers();
+	for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)
+	{
+		bool found = false;
+		Client &cl = this->findClient(*it, found);
+		if (found && cl.getFd() != caster.getFd())
+		{
+			//send(cl.getFd(), mess.c_str(), mess.length(), 0);
+			cl.ConcatenateWBuffer(mess);
+		}
+	}
+}

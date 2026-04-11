@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/11 14:22:01 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 17:34:04 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ class Server
 		int						_sockfd;
 		std::vector<pollfd>		_vecPoll;
 		std::vector<Client>  	_allClients;
+		std::vector<Channel>	_allChannels;
 		std::string				_password;
 		int						_port;
 
@@ -63,11 +64,14 @@ class Server
 		void					Initialize();
 		void 					setPass(std::string newPass);
 		void					setPort(int newPort);
-		std::vector<Client>&	getAllClients();
+		std::vector<Client>		&getAllClients();
+		std::vector<Channel>	&getAllChans();
 		Client 					&findClient(int fd, bool &success);
 		Client 					&findClient(std::string nick, bool &success);
+		Channel 				&findChan(std::string name, bool &success);
 		bool					NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize);
 		void					Processmessage (int i);
+		void					broadcast(std::string &mess, const Client &caster, const Channel &chan);
 };
 
 

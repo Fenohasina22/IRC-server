@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:00:12 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 12:49:13 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 17:50:05 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,17 @@ class Channel;
 class Client
 {
 	private:
-		int					fd;
-		std::string 		nickname;
-		std::string 		username;
-		std::string 		realname;
-		bool				isPassOk;
-		bool				isNickOk;
-		bool				isUserOk;
-		bool				userIsRegistered;
-		std::string			_readBuffer; /*Read buffer pollin to stock here per client*/
-		std::string			_writeBuffer;/*Write buffer pollout to stock here per client*/
-		std::set<Channel*>	joinedChannels;
+		int						fd;
+		std::string 			nickname;
+		std::string 			username;
+		std::string 			realname;
+		bool					isPassOk;
+		bool					isNickOk;
+		bool					isUserOk;
+		bool					userIsRegistered;
+		std::string				_readBuffer; /*Read buffer pollin to stock here per client*/
+		std::string				_writeBuffer;/*Write buffer pollout to stock here per client*/
+		std::set<std::string>	joinedChannels;
 		/*
 			prevNick and CurrentNick
 			to broadcast nick change;
@@ -63,9 +63,10 @@ class Client
 		void			setNickState(bool state);
 		void			setUserState(bool state);
 		void			setRegistrationState(bool state);
+		bool		 	isInChannel(std::string name) const;
 		bool			isInChannel(Channel* c) const;
-		void			addChannel(Channel *c);
-		void			removeChannel(Channel *c);
+		void			addChannel(std::string chanName);
+		void			removeChannel(std::string chanName);
 
 		void			ConcatenateWBuffer(std::string str);
 		void			ConcatenateRBuffer(std::string str);
