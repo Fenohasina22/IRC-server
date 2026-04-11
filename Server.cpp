@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/11 19:43:12 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 21:59:06 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,7 @@ int countOccurrences(const std::string& text, const std::string& target) {
 }
 
 
-void	ParseAndExecute(int i, char *buff, Client& cl, Server& server)
+int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 {
 
 	std::vector<std::string>	messages;
@@ -213,21 +213,22 @@ void	ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 		if (!foundClnt)
 		{
 			std::cout << "no such client" << std::endl;
-			return ;
+			return (1);
 		}
 		parsedMess = parseMessage(messages[m]);
 		dispatchCommand(parsedMess, c, server);
 	}
+	std::cout << BLUE << cl.getReadBuffer() << RESET << std::endl;
+	return (0);
 }
 
 
 void	Server::Processmessage (int i)
 {
-	char						buff[MSG_BUFFERSIZE + 1];
-	int							retval;
-	iRCMessage					parsedMess;
-	std::vector<std::string> 	allMess;
-	static	std::string			stock;
+	char	buff[MSG_BUFFERSIZE + 1];
+	int		retval;
+	bool	success;
+
 
 	memset (buff, 0, MSG_BUFFERSIZE + 1);
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
@@ -241,48 +242,22 @@ void	Server::Processmessage (int i)
 		std::cout << "Disconnected client" << std::endl;
 		/*disconnnect*/
 	}
-	
-	bool a;
-	Client& cl = this->findClient(this->_vecPoll[i].fd, a);
-
-	//cl.setReadBuffer(buff);
+	Client& cl = this->findClient(this->_vecPoll[i].fd, success);
 	if (!HasCRLF(buff))
 	{
 		cl.ConcatenateRBuffer(buff);
 		return ;
 	}
-
-	//std::string recvBuf;
-
-	//cl.ConcatenateRBuffer(buff);
-	//recvBuf = cl.getReadBuffer();
+	if (ParseAndExecute(i, buff, cl, *this))
+		return ;
 	
-	
-	//size_t		count;
-	//std::vector<std::string> messages = splitCRLF(recvBuf);
-	//bool foundClnt;
-	
-	//count = countOccurrences(recvBuf, CRLF);
-	//for (size_t m = 0; m < count; ++m)
-	//{
-	//	Client& c = this->findClient(this->_vecPoll[i].fd, foundClnt);
-	//	if (!foundClnt)
-	//	{
-	//		std::cout << "no such client" << std::endl;
-	//		return ;
-	//	}
-	//	parsedMess = parseMessage(messages[m]);
-	//	dispatchCommand(parsedMess, c, *this);
-	//}
-	ParseAndExecute(i, buff, cl, *this);
 	size_t		pos;
 	pos = cl.getReadBuffer().rfind("\r\n");
 	if (pos != std::string::npos)
 	{
-		std::cout << "UPDATE RBUFF = " << &cl.getReadBuffer()[pos + 2] << std::endl;
 		cl.setReadBuffer(&cl.getReadBuffer()[pos + 2]);
 	}
-	this->_vecPoll[i].events |= POLLOUT;
+	//this->_vecPoll[i].events |= POLLOUT; // We need to activate pollout for the other fd
 }
 
 void	Server::broadcast(std::string &mess, const Client &caster, const Channel &chan)
