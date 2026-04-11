@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/10 15:31:56 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 11:39:11 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,16 +139,40 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 	return (true);
 }
 
+//add these:
+// 403 nick #channel :No such channel
+// 473 nick #channel :Cannot join channel (+i)
+// 471 nick #channel :Cannot join channel (+l)
+// 475 nick #channel :Cannot join channel (+k)
+// 474 nick #channel :Cannot join channel (+b)
+// 443 nick #channel :is already on channel ??? does irssi need this?
 bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 {
+	Channel *destChan;
+	bool	foundChan = false;
+	std::string broadcastMess;
+
 	if (!chanExists(mess.args[0], serv))
 	{
 		serv.getAllChans().push_back(Channel(mess.args[0], ""));
+		*destChan = serv.getAllChans().back();
 	}
+	else
+		*destChan = serv.findChan(mess.args[0], foundChan);
 	//chck channel restrictions
 	//if allowed
 	//1-adduser to channel;
+	destChan->addClient(&client);
 	//2-if 1st user make user operator
+	if (destChan->getMembers().size() == 1)
+		destChan->addOperator(&client);
 	//3-broadcast join to channel
+	// :nick!user@host JOIN #channel
+	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
+	broadcastMess += " JOIN ";
+	broadcastMess += destChan->getName();
+	send(client.getFd(), broadcastMess.c_str(), broadcastMess.size(), 0);
+	serv.broadcast(broadcastMess, client, *destChan);
 	//4-send channel stae (topic+userlist)
+	sendChannelState(client, *destChan, serv);
 }

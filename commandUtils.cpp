@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/10 15:17:58 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 11:36:32 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,51 @@ bool 	chanExists(const std::string &chanName, Server &serv)
 	if (foundChan)
 		return (true);
 	return (false);
+}
+
+std::string	formNameList(Channel &destChan)
+{
+	std::set<Client*> 			members = destChan.getMembers();
+	std::set<Client*>::iterator itBegin = members.begin();
+	std::set<Client*>::iterator itEnd 	= members.end();
+	std::string					nameList;
+	for (std::set<Client*>::iterator it = itBegin; it != itEnd ; it++)
+	{
+		std::string name = (*it)->getNick();
+		if (destChan.isOps((**it)))
+			name = "@" + name;
+		nameList.append(name + " ");
+	}
+	nameList.back() = 0;
+	return (nameList);
+}
+
+void	sendChannelState(Client &client, Channel &destChan, Server &serv)
+{
+	std::string mess;
+
+	if (destChan.getTopic() == "")
+	{
+		// 331 nick #channel :No topic is set
+		sendCodes(client.getFd(), "331", ":server", client.getNick() + " "
+			+ destChan.getName() + " :No topic is set");
+	}
+	else
+		// 332 nick #channel :topic text
+		sendCodes(client.getFd(), "332", ":server", client.getNick() + " "
+			+ destChan.getName() + " :" + destChan.getTopic());
+	// 353 nick = #channel :@nick1 nick2 nick3
+	std::string nameList = formNameList(destChan);
+	mess += client.getNick();
+	mess += " = "; // the = means “public channel”, just hardcode = for now
+	mess += destChan.getName();
+	mess += " :" + nameList;
+	sendCodes(client.getFd(), "353", ":server", mess);
+	// 366 nick #channel :End of /NAMES list
+	mess.clear();
+	mess += client.getNick() + " ";
+	mess += destChan.getName();
+	mess += " :End of /NAMES list";
+	sendCodes(client.getFd(), "366", ":server", mess);
+	// Unlike PRIVMSG, you do send JOIN back to the joining client
 }

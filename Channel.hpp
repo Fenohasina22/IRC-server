@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:05 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/10 15:29:37 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 11:20:08 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,9 @@ class Channel
 		void						setTopic(const std::string &toSet);
 
 		void						addClient(Client* c);
+		void						addOperator(Client* c);
 		void						removeClient(Client* c);
+		bool						isOps(Client &c);
 		bool						operator==(const Channel &other);
 
 		Channel();

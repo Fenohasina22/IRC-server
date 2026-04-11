@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dispatch.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/10 10:07:47 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 11:40:36 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 			//MODE command handler
 			break;
 		case (JOIN):
-			//JOIN command handler
+			joinCmd(client, mess, serv);
 			break;
 		case (PART):
 			//PART command handler
