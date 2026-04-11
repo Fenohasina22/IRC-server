@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 19:23:42 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 20:55:54 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,5 +228,35 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 
 bool	partCmd(Client &client, iRCMessage &mess, Server &serv)
 {
+	std::string broadcastMess;
+	bool		foundChan;
 
+	if (mess.args.empty())
+	{
+		client.ConcatenateWBuffer(FormatedMessage("461", ":server", "* PART :Not enough parameters"));
+		return (false);
+	}
+	// Check:
+	// channel exists
+	if (!chanExists(mess.args[0], serv))
+		client.ConcatenateWBuffer(FormatedMessage("403", ":server", client.getNick() + " " + mess.args[0] + " :No such channel"));
+	// user is in it
+	if (client.isInChannel(mess.args[0]))
+		client.ConcatenateWBuffer(FormatedMessage("442", ":server", client.getNick() + " " + mess.args[0] + " :You're not on that channel"));
+	// If valid:
+	// broadcast PART to channel
+	Channel &destChan = serv.findChan(mess.args[0], foundChan);
+
+	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
+	broadcastMess += " PART ";
+	broadcastMess += destChan.getName();
+	if (mess.args.size() > 1)
+		broadcastMess += mess.args[1];
+	broadcastMess += CRLF;
+	client.ConcatenateWBuffer(broadcastMess);
+	serv.broadcast(broadcastMess, client, destChan);
+	// remove user from channel
+	destChan.removeClient(&client);
+	if (destChan.getMembers().size() == 0)
+		serv.deleteChan(mess.args[0]);
 }

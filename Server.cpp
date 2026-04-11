@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/11 19:22:42 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 20:56:49 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,7 +213,7 @@ void	Server::Processmessage (int i)
 		std::cout << "Disconnected client" << std::endl;
 		/*disconnnect*/
 	}
-	
+
 	bool a;
 	Client& cl = this->findClient(this->_vecPoll[i].fd, a);
 
@@ -251,6 +251,28 @@ void	Server::Processmessage (int i)
 		cl.setReadBuffer(&recvBuf[pos + 2]);
 	}
 	this->_vecPoll[i].events |= POLLOUT;
+}
+
+void	Server::deleteChan(std::string &chanName)
+{
+	for (std::vector<Channel>::iterator it = this->_allChannels.begin();
+		it != this->_allChannels.end(); )
+	{
+		if (it->getName() == chanName)
+		{
+			std::set<std::string> members = it->getMembers();
+			for (std::set<std::string>::iterator mit = members.begin(); mit != members.end(); ++mit)
+			{
+				bool found = false;
+				Client &cl = this->findClient(*mit, found);
+				if (found)
+					cl.removeChannel(chanName);
+			}
+			it = this->_allChannels.erase(it);
+		}
+		else
+			++it;
+	}
 }
 
 void	Server::broadcast(std::string &mess, const Client &caster, const Channel &chan)
