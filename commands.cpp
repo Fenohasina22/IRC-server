@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 19:23:42 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 19:43:37 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,7 +226,7 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 	return (true);
 }
 
-bool	partCmd(Client &client, iRCMessage &mess, Server &serv)
-{
+//bool	partCmd(Client &client, iRCMessage &mess, Server &serv)
+//{
 
-}
+//}
