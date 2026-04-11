@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 17:39:21 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 22:00:53 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,10 @@ void	getArgs(const std::vector<std::string> &splitMess, iRCMessage &parsedMess, 
 
 void	getCRLF(const std::vector<std::string> &splitMess, iRCMessage &parsedMess)
 {
-	if (splitMess.empty())
-		return ;
-	parsedMess.crlf = splitMess.back();
+	if (parsedMess.ogMess.size() >= 2 && parsedMess.ogMess.substr(parsedMess.ogMess.size() - 2) == CRLF)
+		parsedMess.crlf = CRLF;
+	else
+		parsedMess.crlf.clear();
 }
 
 iRCMessage parseMessage(const std::string &strMess)
@@ -119,7 +120,7 @@ iRCMessage parseMessage(const std::string &strMess)
 
 bool	isMessValid(const iRCMessage &mess)
 {
-	if (mess.crlf != "/r/n")
+	if (mess.crlf != "\r\n")
 		return (false);
 	if (mess.len == 0)
 		return (false);
