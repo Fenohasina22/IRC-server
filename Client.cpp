@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:01:25 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/08 09:12:45 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 12:47:35 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ Client::Client()
 , isNickOk(false)
 , isUserOk(false)
 , userIsRegistered(false)
-, readBuffer("")
-, writeBuffer("")
+, _readBuffer("")
+, _writeBuffer("")
 
 {
 }
@@ -132,4 +132,55 @@ void	Client::addChannel(Channel *c)
 void	Client::removeChannel(Channel *c)
 {
 	this->joinedChannels.erase(c);
+}
+
+
+std::string	Client::getWriteBuffer() const 
+{
+	return (this->_writeBuffer);	
+}
+
+std::string	Client::getReadBuffer() const 
+{
+	return (this->_readBuffer);
+}
+
+void	Client::setReadBuffer(std::string str)
+{
+	this->_readBuffer = str;
+}
+
+void	Client::setWriteBuffer(std::string str)
+{
+	this->_writeBuffer = str;
+}
+
+void	Client::ConcatenateWBuffer(std::string str)
+{
+	this->_writeBuffer += str;
+}
+
+void	Client::ConcatenateRBuffer(std::string str)
+{
+	this->_readBuffer += str;
+}
+
+Client&	Client::operator=(const Client& c)
+{
+    if (this != &c)
+    {
+        this->fd = c.fd;
+        this->nickname = c.nickname;
+        this->username = c.username;
+        this->realname = c.realname;
+        this->isPassOk = c.isPassOk;
+        this->isNickOk = c.isNickOk;
+        this->isUserOk = c.isUserOk;
+        this->userIsRegistered = c.userIsRegistered;
+        this->_readBuffer = c._readBuffer;
+        this->_writeBuffer = c._writeBuffer;
+        // Copying the set of channels. This performs a shallow copy of the pointers.
+        this->joinedChannels = c.joinedChannels; 
+    }
+    return (*this);
 }

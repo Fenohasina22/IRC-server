@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:00:12 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/09 14:14:23 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 12:49:13 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ class Client
 		bool				isNickOk;
 		bool				isUserOk;
 		bool				userIsRegistered;
-		std::string			readBuffer; /*no idea what it does yet*/
-		std::string			writeBuffer;/*no idea what it does yet*/
+		std::string			_readBuffer; /*Read buffer pollin to stock here per client*/
+		std::string			_writeBuffer;/*Write buffer pollout to stock here per client*/
 		std::set<Channel*>	joinedChannels;
 		/*
 			prevNick and CurrentNick
@@ -45,6 +45,10 @@ class Client
 		std::string		getNick() const;
 		std::string		getUser() const;
 		std::string		getReal() const;
+		std::string		getWriteBuffer() const;
+		std::string		getReadBuffer() const;
+
+
 		bool			getNickState() const;
 		bool			getUserState() const;
 		bool			getPassState() const;
@@ -53,6 +57,8 @@ class Client
 		void			setNick(std::string toSet);
 		void			setUser(std::string toSet);
 		void			setReal(std::string toSet);
+		void			setWriteBuffer(std::string str);
+		void			setReadBuffer(std::string str);
 		void			setPassState(bool state);
 		void			setNickState(bool state);
 		void			setUserState(bool state);
@@ -61,7 +67,11 @@ class Client
 		void			addChannel(Channel *c);
 		void			removeChannel(Channel *c);
 
+		void			ConcatenateWBuffer(std::string str);
+		void			ConcatenateRBuffer(std::string str);
+		
 		Client();
+		Client&	operator=(const Client& c);
 		~Client();
 };
 

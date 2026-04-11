@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/10 10:05:34 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 10:29:09 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,9 @@ class Server
 		Client 					&findClient(int fd, bool &success);
 		Client 					&findClient(std::string nick, bool &success);
 		bool					NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize);
-		void					Processmessage (int i);
+		void					Processmessage (Client &c, int i);
 };
 
-std::string		BufferCleaning(char *buff);
 
 #endif
 

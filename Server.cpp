@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/10 15:09:39 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 13:16:09 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	Server::Initialize()
 	if (bind(this->_sockfd, (struct sockaddr *)&(this->_addr), sizeof(this->_addr)) == 0)
 		std::cout << "Binding successfull" << std::endl;
 	else
-		std::cout << "binding failed" << std::endl;
+		std::cout << "Binding failed" << std::endl;
 	if (listen(this->_sockfd, 10) == 0) // socket is in listen mode 10 en file d'attente
 		std::cout << "Listen successful"<<  std::endl;
 	else
@@ -148,7 +148,7 @@ bool		HasCRLF(char*	str)
 	}
 	return (0);
 }
-void	Server::Processmessage (int i)
+void	Server::Processmessage (Client &c, int i)
 {
 	char						buff[MSG_BUFFERSIZE + 1];
 	int							retval;
@@ -156,13 +156,19 @@ void	Server::Processmessage (int i)
 	std::vector<std::string> 	allMess;
 	static	std::string			stock;
 
-	memset (buff, 0, MSG_BUFFERSIZE);
+	memset (buff, 0, MSG_BUFFERSIZE + 1);
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
-	if (retval == -1 || retval == 0)
+	if (retval == -1)
 	{
 		std::cout << "Recv error" << std::endl;
 		/*disconnect*/
 	}
+	else if (retval == 0)
+	{
+		std::cout << "Disconnected client" << std::endl;
+		/*disconnnect*/
+	}
+	
 	
 	if (!HasCRLF(buff))
 	{
@@ -179,7 +185,7 @@ void	Server::Processmessage (int i)
 		bool foundClnt;
 		for (size_t m = 0; m < messages.size(); ++m)
 		{
-			Client &c = this->findClient(this->_vecPoll[i].fd, foundClnt);
+			c = this->findClient(this->_vecPoll[i].fd, foundClnt);
 			if (!foundClnt)
 			{
 				std::cout << "no such client" << std::endl;
@@ -189,7 +195,8 @@ void	Server::Processmessage (int i)
 			if (!c.isRegistered() && parsedMess.cmd != CAP
 				&& parsedMess.cmd != PASS && parsedMess.cmd != NICK && parsedMess.cmd != USER)
 			{
-				sendCodes(c.getFd(), "451", ":server", ":user not registered yet");
+				//sendCodes(c.getFd(), "451", ":server", ":user not registered yet");
+				c.ConcatenateWBuffer(FormatedMessage("451", ":server", ":user not registered yet"));
 				continue;
 			}
 			dispatchCommand(parsedMess, c, *this);
@@ -198,31 +205,21 @@ void	Server::Processmessage (int i)
 		std::cout << " == Processing the current command == " << std::endl;
 		std::cout  <<"Current command = " << stock  << std::endl;
 		std::cout << RESET << std::endl;
+		
+		//std::cout << RED << c.getWriteBuffer() << RESET << std::endl;
 		size_t		pos;
-
 		pos = stock.rfind("\r\n");
 		if (pos != std::string::npos)
 		{
 			stock = &recvBuf[pos + 2];
 		}
-	}
-}
-
-std::string		BufferCleaning(char *buff)
-{
-	std::string	result;
-	int			i = 0;
-
-	while (buff[i + 1])
-	{
-		result += buff[i];
-		if (buff[i] == '\r' && buff[i + 1] == '\n')
+		/*activate POLLOUt*/
+		if (!c.getWriteBuffer().empty())
 		{
-			result += "\r\n";
-			return (result);
+			//std::cout << GREEN << "ACTIVATE POLLOUT" << std::endl;
+			this->_vecPoll[i].events |= POLLOUT;
 		}
-		i++;
+		//std::cout << YELLOW << " == Message to be send == \n" << c.getWriteBuffer() << RESET << std::endl;
 	}
-	return (result);
 }
 

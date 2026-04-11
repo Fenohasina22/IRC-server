@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/10 10:07:47 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 11:38:37 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,19 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 	switch (mess.cmd)
 	{
 		case (CAP):
-			capCmd(client);
+			capCmd(client); // concatenated 
 			break ;
 		case (PASS):
-			passCmd(client, mess, serv);
+			passCmd(client, mess, serv); // concatenated
 			break;
 		case (NICK):
-			nickCmd(client, mess, serv);
+			nickCmd(client, mess, serv); // concatenated
 			break;
 		case (USER):
-			userCmd(client, mess);
+			userCmd(client, mess); // concatenated
 			break;
 		case (PING):
-			pongCmd(client, mess);
+			pongCmd(client, mess); // concatenated 
 			break;
 		case (KICK):
 			//KICK command handler;
@@ -54,7 +54,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 			//PART command handler
 			break;
 		case (PRIVMSG):
-			privmsgCmd(client, mess, serv);
+			privmsgCmd(client, mess, serv); // concatenated
 			break;
 		case (QUIT):
 			//QUIT command handler
@@ -71,4 +71,12 @@ void	sendCodes(const int &fd, std::string code, const std::string &prefix, const
 	std::string completeMsg = prefix + " " + code + " " + msg + CRLF;
 	std::cout << completeMsg << std::endl;
 	send(fd, completeMsg.c_str(), completeMsg.size(), 0);
+}
+
+
+std::string	FormatedMessage(std::string code, const std::string &prefix, const::std::string &msg)
+{
+	std::string completeMsg = prefix + " " + code + " " + msg + CRLF;
+	std::cout << completeMsg << std::endl;
+	return (completeMsg);
 }
