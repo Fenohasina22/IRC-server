@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:09 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 11:18:56 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 12:46:06 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,19 +81,14 @@ void	Channel::removeClient(Client* c)
 
 bool	Channel::isOps(Client &c)
 {
-	std::set<Client*>::iterator MitBegin	= this->members.begin();
-	std::set<Client*>::iterator MitEnd 		= this->members.end();
-	std::set<Client*>::iterator OpitBegin 	= this->ops.begin();
-	std::set<Client*>::iterator OpitEnd 	= this->ops.end();
+	std::set<Client*>::iterator itBegin 	= this->ops.begin();
+	std::set<Client*>::iterator itEnd 	= this->ops.end();
 
-	for (std::set<Client*>::iterator it = MitBegin; it != MitEnd ; it++)
+	for (std::set<Client*>::iterator it = itBegin; it != itEnd ; it++)
 	{
 		Client &curr = (**it);
-		for (std::set<Client*>::iterator i = OpitBegin; i != OpitEnd ; i++)
-		{
-			if ((*i)->getNick() == curr.getNick())
-				return (true);
-		}
+		if (curr.getNick() == c.getNick())
+			return (true);
 	}
 	return (false);
 }
