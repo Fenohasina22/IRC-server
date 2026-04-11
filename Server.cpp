@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/11 15:05:29 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 16:31:53 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,19 +135,40 @@ Client &Server::findClient(std::string nick, bool	&success)
 	/*maybe do an error return*/
 }
 
-bool		HasCRLF(char*	str)
+bool		HasCRLF(std::string	str)
 {
-	std::string		tmp;
 	size_t			ret;
 
-	tmp = str;
-	ret = tmp.find("\r\n");
+	ret = str.find("\r\n");
 	if (ret != std::string::npos)
 	{
 		return (1);
 	}
 	return (0);
 }
+
+//std::string	getCommandCRLF(std::string str)
+//{
+//	size_t pos;
+//	std::string result;
+
+//	pos = str.find(CRLF);
+//	result = str.substr(0, pos);
+
+//	std::cout << RED << result << RESET << std::endl;
+//	return (result);
+//}
+
+int countOccurrences(const std::string& text, const std::string& target) {
+    int count = 0;
+    size_t pos = text.find(target, 0); // Start searching from index 0
+    while (pos != std::string::npos) {
+        count++;
+        pos = text.find(target, pos + target.length()); // Move past current match
+    }
+    return count;
+}
+
 void	Server::Processmessage (int i)
 {
 	char						buff[MSG_BUFFERSIZE + 1];
@@ -169,50 +190,41 @@ void	Server::Processmessage (int i)
 		/*disconnnect*/
 	}
 	
-	
-	if (!HasCRLF(buff))
+	bool a;
+	Client& cl = this->findClient(this->_vecPoll[i].fd, a);
+
+	if (!HasCRLF(cl.getReadBuffer()))
 	{
-		stock += buff;
+		cl.ConcatenateRBuffer(buff);
 		return ;
 	}
-	else
+	std::string recvBuf;
+
+	cl.ConcatenateRBuffer(buff);
+	recvBuf = cl.getReadBuffer();
+	size_t		count;
+	count = countOccurrences(recvBuf, CRLF);
+	std::vector<std::string> messages = splitCRLF(recvBuf);
+	bool foundClnt;
+	for (size_t m = 0; m < count; ++m)
 	{
-		stock += buff;
-		//std::cout << "Processing complete command" << std::endl;
-		std::string recvBuf;
-		recvBuf = stock;
-		std::vector<std::string> messages = splitCRLF(recvBuf);
-		bool foundClnt;
-		for (size_t m = 0; m < messages.size(); ++m)
+		Client& c = this->findClient(this->_vecPoll[i].fd, foundClnt);
+		if (!foundClnt)
 		{
-			Client& c = this->findClient(this->_vecPoll[i].fd, foundClnt);
-			if (!foundClnt)
-			{
-				std::cout << "no such client" << std::endl;
-				return ;
-			}
-			parsedMess = parseMessage(messages[m]);
-			dispatchCommand(parsedMess, c, *this);
+			std::cout << "no such client" << std::endl;
+			return ;
 		}
-		std::cout << BLUE << std::endl;
-		std::cout << " == Processing the current command == " << std::endl;
-		std::cout  <<"Current command = " << stock  << std::endl;
-		std::cout << RESET << std::endl;
-		
-		//std::cout << RED << c.getWriteBuffer() << RESET << std::endl;
-		size_t		pos;
-		pos = stock.rfind("\r\n");
-		if (pos != std::string::npos)
-		{
-			stock = &recvBuf[pos + 2];
-		}
-		/*activate POLLOUt*/
-		//if (!c.getWriteBuffer().empty())
-		//{
-			//std::cout << GREEN << "ACTIVATE POLLOUT" << std::endl;
-			this->_vecPoll[i].events |= POLLOUT;
-		//}
-		//std::cout << YELLOW << " == Message to be send == \n" << c.getWriteBuffer() << RESET << std::endl;
+		parsedMess = parseMessage(messages[m]);
+		dispatchCommand(parsedMess, c, *this);
 	}
+	std::cout << BLUE << recvBuf << RESET << std::endl;
+	size_t		pos;
+	pos = cl.getReadBuffer().rfind("\r\n");
+	if (pos != std::string::npos)
+	{
+		std::cout << "UPDATE RBUFF = " << &recvBuf[pos + 2] << std::endl;
+		cl.setReadBuffer(&recvBuf[pos + 2]);
+	}
+	this->_vecPoll[i].events |= POLLOUT;
 }
 
