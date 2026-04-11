@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:40 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/09 14:18:24 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 15:10:12 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ iRCMessage					parseMessage(const std::string &strMess);
 bool						isMessValid(const iRCMessage &mess);
 std::vector<std::string>	split(const std::string& str, char delimiter);
 std::vector<std::string>	splitCRLF(const std::string& str);
+void	printiRCMESS(iRCMessage mess);
 
 
 #endif

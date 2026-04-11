@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/09 14:18:05 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/11 15:10:54 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,14 +138,14 @@ bool	isMessValid(const iRCMessage &mess)
 }
 
 /*                 					   DEBUG                                */
-// void	printiRCMESS(iRCMessage mess)
-// {
-// 	std::cout << "prefix = " << mess.prefix << std::endl;
-// 	std::cout << "command = " << mess.command << std::endl;
-// 	std::cout << "args = ";
-// 	for (int i = 0; i < mess.args.size(); i++)
-// 		std::cout << "-" << mess.args[i] << std::endl;
-// }
+ void	printiRCMESS(iRCMessage mess)
+ {
+ 	std::cout << "prefix = " << mess.prefix << std::endl;
+ 	std::cout << "command = " << mess.cmd << std::endl;
+ 	std::cout << "args = ";
+ 	for (unsigned int i = 0; i < mess.args.size(); i++)
+ 		std::cout << "-" << mess.args[i] << std::endl;
+ }
 
 // void print_vector(const std::vector<std::string>& v)
 // {

@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/11 14:25:43 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 15:05:29 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,13 +192,6 @@ void	Server::Processmessage (int i)
 				return ;
 			}
 			parsedMess = parseMessage(messages[m]);
-			if (!c.isRegistered() && parsedMess.cmd != CAP
-				&& parsedMess.cmd != PASS && parsedMess.cmd != NICK && parsedMess.cmd != USER)
-			{
-				//sendCodes(c.getFd(), "451", ":server", ":user not registered yet");
-				c.ConcatenateWBuffer(FormatedMessage("451", ":server", ":user not registered yet"));
-				continue;
-			}
 			dispatchCommand(parsedMess, c, *this);
 		}
 		std::cout << BLUE << std::endl;

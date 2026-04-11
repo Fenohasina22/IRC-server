@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 13:13:59 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/11 15:10:34 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ bool	userCmd(Client &client, iRCMessage &mess)
     if (mess.args.size() < 4)
     {
 		//sendCodes(client.getFd(), "461" , ":server", "* USER :Not enough parameters");
+		printiRCMESS(mess);
 		client.ConcatenateWBuffer(FormatedMessage("461" , ":server", "* USER :Not enough parameters"));
 		
 		return (false);
@@ -126,7 +127,8 @@ bool	capCmd(Client &client)
 	std::string		cap;
 
 	client.ConcatenateWBuffer(":server CAP * LS :\r\n");
-	client.ConcatenateWBuffer(":server CAP * END\r\n");
+	if (client.isRegistered())
+		client.ConcatenateWBuffer(":server CAP * END\r\n");
     std::cout << GREEN << "U got CAP HERE" << RESET << std::endl;
 
 	return (true);
