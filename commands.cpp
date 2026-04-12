@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 11:45:59 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/12 15:12:27 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -341,5 +341,72 @@ bool	topicCmd(Client &client, iRCMessage &mess, Server &serv)
 		client.ConcatenateWBuffer(broadcastMess, serv);
 		serv.broadcast(broadcastMess, client, destChan, serv);
 	}
+	return (true);
+}
+
+bool	kickCmd(Client &client,iRCMessage &mess,Server &serv)
+{
+	// :nick!user@host KICK #channel target :reason
+	std::string broadcastMess;
+
+	if (mess.args.size() < 2)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("461", ":server", "* KICK :Not enough parameters"), serv);
+		return (false);
+	}
+	if (!chanExists(mess.args[0], serv))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("403", ":server", client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
+		return (false);
+	}
+
+	bool	foundCli = false;
+	bool	foundChan = false;
+	Client	&destCli = serv.findClient(mess.args[1], foundCli);
+	Channel	&destChan = serv.findChan(mess.args[0], foundChan);
+
+	if (!foundChan)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("403", ":server", client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
+		return (false);
+	}
+	if (!client.isInChannel(mess.args[0]))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("442", ":server", client.getNick() + " " + mess.args[0] + " :You're not on that channel"), serv);
+		return (false);
+	}
+	if (!foundCli)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("401", ":server", client.getNick() + " " + mess.args[1] + " :No such nick/channel"), serv);
+		return (false);
+	}
+	if (!destCli.isInChannel(mess.args[0]))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("441", ":server", destCli.getNick() + " " + mess.args[0] + " :They aren't on that channel"), serv);
+		return (false);
+	}
+	if (!destChan.isOps(client.getNick()))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("482", ":server", client.getNick() + " " + mess.args[0] + " :You're not a channel operator"), serv);
+		return (false);
+	}
+
+	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
+	broadcastMess += " KICK ";
+	broadcastMess += destChan.getName() + " ";
+	broadcastMess += destCli.getNick();
+	if (mess.args.size() > 2)
+	{
+		std::string reason = mess.args[2];
+		if (!reason.empty() && reason[0] == ':')
+			reason = reason.substr(1);
+		broadcastMess += " :" + reason;
+	}
+	broadcastMess += CRLF;
+	client.ConcatenateWBuffer(broadcastMess, serv);
+	serv.broadcast(broadcastMess, client, destChan, serv);
+	destChan.removeClient(&destCli);
+	if (destChan.getMembers().size() == 0)
+		serv.deleteChan(mess.args[0]);
 	return (true);
 }

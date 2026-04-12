@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 10:33:43 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/12 14:20:45 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 			pongCmd(client, mess, serv); // concatenated
 			break;
 		case (KICK):
-			//KICK command handler;
+			kickCmd(client, mess, serv);
 			break;
 		case (TOPIC):
 			topicCmd(client, mess, serv);
