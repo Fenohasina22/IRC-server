@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:01:25 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 17:33:35 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/12 10:21:05 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,9 +162,20 @@ void	Client::setWriteBuffer(std::string str)
 	this->_writeBuffer = str;
 }
 
-void	Client::ConcatenateWBuffer(std::string str)
+void	Client::ConcatenateWBuffer(std::string str, Server& server)
 {
+	bool a = false;
+	pollfd&	tmp = server.findElementByfd(this->fd, a);
+
+	std::cout << RED << "fd = " << this->fd << RESET << std::endl;
+	if (a == false)
+	{
+		std::cout << "NO SUCH CLIENT" << std::endl;
+		return ;
+	}
 	this->_writeBuffer += str;
+	std::cout << RED << "fd = " << tmp.fd << RESET << std::endl;
+	tmp.events |= POLLOUT;
 }
 
 void	Client::ConcatenateRBuffer(std::string str)

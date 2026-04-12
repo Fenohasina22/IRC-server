@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:00:12 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 17:50:05 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/12 09:49:36 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 # include <iostream>
 # include <set>
 # include "Channel.hpp"
-
+#include "Server.hpp"
 # ifndef	CRLF
 # define CRLF "\r\n"
 # endif
 
 class Channel;
-
+class Server;
 class Client
 {
 	private:
@@ -68,7 +68,9 @@ class Client
 		void			addChannel(std::string chanName);
 		void			removeChannel(std::string chanName);
 
-		void			ConcatenateWBuffer(std::string str);
+		//void			ConcatenateWBuffer(std::string str);
+		void			ConcatenateWBuffer(std::string str, Server& server);
+
 		void			ConcatenateRBuffer(std::string str);
 		
 		Client();

@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/11 21:59:06 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/12 10:21:11 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,7 +260,7 @@ void	Server::Processmessage (int i)
 	//this->_vecPoll[i].events |= POLLOUT; // We need to activate pollout for the other fd
 }
 
-void	Server::broadcast(std::string &mess, const Client &caster, const Channel &chan)
+void	Server::broadcast(std::string &mess, const Client &caster, const Channel &chan, Server& serv)
 {
 	std::set<std::string> members = chan.getMembers();
 	for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)
@@ -269,7 +269,28 @@ void	Server::broadcast(std::string &mess, const Client &caster, const Channel &c
 		Client &cl = this->findClient(*it, found);
 		if (found && cl.getFd() != caster.getFd())
 		{
-			cl.ConcatenateWBuffer(mess);
+			cl.ConcatenateWBuffer(mess, serv);
 		}
 	}
 }
+
+pollfd&	Server::findElementByfd(int fd, bool& a)
+{
+	//std::vector<pollfd>::iterator it;
+	std::vector<pollfd>&	vec = getVecPoll();
+	unsigned int i;
+
+	for (i = 1; i < vec.size(); i++)
+	{
+		std::cout << GREEN << vec[i].fd << " == " << fd << "?" << RESET <<  std::endl;
+		if (vec[i].fd == fd)
+		{
+			a = true;
+			std::cout << GREEN << "YES" <<  RESET << std::endl;
+			return (vec[i]);
+		}
+	}
+	a = false;
+	return (vec[i]);
+}
+

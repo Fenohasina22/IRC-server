@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 19:44:04 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/12 09:56:18 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 	switch (mess.cmd)
 	{
 		case (CAP):
-			capCmd(client); // concatenated
+			capCmd(client, serv); // concatenated
 			break ;
 		case (PASS):
 			passCmd(client, mess, serv); // concatenated
@@ -33,10 +33,10 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 			nickCmd(client, mess, serv); // concatenated
 			break;
 		case (USER):
-			userCmd(client, mess); // concatenated
+			userCmd(client, mess, serv); // concatenated
 			break;
 		case (PING):
-			pongCmd(client, mess); // concatenated
+			pongCmd(client, mess, serv); // concatenated
 			break;
 		case (KICK):
 			//KICK command handler;
