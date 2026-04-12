@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 10:40:53 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/12 11:45:59 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 			Client &target = serv.findClient(*it, found);
 			if (!found)
 				continue;
-			messageOutput = formMess(sender, target, mess);
+			messageOutput = formChanMess(sender, destChan, mess);
 			if (target.getNick() != client.getNick())
 				target.ConcatenateWBuffer(messageOutput, serv);
 				//send(target.getFd(), messageOutput.c_str(), messageOutput.size(), 0);
