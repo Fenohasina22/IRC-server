@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 08:19:44 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/12 15:49:24 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	getCommand(const std::vector<std::string> &splitMess, iRCMessage &parsedMes
 	std::string strCommand = splitMess[index];
 	index ++;
 	std::string tab[COM_NUM] = {"CAP", "PASS", "NICK", "USER", "PING", "KICK"
-		, "TOPIC", "MODE", "JOIN", "PART" , "PRIVMSG", "QUIT"};
+		, "TOPIC", "MODE", "JOIN", "PART" , "PRIVMSG", "INVITE", "QUIT"};
 	for (int i = 0; i < COM_NUM; i++)
 		types.push_back(tab[i]);
 	for (unsigned int i = 0; i < types.size(); i++)

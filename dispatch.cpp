@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 14:20:45 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/12 16:02:59 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,10 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 			partCmd(client, mess, serv);
 			break;
 		case (PRIVMSG):
-			privmsgCmd(client, mess, serv); // concatenated
+			privmsgCmd(client, mess, serv);
+			break;
+		case (INVITE):
+			// inviteCmd(client, mess, serv);
 			break;
 		case (QUIT):
 			//QUIT command handler

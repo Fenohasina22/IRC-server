@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 15:12:27 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/12 16:02:48 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -410,3 +410,5 @@ bool	kickCmd(Client &client,iRCMessage &mess,Server &serv)
 		serv.deleteChan(mess.args[0]);
 	return (true);
 }
+
+

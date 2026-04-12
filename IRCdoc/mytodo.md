@@ -34,20 +34,19 @@ Before channels, do direct user-to-user PRIVMSG. It's simpler — no channel loo
 
 ---
 
-- [ ] **7. Channel management — JOIN, PART, NAMES, TOPIC, KICK, INVITE**
+- [/] **7. Channel management — JOIN, PART, NAMES, TOPIC, KICK, INVITE**
 
 Now channels. Do them in this sub-order:
 
 - JOIN first — you need it to get into a channel at all
 - PART — clean exit
-- NAMES — irssi asks for this automatically on join
 - TOPIC — simple get/set
 - KICK — requires operator check
 - INVITE — requires operator check
 
 ---
 
-- [ ] **8. All numeric reply codes**
+- [/] **8. All numeric reply codes**
 
 You'll have been adding these as you go. At this point do a full pass — check every command handler sends the right error codes for every edge case. Missing a `461` here or a `442` there is what causes irssi to behave strangely.
 
