@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 15:24:42 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/12 16:03:14 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,18 @@ std::string	formMess(const Client	&sender,const Client &destCli,const iRCMessage
 	messageOutput += ":" + sender.getNick();
 	messageOutput += " PRIVMSG ";
 	messageOutput += destCli.getNick() + " ";
+	messageOutput += mess.args[1];
+	messageOutput += CRLF;
+	return (messageOutput);
+}
+
+std::string	formChanMess(const Client	&sender,const Channel &destChan,const iRCMessage &mess)
+{
+	std::string 	messageOutput;
+
+	messageOutput += ":" + sender.getNick();
+	messageOutput += " PRIVMSG ";
+	messageOutput += destChan.getName() + " ";
 	messageOutput += mess.args[1];
 	messageOutput += CRLF;
 	return (messageOutput);

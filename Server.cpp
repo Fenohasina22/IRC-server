@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/12 15:46:47 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/12 16:05:15 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,7 +203,7 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 	std::string					recvBuf;
 	size_t						count;
 	bool						foundClnt;
-	
+
 	cl.ConcatenateRBuffer(buff);
 	recvBuf = cl.getReadBuffer();
 	count = countOccurrences(recvBuf, CRLF);
@@ -252,12 +252,34 @@ void	Server::Processmessage (int i)
 	}
 	if (ParseAndExecute(i, buff, cl, *this))
 		return ;
-	
+
 	size_t		pos;
 	pos = cl.getReadBuffer().rfind("\r\n");
 	if (pos != std::string::npos)
 	{
 		cl.setReadBuffer(&cl.getReadBuffer()[pos + 2]);
+	}
+}
+
+void	Server::deleteChan(std::string &chanName)
+{
+	for (std::vector<Channel>::iterator it = this->_allChannels.begin();
+		it != this->_allChannels.end(); )
+	{
+		if (it->getName() == chanName)
+		{
+			std::set<std::string> members = it->getMembers();
+			for (std::set<std::string>::iterator mit = members.begin(); mit != members.end(); ++mit)
+			{
+				bool found = false;
+				Client &cl = this->findClient(*mit, found);
+				if (found)
+					cl.removeChannel(chanName);
+			}
+			it = this->_allChannels.erase(it);
+		}
+		else
+			++it;
 	}
 }
 

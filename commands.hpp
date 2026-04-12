@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 09:56:58 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/12 14:23:08 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,18 @@ bool	userCmd(Client &client, iRCMessage &mess, Server& serv);
 bool	pongCmd(Client &client, iRCMessage &mess, Server& serv);
 bool	privmsgCmd(Client &client, iRCMessage &mess, Server &Serv);
 bool	joinCmd(Client &client, iRCMessage &mess, Server &Serv);
+bool	partCmd(Client &client, iRCMessage &mess, Server &serv);
+bool	topicCmd(Client &client, iRCMessage &mess, Server &serv);
+bool	kickCmd(Client &client,iRCMessage &mess,Server &serv);
 
 
 /************************************UTILS************************************/
 void 		tryRegistration(Client &client, Server& serv);
 bool	 	chanExists(const std::string &chanName, Server &serv);
 std::string	formMess(const Client	&sender,const Client &destCli
-			,const iRCMessage &mess);
+				,const iRCMessage &mess);
+std::string	formChanMess(const Client	&sender,const Channel &destChan,
+				const iRCMessage &mess);
 void		sendChannelState(Client &client, Channel &destChan, Server& serv);
 
 #endif
