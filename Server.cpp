@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/11 21:33:31 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/12 10:40:06 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,7 @@ int countOccurrences(const std::string& text, const std::string& target) {
 }
 
 
-void	ParseAndExecute(int i, char *buff, Client& cl, Server& server)
+int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 {
 
 	std::vector<std::string>	messages;
@@ -213,21 +213,22 @@ void	ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 		if (!foundClnt)
 		{
 			std::cout << "no such client" << std::endl;
-			return ;
+			return (1);
 		}
 		parsedMess = parseMessage(messages[m]);
 		dispatchCommand(parsedMess, c, server);
 	}
+	std::cout << BLUE << cl.getReadBuffer() << RESET << std::endl;
+	return (0);
 }
 
 
 void	Server::Processmessage (int i)
 {
-	char						buff[MSG_BUFFERSIZE + 1];
-	int							retval;
-	iRCMessage					parsedMess;
-	std::vector<std::string> 	allMess;
-	static	std::string			stock;
+	char	buff[MSG_BUFFERSIZE + 1];
+	int		retval;
+	bool	success;
+
 
 	memset (buff, 0, MSG_BUFFERSIZE + 1);
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
@@ -241,48 +242,22 @@ void	Server::Processmessage (int i)
 		std::cout << "Disconnected client" << std::endl;
 		/*disconnnect*/
 	}
-
-	bool a;
-	Client& cl = this->findClient(this->_vecPoll[i].fd, a);
-
-	//cl.setReadBuffer(buff);
+	Client& cl = this->findClient(this->_vecPoll[i].fd, success);
 	if (!HasCRLF(buff))
 	{
 		cl.ConcatenateRBuffer(buff);
 		return ;
 	}
+	if (ParseAndExecute(i, buff, cl, *this))
+		return ;
 
-	//std::string recvBuf;
-
-	//cl.ConcatenateRBuffer(buff);
-	//recvBuf = cl.getReadBuffer();
-
-
-	//size_t		count;
-	//std::vector<std::string> messages = splitCRLF(recvBuf);
-	//bool foundClnt;
-
-	//count = countOccurrences(recvBuf, CRLF);
-	//for (size_t m = 0; m < count; ++m)
-	//{
-	//	Client& c = this->findClient(this->_vecPoll[i].fd, foundClnt);
-	//	if (!foundClnt)
-	//	{
-	//		std::cout << "no such client" << std::endl;
-	//		return ;
-	//	}
-	//	parsedMess = parseMessage(messages[m]);
-	//	dispatchCommand(parsedMess, c, *this);
-	//}
-	ParseAndExecute(i, buff, cl, *this);
 	size_t		pos;
 	pos = cl.getReadBuffer().rfind("\r\n");
 	if (pos != std::string::npos)
 	{
-		std::cout << "UPDATE RBUFF = " << &cl.getReadBuffer()[pos + 2] << std::endl;
 		cl.setReadBuffer(&cl.getReadBuffer()[pos + 2]);
 	}
-	this->_vecPoll[i].events |= POLLOUT;
+	//this->_vecPoll[i].events |= POLLOUT; // We need to activate pollout for the other fd
 }
 
 void	Server::deleteChan(std::string &chanName)
@@ -307,7 +282,7 @@ void	Server::deleteChan(std::string &chanName)
 	}
 }
 
-void	Server::broadcast(std::string &mess, const Client &caster, const Channel &chan)
+void	Server::broadcast(std::string &mess, const Client &caster, const Channel &chan, Server& serv)
 {
 	std::set<std::string> members = chan.getMembers();
 	for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)
@@ -316,7 +291,28 @@ void	Server::broadcast(std::string &mess, const Client &caster, const Channel &c
 		Client &cl = this->findClient(*it, found);
 		if (found && cl.getFd() != caster.getFd())
 		{
-			cl.ConcatenateWBuffer(mess);
+			cl.ConcatenateWBuffer(mess, serv);
 		}
 	}
 }
+
+pollfd&	Server::findElementByfd(int fd, bool& a)
+{
+	//std::vector<pollfd>::iterator it;
+	std::vector<pollfd>&	vec = getVecPoll();
+	unsigned int i;
+
+	for (i = 1; i < vec.size(); i++)
+	{
+		std::cout << GREEN << vec[i].fd << " == " << fd << "?" << RESET <<  std::endl;
+		if (vec[i].fd == fd)
+		{
+			a = true;
+			std::cout << GREEN << "YES" <<  RESET << std::endl;
+			return (vec[i]);
+		}
+	}
+	a = false;
+	return (vec[i]);
+}
+

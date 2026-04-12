@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/11 20:57:37 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/12 10:42:23 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <errno.h>
 # include "dispatch.hpp"
 #include <signal.h>
-# define	MSG_BUFFERSIZE 10
+# define	MSG_BUFFERSIZE 1024
 
 # ifndef	CRLF
 # define CRLF "\r\n"
@@ -72,7 +72,8 @@ class Server
 		bool					NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize);
 		void					Processmessage (int i);
 		void					deleteChan(std::string &chanName);
-		void					broadcast(std::string &mess, const Client &caster, const Channel &chan);
+		void					broadcast(std::string &mess, const Client &caster, const Channel &chan, Server& serv);
+		pollfd&					findElementByfd(int fd, bool& a);
 };
 
 

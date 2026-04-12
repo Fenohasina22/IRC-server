@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 09:09:33 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/12 10:33:37 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,21 +25,21 @@
 class Server;
 
 /************************************COMMANDS*********************************/
-bool	capCmd(Client &client);
-bool	passCmd(Client &client, iRCMessage &mess, Server &serv);
-bool	nickCmd(Client &client, iRCMessage &mess, Server &serv);
-bool	userCmd(Client &client, iRCMessage &mess);
-bool	pongCmd(Client &client, iRCMessage &mess);
+bool	capCmd(Client &client, Server& serv);
+bool	passCmd(Client &client, iRCMessage &mess, Server& serv);
+bool	nickCmd(Client &client, iRCMessage &mess, Server& serv);
+bool	userCmd(Client &client, iRCMessage &mess, Server& serv);
+bool	pongCmd(Client &client, iRCMessage &mess, Server& serv);
 bool	privmsgCmd(Client &client, iRCMessage &mess, Server &Serv);
 bool	joinCmd(Client &client, iRCMessage &mess, Server &Serv);
 bool	partCmd(Client &client, iRCMessage &mess, Server &serv);
 bool	topicCmd(Client &client, iRCMessage &mess, Server &serv);
 
 /************************************UTILS************************************/
-void 		tryRegistration(Client &client);
+void 		tryRegistration(Client &client, Server& serv);
 bool	 	chanExists(const std::string &chanName, Server &serv);
 std::string	formMess(const Client	&sender,const Client &destCli
 			,const iRCMessage &mess);
-void		sendChannelState(Client &client, Channel &destChan);
+void		sendChannelState(Client &client, Channel &destChan, Server& serv);
 
 #endif
