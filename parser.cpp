@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 22:00:53 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/12 08:19:44 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	getArgs(const std::vector<std::string> &splitMess, iRCMessage &parsedMess, 
 	}
 }
 
-void	getCRLF(const std::vector<std::string> &splitMess, iRCMessage &parsedMess)
+void	getCRLF(iRCMessage &parsedMess)
 {
 	if (parsedMess.ogMess.size() >= 2 && parsedMess.ogMess.substr(parsedMess.ogMess.size() - 2) == CRLF)
 		parsedMess.crlf = CRLF;
@@ -114,7 +114,7 @@ iRCMessage parseMessage(const std::string &strMess)
 	getPrefix(splitMess, parsedMess, index);
 	getCommand(splitMess, parsedMess, index);
 	getArgs(splitMess, parsedMess, index);
-	getCRLF(splitMess, parsedMess);
+	getCRLF(parsedMess);
 	return (parsedMess);
 }
 
