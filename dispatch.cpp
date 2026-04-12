@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 08:20:44 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/12 08:24:58 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 			//KICK command handler;
 			break;
 		case (TOPIC):
-			//TOPIC command handler
+			topicCmd(client, mess, serv);
 			break;
 		case (MODE):
 			//MODE command handler
