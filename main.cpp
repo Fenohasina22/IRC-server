@@ -6,13 +6,15 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 15:55:48 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/12 16:17:40 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "dispatch.hpp"
 #include "parser.hpp"
+
+/*Handle ghost user reconnection */
 
 bool	getParams(char **argv, Server &serv)
 {
