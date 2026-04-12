@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "InitialBuildPlan.md",
+                "file": "mytodo.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "InitialBuildPlan"
+              "title": "mytodo"
             }
           }
         ]
@@ -185,12 +185,12 @@
   },
   "active": "a199c44215756fc0",
   "lastOpenFiles": [
+    "InitialBuildPlan.md",
     "InitialIRCFamiliarisation.md",
     "mytodo.md",
     "Pasted image 20260404093647.png",
     "Pasted image 20260404095622.png",
     "pollAndEquivalent.md",
-    "InitialBuildPlan.md",
     "RFC 1459 — What matters for your server.md",
     "main.cpp",
     "Functions.md",

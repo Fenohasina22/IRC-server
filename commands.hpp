@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 14:23:08 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/12 15:50:42 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &Serv);
 bool	partCmd(Client &client, iRCMessage &mess, Server &serv);
 bool	topicCmd(Client &client, iRCMessage &mess, Server &serv);
 bool	kickCmd(Client &client,iRCMessage &mess,Server &serv);
-
+bool	inviteCmd(Client &client,iRCMessage &mess,Server &serv);
 
 /************************************UTILS************************************/
 void 		tryRegistration(Client &client, Server& serv);
