@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:01:25 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 15:12:15 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/12 16:19:41 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,7 @@ void	Client::ConcatenateWBuffer(std::string str, Server& server)
 
 	if (a == false)
 	{
+		std::cout << RED "fd = " << this->fd << std::endl;
 		std::cout << "NO SUCH CLIENT" << std::endl;
 		return ;
 	}
