@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 19:24:39 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/12 15:55:48 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,22 @@ bool	getParams(char **argv, Server &serv)
 	return (true);
 }
 
+void	signalHandler(int sig)
+{
+	(void)sig;
+	std::cout << "SIGINT catched" << std::endl;
+}
+
 int main(int argc, char **argv)
 {
 	if (argc != 3)
 	{
-		std::cout << "Needs more args" << std::endl;
+		std::cout << "Usage: ./ft_irc <port> <pass>" << std::endl;
 		return (1);
 	}
+	// signal handling 
+	signal(SIGPIPE, SIG_IGN);
+	signal(SIGINT, signalHandler);
 	struct sockaddr_in	clientinfo;
 	struct pollfd		sock; // for initialization of the first element of vecpol
 	socklen_t			c_size;
@@ -46,7 +55,14 @@ int main(int argc, char **argv)
 	if (!getParams(argv, server))
 		return (1);
 	c_size = sizeof(sockaddr_in);
-	server.Initialize();
+	std::cout << BLUE << std::endl;
+	std::cout << " == CREATING SERVER === " << std::endl;
+	std::cout << RESET << std::endl;
+	if (server.Initialize())
+	{
+		return (0);
+	}
+	
 	sock.events = POLLIN;
 	sock.fd =  server.getSockfd();
 	// ensure revents is initialized to avoid valgrind uninitialized use
@@ -77,7 +93,6 @@ int main(int argc, char **argv)
 				bool success;
 				Client &c = server.findClient(vecpol[i].fd, success);
 				send(vecpol[i].fd, c.getWriteBuffer().c_str(), c.getWriteBuffer().size(), 0);
-				std::cout << YELLOW << c.getWriteBuffer() << RESET << std::endl;
 				c.setWriteBuffer("");
 				vecpol[i].events &= ~POLLOUT;
 			}

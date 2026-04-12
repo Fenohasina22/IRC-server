@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 10:05:19 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/12 15:18:24 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ bool	capCmd(Client &client, Server& serv)
 	client.ConcatenateWBuffer(":server CAP * LS :\r\n", serv);
 	if (client.isRegistered())
 		client.ConcatenateWBuffer(":server CAP * END\r\n", serv);
-    std::cout << GREEN << "U got CAP HERE" << RESET << std::endl;
 
 	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/12 10:21:11 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/12 15:46:47 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ sockaddr_in	Server::getSocketstats() const
 	return (this->_addr);
 }
 
-void	Server::Initialize()
+int	Server::Initialize()
 {
 	int opt;
 
@@ -77,18 +77,31 @@ void	Server::Initialize()
 	opt = 1;
 	if (setsockopt(this->_sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
 	{
-		std::cout << "setsockopt error" << std::endl;
+		std::cout << RED << "setsockopt error" << RESET << std::endl;
 		/*err handling here*/
-		return ;
+		return (1);
 	}
 	if (bind(this->_sockfd, (struct sockaddr *)&(this->_addr), sizeof(this->_addr)) == 0)
-		std::cout << "Binding successfull" << std::endl;
+	{
+		std::cout << GREEN << "Binding successfull" << RESET<< std::endl;
+	}
 	else
-		std::cout << "Binding failed" << std::endl;
-	if (listen(this->_sockfd, 10) == 0) // socket is in listen mode 10 en file d'attente
-		std::cout << "Listen successful"<<  std::endl;
+	{
+		std::cout << RED <<"Binding failed" << RESET << std::endl;
+		/*should return and exit the server*/
+		return (1);
+	}
+	if (listen(this->_sockfd, SOMAXCONN) == 0)
+	{
+		std::cout << GREEN << "Listen successful" << RESET <<  std::endl;
+	} // socket is in listen mode SOMAXONN en file d'attente
 	else
-		std::cout << "Listen failed" << std::endl;
+	{
+		std::cout << RED << "Listen failed" << RESET << std::endl;
+		// should return an error ;
+		return (1);
+	}
+	return (0);
 }
 
 bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
@@ -171,18 +184,6 @@ bool		HasCRLF(std::string	str)
 	return (0);
 }
 
-//std::string	getCommandCRLF(std::string str)
-//{
-//	size_t pos;
-//	std::string result;
-
-//	pos = str.find(CRLF);
-//	result = str.substr(0, pos);
-
-//	std::cout << RED << result << RESET << std::endl;
-//	return (result);
-//}
-
 int countOccurrences(const std::string& text, const std::string& target) {
     int count = 0;
     size_t pos = text.find(target, 0); // Start searching from index 0
@@ -218,7 +219,6 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 		parsedMess = parseMessage(messages[m]);
 		dispatchCommand(parsedMess, c, server);
 	}
-	std::cout << BLUE << cl.getReadBuffer() << RESET << std::endl;
 	return (0);
 }
 
@@ -239,8 +239,10 @@ void	Server::Processmessage (int i)
 	}
 	else if (retval == 0)
 	{
-		std::cout << "Disconnected client" << std::endl;
+		std::cout << "The client disconnected" << std::endl;
 		/*disconnnect*/
+		this->_vecPoll.erase(this->_vecPoll.begin() + i); // erase the client
+		return ; 
 	}
 	Client& cl = this->findClient(this->_vecPoll[i].fd, success);
 	if (!HasCRLF(buff))
@@ -257,7 +259,6 @@ void	Server::Processmessage (int i)
 	{
 		cl.setReadBuffer(&cl.getReadBuffer()[pos + 2]);
 	}
-	//this->_vecPoll[i].events |= POLLOUT; // We need to activate pollout for the other fd
 }
 
 void	Server::broadcast(std::string &mess, const Client &caster, const Channel &chan, Server& serv)
@@ -276,17 +277,14 @@ void	Server::broadcast(std::string &mess, const Client &caster, const Channel &c
 
 pollfd&	Server::findElementByfd(int fd, bool& a)
 {
-	//std::vector<pollfd>::iterator it;
 	std::vector<pollfd>&	vec = getVecPoll();
 	unsigned int i;
 
 	for (i = 1; i < vec.size(); i++)
 	{
-		std::cout << GREEN << vec[i].fd << " == " << fd << "?" << RESET <<  std::endl;
 		if (vec[i].fd == fd)
 		{
 			a = true;
-			std::cout << GREEN << "YES" <<  RESET << std::endl;
 			return (vec[i]);
 		}
 	}

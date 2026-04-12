@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/12 10:21:24 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/12 15:40:49 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ class Server
 		sockaddr_in				getSocketstats() const;
 		int						getPort() const;
 		const std::string		getPass() const;
-		void					Initialize();
+		int						Initialize();
 		void 					setPass(std::string newPass);
 		void					setPort(int newPort);
 		std::vector<Client>		&getAllClients();
