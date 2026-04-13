@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:01:25 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 16:19:41 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/13 15:24:04 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,24 @@ bool			Client::getPassState() const
 	return (this->isPassOk);
 }
 
+struct sockaddr_in	Client::getClientInfos() 
+{
+	return (this->_clientinfos);
+}
+
 bool			Client::isRegistered() const
 {
 	return (this->userIsRegistered);
 }
+
+void			Client::setClientInfos(struct sockaddr_in& infos)
+{
+	this->_clientinfos.sin_addr = infos.sin_addr;
+	this->_clientinfos.sin_family = infos.sin_family;
+	this->_clientinfos.sin_port = infos.sin_port;
+	//this->_clientinfos.sin_zero = infos.sin_zero;
+}
+
 
 void 				Client::setFd(int fd)
 {
@@ -201,3 +215,5 @@ Client&	Client::operator=(const Client& c)
     }
     return (*this);
 }
+
+

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 15:50:42 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/13 15:20:56 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "parser.hpp"
 # include "Client.hpp"
 # include <sys/socket.h>
+#include <arpa/inet.h>
 # include "Server.hpp"
 
 # ifndef	CRLF
@@ -36,6 +37,8 @@ bool	partCmd(Client &client, iRCMessage &mess, Server &serv);
 bool	topicCmd(Client &client, iRCMessage &mess, Server &serv);
 bool	kickCmd(Client &client,iRCMessage &mess,Server &serv);
 bool	inviteCmd(Client &client,iRCMessage &mess,Server &serv);
+bool	quitCmd(iRCMessage& mess, Client& client, Server& serv);
+bool	disconnectCmd(Client& client, Server& serv);
 
 /************************************UTILS************************************/
 void 		tryRegistration(Client &client, Server& serv);

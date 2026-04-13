@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/13 11:51:46 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/13 15:56:44 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ int	Server::Initialize()
 	if (setsockopt(this->_sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
 	{
 		std::cout << RED << "setsockopt error" << RESET << std::endl;
-		/*err handling here*/
 		return (1);
 	}
 	if (bind(this->_sockfd, (struct sockaddr *)&(this->_addr), sizeof(this->_addr)) == 0)
@@ -88,17 +87,17 @@ int	Server::Initialize()
 	else
 	{
 		std::cout << RED <<"Binding failed" << RESET << std::endl;
-		/*should return and exit the server*/
+		close(this->_sockfd);
 		return (1);
 	}
 	if (listen(this->_sockfd, SOMAXCONN) == 0)
 	{
 		std::cout << GREEN << "Listen successful" << RESET <<  std::endl;
-	} // socket is in listen mode SOMAXONN en file d'attente
+	}
 	else
 	{
 		std::cout << RED << "Listen failed" << RESET << std::endl;
-		// should return an error ;
+		close (this->_sockfd);
 		return (1);
 	}
 	return (0);
@@ -115,6 +114,7 @@ bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 	std::cout << "New user connected from port : " << clientinfo.sin_port << std::endl;
 	this->_vecPoll.push_back(tmp);
 	client.setFd(tmp.fd);
+	client.setClientInfos(clientinfo);
 	this->_allClients.push_back(client);
 	return (true);
 }
@@ -232,6 +232,7 @@ void	Server::Processmessage (int i)
 
 	memset (buff, 0, MSG_BUFFERSIZE + 1);
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
+	std::cout << YELLOW << buff << RESET << std::endl;
 	if (retval == -1)
 	{
 		std::cout << "Recv error" << std::endl;
@@ -242,8 +243,17 @@ void	Server::Processmessage (int i)
 		std::cout << "The client disconnected" << std::endl;
 		/*disconnnect*/
 		close (this->getVecPoll()[i].fd); // close fd
+		//close(this-)
 		// remove client from all channel
+		std::cout << "vec = "<< this->_vecPoll.size() << std::endl;
 		this->_vecPoll.erase(this->_vecPoll.begin() + i); // erase the client
+		std::cout << "allCli = "<< this->_allClients.size() << std::endl;
+		if (i != 0)
+		{
+			std::cout << "Client erased" << std::endl;
+			std::cout << "i = " << i << std::endl;
+			this->_allClients.erase(this->_allClients.begin() + i - 1); // erase client from clients 
+		}
 		return ;
 	}
 	Client& cl = this->findClient(this->_vecPoll[i].fd, success);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:40 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 15:48:58 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/13 14:21:01 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 //commands number
 # ifndef COM_NUM
-#  define COM_NUM 13
+#  define COM_NUM 14
 # endif
 
 # ifndef	CRLF
@@ -52,6 +52,7 @@ typedef enum	command
 	PRIVMSG	,
 	INVITE	,
 	QUIT	,
+	DISCONNECT,
 	UNKNOWN
 }				command;
 

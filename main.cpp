@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 16:17:40 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/13 16:00:31 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,12 @@ int main(int argc, char **argv)
 			{
 				bool success;
 				Client &c = server.findClient(vecpol[i].fd, success);
-				send(vecpol[i].fd, c.getWriteBuffer().c_str(), c.getWriteBuffer().size(), 0);
-				c.setWriteBuffer("");
-				vecpol[i].events &= ~POLLOUT;
+				if (success)
+				{
+					send(vecpol[i].fd, c.getWriteBuffer().c_str(), c.getWriteBuffer().size(), 0);
+					c.setWriteBuffer("");
+					vecpol[i].events &= ~POLLOUT;
+				}
 			}
 		}
 	}

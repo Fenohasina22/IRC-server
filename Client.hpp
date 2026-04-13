@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:00:12 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 09:49:36 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/13 15:24:15 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,20 @@ class Client
 		std::string				_readBuffer; /*Read buffer pollin to stock here per client*/
 		std::string				_writeBuffer;/*Write buffer pollout to stock here per client*/
 		std::set<std::string>	joinedChannels;
+		struct sockaddr_in		_clientinfos;
+		
 		/*
 			prevNick and CurrentNick
 			to broadcast nick change;
 		*/
 	public:
-		int 			getFd() const;
-		std::string		getNick() const;
-		std::string		getUser() const;
-		std::string		getReal() const;
-		std::string		getWriteBuffer() const;
-		std::string		getReadBuffer() const;
+		int 				getFd() const;
+		std::string			getNick() const;
+		std::string			getUser() const;
+		std::string			getReal() const;
+		std::string			getWriteBuffer() const;
+		std::string			getReadBuffer() const;
+		struct sockaddr_in	getClientInfos() ;
 
 
 		bool			getNickState() const;
@@ -63,6 +66,8 @@ class Client
 		void			setNickState(bool state);
 		void			setUserState(bool state);
 		void			setRegistrationState(bool state);
+		void			setClientInfos(struct sockaddr_in& infos);
+		
 		bool		 	isInChannel(std::string name) const;
 		bool			isInChannel(Channel* c) const;
 		void			addChannel(std::string chanName);

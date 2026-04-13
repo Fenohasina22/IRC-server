@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/13 11:54:22 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/13 15:41:06 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -410,8 +410,28 @@ bool	kickCmd(Client &client,iRCMessage &mess,Server &serv)
 	return (true);
 }
 
-bool	quitCmd(Client& client, Server& serv)
+bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 {
-	// needs stuff here
+	(void)serv;
+	std::string msg;
+	char	hostname[INET_ADDRSTRLEN];
+
+
+	struct sockaddr_in	tmp = client.getClientInfos();
+	// transform the binary into string
+	std::cout << RED << "HERE" << std::endl;
+	inet_ntop(AF_INET, &tmp.sin_addr, hostname, INET_ADDRSTRLEN);
+	msg = ":" + client.getNick() + "!" + client.getUser() + "@" + hostname + " QUIT " + mess.args[0] + CRLF;   
+	client.ConcatenateWBuffer(msg, serv);
+	std::cout << RED << msg << RESET << std::endl;
+	std::cout << GREEN  << "Bye " << client.getUser() << RESET << std::endl;
+	return (true);
+}
+
+bool	disconnectCmd(Client& client, Server& serv)
+{
+	(void) serv;
+	std::cout << GREEN <<  client.getUser() << " disconected" << RESET << std::endl;
+	 
 	return (true);
 }
