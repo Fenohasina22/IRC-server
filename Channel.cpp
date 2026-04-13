@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:09 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/13 09:13:00 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/13 10:59:58 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,17 @@ void	Channel::removeClient(Client* c)
 {
 	this->members.erase(c->getNick());
 	c->removeChannel(this->name);
+}
+
+void	Channel::addFlag(std::string flag)
+{
+	this->flags.insert(flag);
+}
+
+void	Channel::removeFlag(std::string flag)
+{
+	if (!flags.empty())
+		this->flags.erase(flag);
 }
 
 bool	Channel::isOps(Client &c)

@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:05 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/13 09:12:14 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/13 10:59:15 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ class Channel
 		std::set<std::string>		members;
 		std::set<std::string>		ops;
 		std::set<std::string>		invited;
+		std::set<std::string>		flags;
 
 	public:
 		const std::string			getName() const;
@@ -41,6 +42,8 @@ class Channel
 		bool						isOps(const std::string &nick) const;
 		void						setName(const std::string &toSet);
 		void						setTopic(const std::string &toSet);
+		void						addFlag(std::string flag);
+		void						removeFlag(std::string flag);
 
 		void						addClient(Client* c);
 		void						addOperator(Client* c);

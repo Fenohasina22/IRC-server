@@ -54,7 +54,12 @@ You'll have been adding these as you go. At this point do a full pass — check 
 
 - [ ] **9. MODE handling**
 
-Last because it's the most complex and the least critical for basic functionality. Start with the modes you actually need — `+o` (operator), `+t` (topic lock), `+k` (channel key), `+i` (invite only). Leave the rest for after everything else works.
+Last because it's the most complex and the least critical for basic functionality.
+· i: Set/remove Invite-only channel
+· o: Give/take channel operator privilege
+· t: Set/remove the restrictions of the TOPIC command to channel operators 
+· k: Set/remove the channel key (password)
+· l: Set/remove the user limit to channel
 
 ---
 - [ ] **10. Handle multi-args /join and /privmsg 
