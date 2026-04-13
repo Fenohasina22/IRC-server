@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/12 16:05:15 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/13 11:51:46 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,8 +241,10 @@ void	Server::Processmessage (int i)
 	{
 		std::cout << "The client disconnected" << std::endl;
 		/*disconnnect*/
+		close (this->getVecPoll()[i].fd); // close fd
+		// remove client from all channel
 		this->_vecPoll.erase(this->_vecPoll.begin() + i); // erase the client
-		return ; 
+		return ;
 	}
 	Client& cl = this->findClient(this->_vecPoll[i].fd, success);
 	if (!HasCRLF(buff))
