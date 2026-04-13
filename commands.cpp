@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/13 09:57:21 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/13 11:13:28 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -418,7 +418,10 @@ bool	inviteCmd(Client &client,iRCMessage &mess,Server &serv)
 	std::string	confirmationMess;
 
 	if (mess.args.size() < 2)
+	{
 		client.ConcatenateWBuffer(FormatedMessage("461", ":server", "* INVITE :Not enough parameters"), serv);
+		return (false);
+	}
 
 	bool	foundCli 	= false;
 	bool	foundChan 	= false;
@@ -429,6 +432,11 @@ bool	inviteCmd(Client &client,iRCMessage &mess,Server &serv)
 	if (!foundCli)
 	{
 		client.ConcatenateWBuffer(FormatedMessage("401", ":server", client.getNick() + " " + mess.args[0] + " :No such nick"), serv);
+		return (false);
+	}
+	if (!foundChan)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("401", ":server", destChan.getName() + " " + mess.args[1] + " :No such channel"), serv);
 		return (false);
 	}
 	if (!senderCli.isInChannel(mess.args[1]))

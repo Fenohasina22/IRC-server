@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 16:02:59 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/13 11:07:27 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 			topicCmd(client, mess, serv);
 			break;
 		case (MODE):
-			//MODE command handler
+			modeCmd(client, mess, serv);
 			break;
 		case (JOIN):
 			joinCmd(client, mess, serv);
@@ -57,7 +57,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 			privmsgCmd(client, mess, serv);
 			break;
 		case (INVITE):
-			// inviteCmd(client, mess, serv);
+			inviteCmd(client, mess, serv);
 			break;
 		case (QUIT):
 			//QUIT command handler
