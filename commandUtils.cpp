@@ -36,7 +36,7 @@ std::string	formMess(const Client	&sender,const Client &destCli,const iRCMessage
 	messageOutput += ":" + sender.getNick();
 	messageOutput += " PRIVMSG ";
 	messageOutput += destCli.getNick() + " ";
-	messageOutput += mess.args[1];
+	messageOutput += mess.args[1]; // U need to check here cause seg when PRIVMSG user <no more args> with nc
 	messageOutput += CRLF;
 	return (messageOutput);
 }
