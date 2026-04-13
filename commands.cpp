@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/13 09:55:53 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/13 09:57:21 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -463,4 +463,5 @@ bool	inviteCmd(Client &client,iRCMessage &mess,Server &serv)
 	senderCli.ConcatenateWBuffer(FormatedMessage("341", ":server", confirmationMess), serv);
 
 	destChan.addInvited(&invitedCli);
+	return (true);
 }
