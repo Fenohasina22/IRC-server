@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:09 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/13 10:59:58 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/13 15:52:55 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,26 @@ Channel::Channel()
 , topic("")
 , members()
 , ops()
+, pass("")
+, maxUser(512)
+, _isInviteOnly(false)
+, _isTopicLocked(false)
+, _isPassRequired(false)
+, _isUserLimitEnabled(false)
 {
 }
 
 Channel::Channel(std::string n, std::string t)
 : name(n)
 , topic(t)
+, members()
+, ops()
+, pass("")
+, maxUser(512)
+, _isInviteOnly(false)
+, _isTopicLocked(false)
+, _isPassRequired(false)
+, _isUserLimitEnabled(false)
 {
 }
 
@@ -44,6 +58,66 @@ const std::string	Channel::getTopic() const
 const std::set<std::string> &Channel::getMembers() const
 {
 	return (this->members);
+}
+
+const std::string	Channel::getPass() const
+{
+	return (this->pass);
+}
+
+void	Channel::setPass(const std::string &p)
+{
+	this->pass = p;
+}
+
+int	Channel::getMaxUser() const
+{
+	return (this->maxUser);
+}
+
+void	Channel::setMaxUser(int v)
+{
+	this->maxUser = v;
+}
+
+bool	Channel::isInviteOnly() const
+{
+	return (this->_isInviteOnly);
+}
+
+void	Channel::setInviteOnly(bool v)
+{
+	this->_isInviteOnly = v;
+}
+
+bool	Channel::isTopicLocked() const
+{
+	return (this->_isTopicLocked);
+}
+
+void	Channel::setTopicLocked(bool v)
+{
+	this->_isTopicLocked = v;
+}
+
+bool	Channel::isPassRequired() const
+{
+	return (this->_isPassRequired);
+}
+
+void	Channel::setPassRequired(bool v)
+{
+	this->_isPassRequired = v;
+}
+
+bool	Channel::isUserLimitEnabled() const
+{
+	return (this->_isUserLimitEnabled);
+}
+
+void	Channel::setUserLimitEnabled(bool v)
+{
+	this->_isUserLimitEnabled = v;
 }
 
 void	Channel::setName(const std::string &toSet)
@@ -85,6 +159,11 @@ void	Channel::removeClient(Client* c)
 	c->removeChannel(this->name);
 }
 
+void	Channel::removeOperator(Client* c)
+{
+	this->ops.erase(c->getNick());
+}
+
 void	Channel::addFlag(std::string flag)
 {
 	this->flags.insert(flag);
@@ -102,6 +181,11 @@ bool	Channel::isOps(Client &c)
 }
 
 bool	Channel::isOps(const std::string &nick) const
+{
+	return (this->ops.count(nick) > 0);
+}
+
+bool	Channel::isInvited(const std::string &nick) const
 {
 	return (this->ops.count(nick) > 0);
 }

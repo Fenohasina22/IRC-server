@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/13 11:07:42 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/13 15:45:32 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,30 @@
 # include "Client.hpp"
 # include <sys/socket.h>
 # include "Server.hpp"
+# include <errno.h>
 
 # ifndef	CRLF
 # define CRLF "\r\n"
 # endif
 
 class Server;
+
+typedef enum ChanModes
+{
+			i,
+			o,
+			t,
+			k,
+			l,
+			unknown
+}			ChanModes;
+
+typedef enum ModeAction
+{
+			ADD,
+			REMOVE,
+			UNKNOWN
+}			ModeAction;
 
 /************************************COMMANDS*********************************/
 bool	capCmd(Client &client, Server& serv);
@@ -46,5 +64,13 @@ std::string	formMess(const Client	&sender,const Client &destCli
 std::string	formChanMess(const Client	&sender,const Channel &destChan,
 				const iRCMessage &mess);
 void		sendChannelState(Client &client, Channel &destChan, Server& serv);
+ChanModes	strToMode(std::string strMode, ModeAction &action);
+void		doIflag(Channel &destChan, ModeAction &act);
+void		doTflag(Channel &destChan, ModeAction &act);
+bool		doKflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args);
+bool		doLflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args);
+int			doOflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args
+			, Client &client, Server &serv);
+
 
 #endif

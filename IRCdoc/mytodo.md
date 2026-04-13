@@ -67,6 +67,11 @@ Last because it's the most complex and the least critical for basic functionalit
 like join a,b,c or msg a,b,c
 
 --------------------------------------
+- [ ] **11. put a limit and error check on the port 
+
+check program argument
+
+----------
 **In short:**
 
 ```
