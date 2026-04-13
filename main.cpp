@@ -96,6 +96,7 @@ int main(int argc, char **argv)
 				Client &c = server.findClient(vecpol[i].fd, success);
 				if (success)
 				{
+					std::cout << "Message sent to client |" << c.getWriteBuffer() << "|"<< std::endl;
 					send(vecpol[i].fd, c.getWriteBuffer().c_str(), c.getWriteBuffer().size(), 0);
 					c.setWriteBuffer("");
 					vecpol[i].events &= ~POLLOUT;
