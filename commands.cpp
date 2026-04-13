@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 16:07:38 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/13 11:54:22 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -410,4 +410,8 @@ bool	kickCmd(Client &client,iRCMessage &mess,Server &serv)
 	return (true);
 }
 
-
+bool	quitCmd(Client& client, Server& serv)
+{
+	// needs stuff here
+	return (true);
+}
