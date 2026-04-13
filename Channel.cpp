@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:09 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 15:43:07 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/13 09:13:00 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,11 @@ void	Channel::addClient(Client* c)
 void	Channel::addOperator(Client* c)
 {
 	this->ops.insert(c->getNick());
+}
+
+void	Channel::addInvited(Client* c)
+{
+	this->invited.insert(c->getNick());
 }
 
 void	Channel::removeClient(Client* c)

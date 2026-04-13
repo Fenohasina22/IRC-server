@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/12 16:02:48 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/13 09:55:53 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ bool	pongCmd(Client &client, iRCMessage &mess, Server& serv)
 	if (mess.args.empty())
 		pongstr = CRLF;
 	else
-		pongstr = mess.args[0] + CRLF;
+		pongstr = "PONG " + mess.args[0] + CRLF;
 	//send(client.getFd(), pongstr.c_str(), pongstr.size(), 0);
 	client.ConcatenateWBuffer(pongstr, serv);
 	return (true);
@@ -411,4 +411,56 @@ bool	kickCmd(Client &client,iRCMessage &mess,Server &serv)
 	return (true);
 }
 
+bool	inviteCmd(Client &client,iRCMessage &mess,Server &serv)
+{
+	// Usage: INVITE nick #channel
+	std::string	invitationMess;
+	std::string	confirmationMess;
 
+	if (mess.args.size() < 2)
+		client.ConcatenateWBuffer(FormatedMessage("461", ":server", "* INVITE :Not enough parameters"), serv);
+
+	bool	foundCli 	= false;
+	bool	foundChan 	= false;
+	Client 	&invitedCli = serv.findClient(mess.args[0], foundCli);
+	Client 	&senderCli  = client;
+	Channel &destChan 	= serv.findChan(mess.args[1], foundChan);
+
+	if (!foundCli)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("401", ":server", client.getNick() + " " + mess.args[0] + " :No such nick"), serv);
+		return (false);
+	}
+	if (!senderCli.isInChannel(mess.args[1]))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("442", ":server", client.getNick() + " " + destChan.getName() + " :You're not on that channel"), serv);
+		return (false);
+	}
+	if (!destChan.isOps(senderCli.getNick()))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("482", ":server", client.getNick() + " " + destChan.getName() + " :You're not a channel operator"), serv);
+		return (false);
+	}
+	if (invitedCli.isInChannel(destChan.getName()))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("443", ":server", client.getNick() + " " + destChan.getName() + " :is already on channel"), serv);
+		return (false);
+	}
+	//to the invited ---> :nick!user@host INVITE target #channel
+	//to the sender ---> :server 341 sender target #channel
+
+	invitationMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
+	invitationMess += " INVITE ";
+	invitationMess += invitedCli.getNick() + " ";
+	invitationMess += destChan.getName();
+	invitationMess += CRLF;
+
+	confirmationMess += senderCli.getNick() + " ";
+	confirmationMess += invitedCli.getNick() + " ";
+	confirmationMess += destChan.getName();
+
+	invitedCli.ConcatenateWBuffer(invitationMess, serv);
+	senderCli.ConcatenateWBuffer(FormatedMessage("341", ":server", confirmationMess), serv);
+
+	destChan.addInvited(&invitedCli);
+}

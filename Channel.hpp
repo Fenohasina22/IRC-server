@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:05 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/11 11:20:08 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/13 09:12:14 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ class Channel
 		std::string					topic;
 		std::set<std::string>		members;
 		std::set<std::string>		ops;
+		std::set<std::string>		invited;
 
 	public:
 		const std::string			getName() const;
@@ -43,6 +44,7 @@ class Channel
 
 		void						addClient(Client* c);
 		void						addOperator(Client* c);
+		void						addInvited(Client* c);
 		void						removeClient(Client* c);
 		bool						isOps(Client &c);
 		bool						operator==(const Channel &other);
