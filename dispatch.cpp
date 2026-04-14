@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dispatch.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 13:29:10 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/14 20:57:31 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 	switch (mess.cmd)
 	{
 		case (CAP):
-			capCmd(client, serv); // concatenated
+			capCmd(client, mess, serv); // concatenated
 			break ;
 		case (PASS):
 			passCmd(client, mess, serv); // concatenated

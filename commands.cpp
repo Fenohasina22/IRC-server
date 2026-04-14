@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 19:46:10 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 21:03:57 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,22 @@
 
 bool	passCmd(Client &client, iRCMessage &mess, Server &serv)
 {
-	// std::cout << "inpasscmd" <<std::endl;
     if (mess.args.empty())
     {
-		//sendCodes(client.getFd(), "461", ":server", "* PASS :Not enough parameters"), serv;
 		client.ConcatenateWBuffer(FormatedMessage("461", ":server", "* PASS :Not enough parameters"), serv);
 		return (false);
 	}
 	if (mess.args[0] != serv.getPass())
     {
-		//sendCodes(client.getFd(), "464", ":server", ":Password incorrect"), serv;
-		client.ConcatenateWBuffer(FormatedMessage("464", ":server", ":Password incorrect"), serv);
-
+		client.ConcatenateWBuffer(FormatedMessage("464", ":server", "* :Password incorrect"), serv);
 		return (false);
 	}
 	if (client.isRegistered())
     {
-		//sendCodes(client.getFd(), "462", ":server", ":You may not reregister");
-		client.ConcatenateWBuffer(FormatedMessage("462", ":server", ":You may not reregister"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("462", ":server", "* :You may not reregister"), serv);
 		return (false);
 	}
     client.setPassState(true);
-	// std::cout << "PASS ok" << std::endl;
 	return (true);
 }
 
@@ -107,18 +101,14 @@ bool	userCmd(Client &client, iRCMessage &mess, Server& serv)
 	return (true);
 }
 
-bool	capCmd(Client &client, Server& serv)
+bool	capCmd(Client &client, iRCMessage &mess, Server& serv)
 {
-	if (client.isRegistered())
-		return (false);
     //send(client.getFd(), ":server CAP * LS :\r\n", 21, 0);
     //send(client.getFd(), ":server CAP * END\r\n", 20, 0);
 	std::string		cap;
 
-	client.ConcatenateWBuffer(":server CAP * LS :\r\n", serv);
-	if (client.isRegistered())
-		client.ConcatenateWBuffer(":server CAP * END\r\n", serv);
-
+	if (!mess.args.empty() && mess.args[0] == "LS")
+		client.ConcatenateWBuffer(":server CAP * LS :\r\n", serv);
 	return (true);
 }
 

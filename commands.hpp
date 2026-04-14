@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 13:29:01 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/14 20:57:17 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef enum ModeAction
 }			ModeAction;
 
 /************************************COMMANDS*********************************/
-bool	capCmd(Client &client, Server& serv);
+bool	capCmd(Client &client, iRCMessage &mess, Server& serv);
 bool	passCmd(Client &client, iRCMessage &mess, Server& serv);
 bool	nickCmd(Client &client, iRCMessage &mess, Server& serv);
 bool	userCmd(Client &client, iRCMessage &mess, Server& serv);
