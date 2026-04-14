@@ -67,9 +67,10 @@ Last because it's the most complex and the least critical for basic functionalit
 like join a,b,c or msg a,b,c or mode +abcd
 
 --------------------------------------
-- [ ] **11. put a limit and error check on the port 
+- [ ] **11. handle this
 
-check program argument
+MODE Not enough parameters
+19:13 -!- Irssi: Not enough parameters given gets sent into status window
 
 ----------
 **In short:**
