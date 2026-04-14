@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 15:05:04 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 15:48:25 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,23 @@
 bool	passCmd(Client &client, iRCMessage &mess, Server &serv)
 {
 	// std::cout << "inpasscmd" <<std::endl;
-    if (client.isRegistered())
-    {
-		//sendCodes(client.getFd(), "462", ":server", ":You may not reregister");
-		client.ConcatenateWBuffer(FormatedMessage("462", ":server", ":You may not reregister"), serv);
-		return (false);
-	}
     if (mess.args.empty())
     {
 		//sendCodes(client.getFd(), "461", ":server", "* PASS :Not enough parameters"), serv;
 		client.ConcatenateWBuffer(FormatedMessage("461", ":server", "* PASS :Not enough parameters"), serv);
-
 		return (false);
 	}
-    if (mess.args[0] != serv.getPass())
+	if (mess.args[0] != serv.getPass())
     {
 		//sendCodes(client.getFd(), "464", ":server", ":Password incorrect"), serv;
 		client.ConcatenateWBuffer(FormatedMessage("464", ":server", ":Password incorrect"), serv);
 
+		return (false);
+	}
+	if (client.isRegistered())
+    {
+		//sendCodes(client.getFd(), "462", ":server", ":You may not reregister");
+		client.ConcatenateWBuffer(FormatedMessage("462", ":server", ":You may not reregister"), serv);
 		return (false);
 	}
     client.setPassState(true);
