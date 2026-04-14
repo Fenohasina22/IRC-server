@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 14:53:34 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 18:04:56 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ bool	getParams(char **argv, Server &serv)
 	if (errno)
 		return (false);
 	if (*endptr != 0 || endptr == argv[1])
+		return (false);
+	if (newPort < 1024 || newPort > 65535)
 		return (false);
 	serv.setPort(newPort);
 	serv.setPass(newPass);
