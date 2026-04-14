@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 19:02:23 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 19:46:10 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,19 +152,12 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 
 	if (!foundClient && !foundChan)
 	{
-		//sendCodes(client.getFd(), "401", ":server", client.getNick() + " " + mess.args[0] + " :No such nick/channel");
 		client.ConcatenateWBuffer(FormatedMessage("401", ":server", client.getNick() + " " + mess.args[0] + " :No such nick/channel"), serv);
 		return (false);
 	}
 	if (foundClient)
 	{
-		if (!foundChan)
-		{
-			client.ConcatenateWBuffer(FormatedMessage("403", ":server", client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
-			return (false);
-		}
 		messageOutput = formMess(sender, destCli, mess);
-		//send(destCli.getFd(), messageOutput.c_str(), messageOutput.size(), 0);
 		destCli.ConcatenateWBuffer(messageOutput, serv);
 	}
 	else
@@ -179,16 +172,12 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 			messageOutput = formChanMess(sender, destChan, mess);
 			if (target.getNick() != client.getNick())
 				target.ConcatenateWBuffer(messageOutput, serv);
-				//send(target.getFd(), messageOutput.c_str(), messageOutput.size(), 0);
-
 		}
 	}
 	std::cout <<messageOutput<< std::endl;
 	return (true);
 }
 
-//add these:
-// 471 nick #channel :Cannot join channel (+l)
 bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 {
 	Channel 	*destChan;

@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "mytodo.md",
-                "mode": "source",
+                "file": "MID test.md",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "mytodo"
+              "title": "MID test"
             }
           }
         ],
@@ -200,9 +200,9 @@
   },
   "active": "ea1122087de86c20",
   "lastOpenFiles": [
+    "mytodo.md",
     "MID test.md",
     "# IRC SERVER — FINAL TEST PLAN.md",
-    "mytodo.md",
     "InitialBuildPlan.md",
     "InitialIRCFamiliarisation.md",
     "Pasted image 20260404093647.png",

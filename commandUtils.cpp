@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commandUtils.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 13:28:13 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/14 19:28:50 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void 	tryRegistration(Client &client, Server& serv)
 		std::string msg003 = ":server 003 " + client.getNick() + " :This server was created just now" + CRLF;
 		std::string msg004 = ":server 004 " + client.getNick() + " idk bro put all the infos abt our server" + CRLF;
 		std::string all = msg001 + msg002 + msg003 + msg004;
-		
+
 		client.ConcatenateWBuffer(all, serv);
 	}
 }
@@ -36,7 +36,7 @@ std::string	formMess(const Client	&sender,const Client &destCli,const iRCMessage
 	messageOutput += ":" + sender.getNick();
 	messageOutput += " PRIVMSG ";
 	messageOutput += destCli.getNick() + " ";
-	messageOutput += mess.args[1]; // U need to check here cause seg when PRIVMSG user <no more args> with nc
+	messageOutput += mess.args[1];
 	messageOutput += CRLF;
 	return (messageOutput);
 }
@@ -88,33 +88,26 @@ void	sendChannelState(Client &client, Channel &destChan, Server &serv)
 	if (destChan.getTopic() == "")
 	{
 		// 331 nick #channel :No topic is set
-		//sendCodes(client.getFd(), "331", ":server", client.getNick() + " " + destChan.getName() + " :No topic is set");
-		client.ConcatenateWBuffer(FormatedMessage("331", ":server", client.getNick() + " " + destChan.getName() + " :No topic is set"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("331", ":server"
+			, client.getNick() + " " + destChan.getName() + " :No topic is set"), serv);
 	}
 	else
 	{
-
-		//sendCodes(client.getFd(), "332", ":server", client.getNick() + " " + destChan.getName() + " :" + destChan.getTopic());
-		client.ConcatenateWBuffer(FormatedMessage("332", ":server", client.getNick() + " " + destChan.getName() + " :" + destChan.getTopic()), serv);
+		client.ConcatenateWBuffer(FormatedMessage("332", ":server"
+			, client.getNick() + " " + destChan.getName()
+			+ " :" + destChan.getTopic()), serv);
 	}
-		// 332 nick #channel :topic text
-		// 353 nick = #channel :@nick1 nick2 nick3
 	std::string nameList = formNameList(destChan);
 	mess += client.getNick();
-	mess += " = "; // the = means “public channel”, just hardcode = for now
+	mess += " = ";
 	mess += destChan.getName();
 	mess += " :" + nameList;
-	//sendCodes(client.getFd(), "353", ":server", mess);
 	client.ConcatenateWBuffer(FormatedMessage("353", ":server", mess), serv);
-	// 366 nick #channel :End of /NAMES list
 	mess.clear();
 	mess += client.getNick() + " ";
 	mess += destChan.getName();
 	mess += " :End of /NAMES list";
-	//sendCodes(client.getFd(), "366", ":server", mess);
 	client.ConcatenateWBuffer(FormatedMessage("366", ":server", mess), serv);
-
-	// Unlike PRIVMSG, you do send JOIN back to the joining client
 }
 
 ChanModes strToMode(std::string strMode, ModeAction &action)
