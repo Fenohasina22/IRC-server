@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 13:28:35 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/14 13:36:20 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,12 @@ bool	pongCmd(Client &client, iRCMessage &mess, Server& serv)
 
 bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 {
+	if (mess.args.size() < 2)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("461", ":server", "* PRIVMSG :Not enough parameters"), serv);
+		return (false);
+	}
+
 	bool			foundClient 	= false;
 	bool			foundChan	 	= false;
 	Client			&destCli	 	= serv.findClient(mess.args[0], foundClient);
@@ -595,7 +601,7 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 
 	// transform the binary into string
 	inet_ntop(AF_INET, &tmp.sin_addr, hostname, INET_ADDRSTRLEN);
-	msg = ":" + client.getNick() + "!" + client.getUser() + "@" + hostname + " QUIT " + mess.args[0] + CRLF;   
+	msg = ":" + client.getNick() + "!" + client.getUser() + "@" + hostname + " QUIT " + mess.args[0] + CRLF;
 	joinedChannel = client.getJoinedChannels();
 	for (std::set<std::string>::iterator it = joinedChannel.begin(); it != joinedChannel.end(); it++)
 	{
@@ -604,7 +610,7 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 		if (success)
 		{
 			serv.broadcast(msg, client, chan, serv);
-			chan.removeClient(&client);		
+			chan.removeClient(&client);
 		}
 		else
 		{
@@ -619,6 +625,6 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 bool	disconnectCmd(Client& client, Server& serv)
 {
 	(void) serv;
-	std::cout << GREEN <<  client.getUser() << " disconected" << RESET << std::endl;	 
+	std::cout << GREEN <<  client.getUser() << " disconected" << RESET << std::endl;
 	return (true);
 }
