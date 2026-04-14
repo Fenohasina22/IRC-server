@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:00:12 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/13 15:24:15 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/14 08:18:22 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ class Client
 
 		void			ConcatenateRBuffer(std::string str);
 		
+		std::set<std::string>	getJoinedChannels() const;
 		Client();
 		Client&	operator=(const Client& c);
 		~Client();
