@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:09 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 15:04:21 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 16:10:08 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,8 @@ void	Channel::addInvited(Client* c)
 void	Channel::removeClient(Client* c)
 {
 	this->members.erase(c->getNick());
+	if (this->isOps(c->getNick()))
+		this->removeOperator(c);
 	c->removeChannel(this->name);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 15:48:25 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 16:10:05 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,18 +80,17 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 
 bool	userCmd(Client &client, iRCMessage &mess, Server& serv)
 {
+	if (mess.args.size() < 4)
+    {
+		//sendCodes(client.getFd(), "461" , ":server", "* USER :Not enough parameters"), serv;
+		client.ConcatenateWBuffer(FormatedMessage("461" , ":server", "* USER :Not enough parameters"), serv);
+
+		return (false);
+	}
 	if (client.isRegistered())
     {
 		//sendCodes(client.getFd(), "462", ":server", ":You may not reregister"), serv;
 		client.ConcatenateWBuffer(FormatedMessage("462", ":server", ":You may not reregister"), serv);
-		return (false);
-	}
-    if (mess.args.size() < 4)
-    {
-		//sendCodes(client.getFd(), "461" , ":server", "* USER :Not enough parameters"), serv;
-		printiRCMESS(mess);
-		client.ConcatenateWBuffer(FormatedMessage("461" , ":server", "* USER :Not enough parameters"), serv);
-
 		return (false);
 	}
     client.setUser(mess.args[0]);
@@ -207,6 +206,11 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 	else
 		destChan = &(serv.findChan(mess.args[0], foundChan));
 	//chck channel restrictions
+	if (client.isInChannel(mess.args[0]))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("443", ":server", client.getNick() + " " + mess.args[0] + " :is already on channel"), serv);
+		return (false);
+	}
 	if (destChan->isInviteOnly() && !destChan->isInvited(client.getNick()))
 	{
 		client.ConcatenateWBuffer(FormatedMessage("473", ":server", client.getNick() + " " + destChan->getName() + " :cannot join channel (+i)"), serv);
@@ -224,11 +228,6 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 	}
 	//if allowed
 	//1-adduser to channel;
-	if (client.isInChannel(mess.args[0]))
-	{
-		client.ConcatenateWBuffer(FormatedMessage("443", ":server", client.getNick() + " " + mess.args[0] + " :is already on channel"), serv);
-		return (false);
-	}
 	destChan->addClient(&client);
 	//2-if 1st user make user operator
 	if (destChan->getMembers().size() == 1)
