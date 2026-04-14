@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/13 15:20:56 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/14 13:10:50 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <sys/socket.h>
 #include <arpa/inet.h>
 # include "Server.hpp"
+#include <sstream>
 
 # ifndef	CRLF
 # define CRLF "\r\n"

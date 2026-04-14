@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/13 15:56:44 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/14 10:52:03 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,26 +225,37 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 
 void	Server::Processmessage (int i)
 {
-	char	buff[MSG_BUFFERSIZE + 1];
-	int		retval;
-	bool	success;
+	char			buff[MSG_BUFFERSIZE + 1];
+	int				retval;
+	bool			success;
+	//iRCMessage		exitMessage;
 
 
 	memset (buff, 0, MSG_BUFFERSIZE + 1);
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
 	std::cout << YELLOW << buff << RESET << std::endl;
+	//exitMessage.args.push_back("Leaving");
 	if (retval == -1)
 	{
-		std::cout << "Recv error" << std::endl;
-		/*disconnect*/
+		if (errno == EAGAIN || errno == EWOULDBLOCK)
+			return ;
+		else
+		{
+			std::cout << "Recv error" << std::endl;
+			// cleanup
+		}		
+		return ;
 	}
 	else if (retval == 0)
 	{
+
+		std::cout << RED << "TEST" << RESET << std::endl;
+		// Add this to recv -1
+		// should send message when nickchange
 		std::cout << "The client disconnected" << std::endl;
-		/*disconnnect*/
-		close (this->getVecPoll()[i].fd); // close fd
-		//close(this-)
 		// remove client from all channel
+		//quitCmd(exitMessage, this->_allClients[i], *this);
+		close (this->getVecPoll()[i].fd); // close fd
 		std::cout << "vec = "<< this->_vecPoll.size() << std::endl;
 		this->_vecPoll.erase(this->_vecPoll.begin() + i); // erase the client
 		std::cout << "allCli = "<< this->_allClients.size() << std::endl;

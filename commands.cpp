@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 08:50:01 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/14 10:08:05 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -412,19 +412,15 @@ bool	kickCmd(Client &client,iRCMessage &mess,Server &serv)
 
 bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 {
-	(void)serv;
-	std::string msg;
-	char	hostname[INET_ADDRSTRLEN];
-	std::set<std::string> joinedChannel;
+	std::set<std::string>	joinedChannel;
+	std::string				msg;
+	char					hostname[INET_ADDRSTRLEN];
+	struct sockaddr_in		tmp = client.getClientInfos();
 
 
-	struct sockaddr_in	tmp = client.getClientInfos();
 	// transform the binary into string
-	std::cout << RED << "HERE" << std::endl;
 	inet_ntop(AF_INET, &tmp.sin_addr, hostname, INET_ADDRSTRLEN);
-
 	msg = ":" + client.getNick() + "!" + client.getUser() + "@" + hostname + " QUIT " + mess.args[0] + CRLF;   
-	//client.ConcatenateWBuffer(msg, serv);
 	joinedChannel = client.getJoinedChannels();
 	for (std::set<std::string>::iterator it = joinedChannel.begin(); it != joinedChannel.end(); it++)
 	{
@@ -435,6 +431,10 @@ bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 			serv.broadcast(msg, client, chan, serv);
 			chan.removeClient(&client);		
 		}
+		else
+		{
+			return (false);
+		}
 	}
 	std::cout << RED << msg << RESET << std::endl;
 	std::cout << GREEN  << "Bye " << client.getUser() << RESET << std::endl;
@@ -444,7 +444,6 @@ bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 bool	disconnectCmd(Client& client, Server& serv)
 {
 	(void) serv;
-	std::cout << GREEN <<  client.getUser() << " disconected" << RESET << std::endl;
-	 
+	std::cout << GREEN <<  client.getUser() << " disconected" << RESET << std::endl;	 
 	return (true);
 }
