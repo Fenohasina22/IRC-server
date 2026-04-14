@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:40 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/13 14:21:01 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/14 18:35:18 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,20 @@
 
 
 
-//KICK - Eject a client from the channel
-//TOPIC - Change or view the channel topic
-//MODE - Change the channel’s mode:
-//JOIN	Client joins a channel — created automatically if it doesn't exist. First user becomes channel operator. Send back topic + names list
-//PART	Client leaves a channel
-//PRIVMSG	Send message to a channel or user
-//TOPIC	View or set channel topic — only ops can set if mode +t
+// CAP — negotiates client/server capabilities before full registration
+// PASS — provides server password for authentication
+// NICK — sets or changes the client’s nickname
+// USER — supplies username and real name to complete registration
+// PING — checks connection liveness (expects PONG reply)
+// KICK — forcibly removes a user from a channel
+// TOPIC — sets or retrieves the channel’s topic
+// MODE — changes or queries user/channel modes (permissions and flags)
+// JOIN — makes a user enter a channel (creates it if needed)
+// PART — makes a user leave a channel
+// PRIVMSG — sends a message to a user or channel
+// INVITE — invites a user to join a channel
+// QUIT — disconnects a client from the server with a message
+// DISCONNECT — non-standard command to forcibly close a connection (server-specific)
 typedef enum	command
 {
 	CAP     ,
@@ -56,6 +63,7 @@ typedef enum	command
 	UNKNOWN
 }				command;
 
+
 struct iRCMessage
 {
 	std::string 				prefix;
@@ -67,11 +75,11 @@ struct iRCMessage
 };
 
 
+void						initialiseIRCMessage(iRCMessage &msg);
 iRCMessage					parseMessage(const std::string &strMess);
 bool						isMessValid(const iRCMessage &mess);
 std::vector<std::string>	split(const std::string& str, char delimiter);
 std::vector<std::string>	splitCRLF(const std::string& str);
-void	printiRCMESS(iRCMessage mess);
 
 
 #endif
