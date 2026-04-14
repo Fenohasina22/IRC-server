@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 14:11:36 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 14:14:55 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,12 @@ bool	pongCmd(Client &client, iRCMessage &mess, Server& serv)
 
 bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 {
+	if (mess.args.size() < 2)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("461", ":server", "* PRIVMSG :Not enough parameters"), serv);
+		return (false);
+	}
+
 	bool			foundClient 	= false;
 	bool			foundChan	 	= false;
 	Client			&destCli	 	= serv.findClient(mess.args[0], foundClient);

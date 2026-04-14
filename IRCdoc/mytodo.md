@@ -22,7 +22,7 @@ Do this right after registration, not at the end. You'll be connecting and disco
 
 ---
 
-- [/] **5. Command dispatcher**
+- [x] **5. Command dispatcher**
 
 Now that you have a parser and at least PASS/NICK/USER/QUIT working, build the full dispatcher. Add all the command strings, route to stub functions that just print "command received" for now. This gives you the skeleton everything else plugs into.
 
@@ -34,7 +34,7 @@ Before channels, do direct user-to-user PRIVMSG. It's simpler — no channel loo
 
 ---
 
-- [/] **7. Channel management — JOIN, PART, NAMES, TOPIC, KICK, INVITE**
+- [x] **7. Channel management — JOIN, PART, NAMES, TOPIC, KICK, INVITE**
 
 Now channels. Do them in this sub-order:
 
@@ -64,7 +64,7 @@ Last because it's the most complex and the least critical for basic functionalit
 ---
 - [ ] **10. Handle multi-args /join and /privmsg and /modes
 
-like join a,b,c or msg a,b,c
+like join a,b,c or msg a,b,c or mode +abcd
 
 --------------------------------------
 - [ ] **11. put a limit and error check on the port 
