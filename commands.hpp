@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/13 15:45:32 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 12:37:50 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef enum ModeAction
 {
 			ADD,
 			REMOVE,
-			UNKNOWN
+			NO_ACTION
 }			ModeAction;
 
 /************************************COMMANDS*********************************/

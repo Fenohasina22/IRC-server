@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/13 16:00:59 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 12:41:37 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,15 +124,14 @@ void	sendChannelState(Client &client, Channel &destChan, Server &serv)
 
 ChanModes strToMode(std::string strMode, ModeAction &action)
 {
-	ModeAction act;
 	if (strMode.size() < 2)
-		act = UNKNOWN;
+		action = NO_ACTION;
 	else if (strMode[0] == '+')
-		act = ADD;
+		action = ADD;
 	else if (strMode[0] == '-')
-		act = REMOVE;
+		action = REMOVE;
 	else
-		act = UNKNOWN;
+		action = NO_ACTION;
 	if (strMode == "+i"  || strMode == "-i")
 		return (i);
 	else if (strMode == "+o"  || strMode == "-o")

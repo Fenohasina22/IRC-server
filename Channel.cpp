@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:09 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/13 15:52:55 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 12:34:51 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,4 +188,41 @@ bool	Channel::isOps(const std::string &nick) const
 bool	Channel::isInvited(const std::string &nick) const
 {
 	return (this->ops.count(nick) > 0);
+}
+
+std::string	Channel::flagsToStr()
+{
+	std::string					res;
+	std::vector<std::string>	args;
+
+	if (!this->flags.empty())
+		res += "+";
+	if (this->isInviteOnly())
+		res += "i";
+	if (this->isTopicLocked())
+		res += "t";
+	if (this->isPassRequired())
+	{
+		res += "k";
+		args.push_back(this->pass);
+	}
+	if (this->isUserLimitEnabled())
+	{
+		std::stringstream	ss;
+		std::string 		strMax;
+
+		ss << this->maxUser;
+		ss >> strMax;
+
+		res += "l";
+		args.push_back(strMax);
+	}
+	res += " ";
+	for (size_t i = 0; i < args.size(); i++)
+	{
+		res += args[i];
+		if (i != args.size() - 1)
+			res += " ";
+	}
+	return (res);
 }

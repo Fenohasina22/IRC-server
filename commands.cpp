@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/13 16:07:21 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 12:40:46 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,7 +213,7 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 		client.ConcatenateWBuffer(FormatedMessage("475", ":server", client.getNick() + " " + destChan->getName() + " :cannot join channel (+k)"), serv);
 		return (false);
 	}
-	if (destChan->getMembers().size() + 1 > destChan->getMaxUser())
+	if (static_cast<int>(destChan->getMembers().size() + 1) > destChan->getMaxUser())
 	{
 		client.ConcatenateWBuffer(FormatedMessage("471", ":server", client.getNick() + " " + destChan->getName() + " :cannot join channel (+l)"), serv);
 		return (false);
@@ -503,11 +503,12 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 {
 	//MODE #channel chanmode
 
-	if (mess.args.size() < 2)
+	if (mess.args.size() < 1)
 	{
 		client.ConcatenateWBuffer(FormatedMessage("461", ":server", client.getNick() + " MODE :Not enough parameters"), serv);
 		return (false);
 	}
+
 
 	bool	foundChan = false;
 	Channel &destChan = serv.findChan(mess.args[0], foundChan);
@@ -516,6 +517,11 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 	{
 		client.ConcatenateWBuffer(FormatedMessage("403", ":server", client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
 		return (false);
+	}
+	if (mess.args.size() < 2)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("324", ":server", client.getNick() + " " + destChan.getName() + " " + destChan.flagsToStr()), serv);
+		return (true);
 	}
 	if (!destChan.isOps(client.getNick()))
 	{
@@ -528,7 +534,7 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 	std::vector<std::string>	args = mess.args;
 
 	mode = strToMode(mess.args[1], act);
-	if (mode == unknown || act == UNKNOWN)
+	if (mode == unknown || act == NO_ACTION)
 	{
 		// 472 nick x :is unknown mode char to me
 		client.ConcatenateWBuffer(FormatedMessage("472", ":server", client.getNick() + " " + mess.args[1] + " :is unknown mode char to me"), serv);
@@ -566,5 +572,15 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 		default:
 			break;
 	}
-	client.ConcatenateWBuffer(FormatedMessage("324", ":server", client.getNick() + " " + destChan.getName() + " " + ), serv);
+	std::string broadcastMess;
+
+	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
+	broadcastMess += " MODE ";
+	broadcastMess += destChan.getName();
+	broadcastMess += mess.args[1];
+	broadcastMess += CRLF;
+
+	serv.broadcast(broadcastMess, client, destChan, serv);
+	client.ConcatenateWBuffer(broadcastMess, serv);
+	return (true);
 }
