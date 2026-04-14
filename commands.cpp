@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 16:10:05 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 17:51:50 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 	}
 	newNick = mess.args[0];
 
+	if (!newNick.empty() && newNick[0] == ':')
+		newNick = newNick.substr(1);
 
 	/*---------------------------------fix this ----------------------------------------------*/
 	for (unsigned int i = 0; i < serv.getAllClients().size(); i++)
@@ -80,6 +82,8 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 
 bool	userCmd(Client &client, iRCMessage &mess, Server& serv)
 {
+	std::string newUser;
+
 	if (mess.args.size() < 4)
     {
 		//sendCodes(client.getFd(), "461" , ":server", "* USER :Not enough parameters"), serv;
@@ -87,13 +91,16 @@ bool	userCmd(Client &client, iRCMessage &mess, Server& serv)
 
 		return (false);
 	}
+	newUser = mess.args[0];
 	if (client.isRegistered())
     {
 		//sendCodes(client.getFd(), "462", ":server", ":You may not reregister"), serv;
 		client.ConcatenateWBuffer(FormatedMessage("462", ":server", ":You may not reregister"), serv);
 		return (false);
 	}
-    client.setUser(mess.args[0]);
+	if (!newUser.empty() && newUser[0] == ':')
+		newUser = newUser.substr(1);
+    client.setUser(newUser);
     client.setReal(mess.args[3]);
     client.setUserState(true);
     tryRegistration(client, serv);
