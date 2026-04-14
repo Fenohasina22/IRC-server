@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 12:41:37 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 13:22:33 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ ChanModes strToMode(std::string strMode, ModeAction &action)
 		return (t);
 	else if (strMode == "+k"  || strMode == "-k")
 		return (k);
-	else if (strMode == "+o"  || strMode == "-o")
+	else if (strMode == "+l"  || strMode == "-l")
 		return (l);
 	else
 		return (unknown);
@@ -178,10 +178,10 @@ bool	doKflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args)
 {
 	if (act == ADD)
 	{
-		if (args.size() < 2)
+		if (args.size() < 3)
 			return (false);
 		destChan.addFlag("k");
-		destChan.setPass(args[1]);
+		destChan.setPass(args[2]);
 		destChan.setPassRequired(true);
 	}
 	else
@@ -199,11 +199,11 @@ bool	doLflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args)
 	char	*endptr;
 	if (act == ADD)
 	{
-		if (args.size() < 2)
+		if (args.size() < 3)
 			return (false);
 		errno = 0;
-		newLimit = std::strtol(args[1].c_str(), &endptr, 10);
-		if (*endptr || endptr == args[1])
+		newLimit = std::strtol(args[2].c_str(), &endptr, 10);
+		if (*endptr || endptr == args[2])
 			return (false);
 		if (errno)
 			return (false);

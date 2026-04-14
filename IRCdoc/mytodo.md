@@ -52,7 +52,7 @@ You'll have been adding these as you go. At this point do a full pass — check 
 
 ---
 
-- [ ] **9. MODE handling**
+- [x] **9. MODE handling**
 
 Last because it's the most complex and the least critical for basic functionality.
 · i: Set/remove Invite-only channel
@@ -62,7 +62,7 @@ Last because it's the most complex and the least critical for basic functionalit
 · l: Set/remove the user limit to channel
 
 ---
-- [ ] **10. Handle multi-args /join and /privmsg 
+- [ ] **10. Handle multi-args /join and /privmsg and /modes
 
 like join a,b,c or msg a,b,c
 

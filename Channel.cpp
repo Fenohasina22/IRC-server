@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:09 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 12:34:51 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 13:04:19 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,8 +195,8 @@ std::string	Channel::flagsToStr()
 	std::string					res;
 	std::vector<std::string>	args;
 
-	if (!this->flags.empty())
-		res += "+";
+
+	res += "+";
 	if (this->isInviteOnly())
 		res += "i";
 	if (this->isTopicLocked())

@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 12:40:46 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 13:00:53 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -511,13 +511,16 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 
 
 	bool	foundChan = false;
+	bool	foundCli = false;
 	Channel &destChan = serv.findChan(mess.args[0], foundChan);
-
-	if (!foundChan)
+	serv.findClient(mess.args[0], foundCli);
+	if (!foundChan && !foundCli)
 	{
 		client.ConcatenateWBuffer(FormatedMessage("403", ":server", client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
 		return (false);
 	}
+	if (foundCli)
+		return (false);
 	if (mess.args.size() < 2)
 	{
 		client.ConcatenateWBuffer(FormatedMessage("324", ":server", client.getNick() + " " + destChan.getName() + " " + destChan.flagsToStr()), serv);
@@ -576,7 +579,7 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 
 	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
 	broadcastMess += " MODE ";
-	broadcastMess += destChan.getName();
+	broadcastMess += destChan.getName() + " ";
 	broadcastMess += mess.args[1];
 	broadcastMess += CRLF;
 
