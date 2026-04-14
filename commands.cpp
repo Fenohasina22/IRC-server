@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 14:14:55 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 15:05:04 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,6 +243,8 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 	// send(client.getFd(), broadcastMess.c_str(), broadcastMess.size(), 0);
 	client.ConcatenateWBuffer(broadcastMess, serv);
 	serv.broadcast(broadcastMess, client, *destChan, serv);
+	if (destChan->isInvited(client.getNick()))
+		destChan->removeInvited(&client);
 	//4-send channel state (topic+userlist)
 	sendChannelState(client, *destChan, serv);
 	return (true);
@@ -591,7 +593,9 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 	serv.broadcast(broadcastMess, client, destChan, serv);
 	client.ConcatenateWBuffer(broadcastMess, serv);
 	return (true);
-}bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
+}
+
+bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 {
 	std::set<std::string>	joinedChannel;
 	std::string				msg;

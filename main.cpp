@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 11:03:13 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/14 14:53:34 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ bool	getParams(char **argv, Server &serv)
 void	signalHandler(int sig)
 {
 	(void)sig;
-	std::cout << "SIGINT catched" << std::endl;
+	std::cout << "SIGINT caught" << std::endl;
 }
 
 int main(int argc, char **argv)
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 		std::cout << "Usage: ./ft_irc <port> <pass>" << std::endl;
 		return (1);
 	}
-	// signal handling 
+	// signal handling
 	signal(SIGPIPE, SIG_IGN);
 	signal(SIGINT, signalHandler);
 	struct sockaddr_in	clientinfo;
@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 	{
 		return (0);
 	}
-	
+
 	sock.events = POLLIN;
 	sock.fd =  server.getSockfd();
 	// ensure revents is initialized to avoid valgrind uninitialized use

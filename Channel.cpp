@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:09 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 13:04:19 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 15:04:21 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,12 @@ void	Channel::removeFlag(std::string flag)
 {
 	if (!flags.empty())
 		this->flags.erase(flag);
+}
+
+void	Channel::removeInvited(Client *c)
+{
+	if (!invited.empty())
+		this->invited.erase(c->getNick());
 }
 
 bool	Channel::isOps(Client &c)
