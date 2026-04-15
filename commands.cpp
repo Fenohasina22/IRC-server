@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 21:03:57 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 07:19:54 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,20 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv)
 {
     if (mess.args.empty())
     {
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server", "* PASS :Not enough parameters"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+			 "* PASS :Not enough parameters"), serv);
 		return (false);
 	}
 	if (mess.args[0] != serv.getPass())
     {
-		client.ConcatenateWBuffer(FormatedMessage("464", ":server", "* :Password incorrect"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("464", ":server",
+			 "* :Password incorrect"), serv);
 		return (false);
 	}
 	if (client.isRegistered())
     {
-		client.ConcatenateWBuffer(FormatedMessage("462", ":server", "* :You may not reregister"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("462", ":server",
+			 "* :You may not reregister"), serv);
 		return (false);
 	}
     client.setPassState(true);
