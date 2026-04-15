@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/15 08:36:15 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 10:57:40 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,12 @@ sockaddr_in	Server::getSocketstats() const
 {
 	return (this->_addr);
 }
+
+std::vector<Client>&	Server::getTrueClients()
+{
+	return (this->_allClients);
+}
+
 
 int	Server::Initialize()
 {
@@ -136,6 +142,40 @@ Client &Server::findClient(int fd, bool	&success)
 	return (this->_allClients[fakeIdx]);
 }
 
+Client &Server::findTrueClient(int fd, bool	&success)
+{
+	int		fakeIdx = this->_trueClients.size() - 1;
+
+	success = false;
+	for (size_t idx = 0; idx < this->_trueClients.size(); ++idx)
+	{
+		if (this->_trueClients[idx].getFd() == fd)
+		{
+			success = true;
+			return (this->_trueClients[idx]);
+		}
+		fakeIdx = idx;
+	}
+	return (this->_trueClients[fakeIdx]);
+}
+
+Client &Server::findTrueClient(std::string nick, bool	&success)
+{
+	int		fakeIdx = this->_trueClients.size() - 1;
+
+	success = false;
+	for (size_t idx = 0; idx < this->_trueClients.size(); ++idx)
+	{
+		if (this->_trueClients[idx].getNick() == nick)
+		{
+			success = true;
+			return (this->_trueClients[idx]);
+			fakeIdx = idx;
+		}
+	}
+	return (this->_trueClients[fakeIdx]);
+}
+
 Client &Server::findClient(std::string nick, bool	&success)
 {
 	int		fakeIdx = this->_allClients.size() - 1;
@@ -203,21 +243,28 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 	std::string					recvBuf;
 	size_t						count;
 	bool						foundClnt;
+	Client						*c;
+	bool						validPass;
 
+	c = NULL;
+	validPass = false;
 	cl.ConcatenateRBuffer(buff);
 	recvBuf = cl.getReadBuffer();
 	count = countOccurrences(recvBuf, CRLF);
 	messages = splitCRLF(recvBuf);
 	for (size_t m = 0; m < count; ++m)
 	{
-		Client& c = server.findClient(server.getVecPoll()[i].fd, foundClnt);
+		if (!validPass)
+			c = &(server.findClient(server.getVecPoll()[i].fd, foundClnt));
+		else
+			c = &(server.findTrueClient(server.getVecPoll()[i].fd, foundClnt));
 		if (!foundClnt)
 		{
 			std::cout << "no such client" << std::endl;
 			return (1);
 		}
 		parsedMess = parseMessage(messages[m]);
-		dispatchCommand(parsedMess, c, server);
+		dispatchCommand(parsedMess, *c, server, validPass);
 	}
 	return (0);
 }
@@ -264,10 +311,15 @@ void	Server::Processmessage (int i)
 			std::cout << "Client erased" << std::endl;
 			std::cout << "i = " << i << std::endl;
 			this->_allClients.erase(this->_allClients.begin() + i - 1); // erase client from clients
+			// erase true clients too
 		}
 		return ;
 	}
 	Client& cl = this->findClient(this->_vecPoll[i].fd, success);
+	/*
+
+	*/
+
 	if (!HasCRLF(buff))
 	{
 		cl.ConcatenateRBuffer(buff);
@@ -338,39 +390,8 @@ pollfd&	Server::findElementByfd(int fd, bool& a)
 }
 
 
-void	Server::removeClientByFd(int fd)
-{
-	std::vector<pollfd> &vec = this->_vecPoll;
-	std::vector<Client> &vecCli = this->_allClients;
-	std::vector<pollfd>::iterator it;
-	std::vector<Client>::iterator itC;
+//
 
-	it = vec.begin();
-	while (it != vec.end())
-	{
-		if ((*it).fd == fd)
-		{
-			it = vec.erase(vec.begin() + i);
-		}
-		else
-		{
-			it++;
-		}
-	}
-
-	itC = vecCli.begin();
-	while (itC != vecCli.end())
-	{
-		if ((*itC).getFd() == fd)
-		{
-			itC = vecCli.erase(vecCli.begin() + i);
-		}
-		else
-		{
-			itC++;
-		}
-	}
-}
 // {
 // 	std::vector<pollfd> &vec = this->_vecPoll;
 // 	// find pollfd index

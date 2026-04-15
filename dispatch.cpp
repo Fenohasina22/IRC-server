@@ -6,13 +6,13 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/15 08:36:26 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 10:52:43 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "dispatch.hpp"
 
-void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
+void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv, bool &validPass)
 {
 	//1-if !registered && !registering_command:return;
 	// std::cout << "indispatch" <<std::endl;
@@ -27,7 +27,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv)
 			capCmd(client, mess, serv); // concatenated
 			break ;
 		case (PASS):
-			passCmd(client, mess, serv); // concatenated
+			passCmd(client, mess, serv, validPass); // concatenated
 			break;
 		case (NICK):
 			nickCmd(client, mess, serv); // concatenated

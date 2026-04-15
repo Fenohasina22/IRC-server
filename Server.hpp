@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/15 08:18:56 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 10:28:40 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ class Server
 		int						_sockfd;
 		std::vector<pollfd>		_vecPoll;
 		std::vector<Client>  	_allClients;
+		std::vector<Client>		_trueClients;
 		std::vector<Channel>	_allChannels;
 		std::string				_password;
 		int						_port;
@@ -61,12 +62,17 @@ class Server
 		sockaddr_in				getSocketstats() const;
 		int						getPort() const;
 		const std::string		getPass() const;
+		std::vector<Client>&	getTrueClients();
 		int						Initialize();
 		void 					setPass(std::string newPass);
 		void					setPort(int newPort);
 		std::vector<Client>		&getAllClients();
 		std::vector<Channel>	&getAllChans();
 		Client 					&findClient(int fd, bool &success);
+		Client&					findTrueClient(int fd, bool	&success);
+		Client&					findTrueClient(std::string nick, bool &success);
+
+
 		Client 					&findClient(std::string nick, bool &success);
 		Channel 				&findChan(std::string name, bool &success);
 		bool					NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize);
@@ -75,7 +81,8 @@ class Server
 		void					broadcast(std::string &mess, const Client &caster, const Channel &chan, Server& serv);
 		pollfd&					findElementByfd(int fd, bool& a);
 		void					removeClientByFd(int fd);
-};
+
+	};
 
 
 #endif

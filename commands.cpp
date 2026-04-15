@@ -6,13 +6,13 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/15 08:36:39 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 10:51:31 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commands.hpp"
 
-bool	passCmd(Client &client, iRCMessage &mess, Server &serv)
+bool	passCmd(Client &client, iRCMessage &mess, Server &serv, bool &validPass)
 {
     if (mess.args.empty())
     {
@@ -24,7 +24,7 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv)
     {
 		client.ConcatenateWBuffer(FormatedMessage("464", ":server",
 			 "* :Password incorrect"), serv);
-		serv.removeClientByFd(client.getFd());
+		// serv.removeClientByFd(client.getFd());
 		return (false);
 	}
 	if (client.isRegistered())
@@ -34,6 +34,8 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv)
 		return (false);
 	}
     client.setPassState(true);
+	validPass = true;
+	serv.getTrueClients().push_back(client);
 	return (true);
 }
 

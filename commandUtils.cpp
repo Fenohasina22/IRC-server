@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/15 07:50:05 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 10:51:51 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,9 +251,9 @@ int	doOflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args, 
 
 bool	isNicknameInUse(Server &serv, Client &client, std::string &newNick)
 {
-	for (unsigned int i = 0; i < serv.getAllClients().size(); i++)
+	for (unsigned int i = 0; i < serv.getTrueClients().size(); i++)
 	{
-		if (serv.getAllClients()[i].getNick() == newNick)
+		if (serv.getTrueClients()[i].getNick() == newNick)
 		{
 			if (!client.isRegistered())
 			{

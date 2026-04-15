@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/15 07:50:33 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 10:51:50 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef enum ModeAction
 
 /************************************COMMANDS*********************************/
 bool	capCmd(Client &client, iRCMessage &mess, Server& serv);
-bool	passCmd(Client &client, iRCMessage &mess, Server& serv);
+bool	passCmd(Client &client, iRCMessage &mess, Server& serv, bool& validPass);
 bool	nickCmd(Client &client, iRCMessage &mess, Server& serv);
 bool	userCmd(Client &client, iRCMessage &mess, Server& serv);
 bool	pongCmd(Client &client, iRCMessage &mess, Server& serv);
