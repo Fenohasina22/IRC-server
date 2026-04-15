@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/15 10:57:40 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 13:29:21 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ sockaddr_in	Server::getSocketstats() const
 
 std::vector<Client>&	Server::getTrueClients()
 {
-	return (this->_allClients);
+	return (this->_trueClients);
 }
 
 
@@ -147,13 +147,17 @@ Client &Server::findTrueClient(int fd, bool	&success)
 	int		fakeIdx = this->_trueClients.size() - 1;
 
 	success = false;
+	std::cout << "ftc size = " << this->_trueClients.size() << std::endl;
 	for (size_t idx = 0; idx < this->_trueClients.size(); ++idx)
 	{
+		std::cout << GREEN << this->_trueClients[idx].getFd() << " == " << fd << RESET << std::endl;
 		if (this->_trueClients[idx].getFd() == fd)
 		{
+			std::cout << GREEN << "YES" << RESET << std::endl;
 			success = true;
 			return (this->_trueClients[idx]);
 		}
+		std::cout << RED << "NO" << std::endl;
 		fakeIdx = idx;
 	}
 	return (this->_trueClients[fakeIdx]);
@@ -247,17 +251,30 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 	bool						validPass;
 
 	c = NULL;
-	validPass = false;
+	if (!cl.getPassState())
+		validPass = false;
+	else
+		validPass = true;
 	cl.ConcatenateRBuffer(buff);
 	recvBuf = cl.getReadBuffer();
 	count = countOccurrences(recvBuf, CRLF);
 	messages = splitCRLF(recvBuf);
 	for (size_t m = 0; m < count; ++m)
 	{
+		std::cout << BLUE << "message[" << m << "] = " << messages[m] << RESET << std::endl;
 		if (!validPass)
+		{
+			std::cout << RED << "INVALID PASS" << RESET << std::endl;
 			c = &(server.findClient(server.getVecPoll()[i].fd, foundClnt));
+		}
 		else
+		{
+			std::cout << GREEN << "VALID PASS" << RESET << std::endl;
 			c = &(server.findTrueClient(server.getVecPoll()[i].fd, foundClnt));
+			// if (!c->getPassState())
+			// 	c->setPassState(true);
+			std::cout << "size = " << server.getTrueClients().size() << std::endl;
+		}
 		if (!foundClnt)
 		{
 			std::cout << "no such client" << std::endl;
@@ -265,6 +282,9 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 		}
 		parsedMess = parseMessage(messages[m]);
 		dispatchCommand(parsedMess, *c, server, validPass);
+		std::cout << "PASS" << c->getPassState() <<std::endl;
+		std::cout << "NICK" << c->getNickState() <<std::endl;
+		std::cout << "USER" << c->getUserState() <<std::endl;
 	}
 	return (0);
 }

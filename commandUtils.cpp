@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/15 10:51:51 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 13:10:33 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,12 @@
 
 void 	tryRegistration(Client &client, Server& serv)
 {
+	std::cout << RED << "Registration" << RESET << std::endl;
 	if (client.isRegistered())
 		return ;
 	if (client.getNickState() && client.getPassState() && client.getUserState())
 	{
+		std::cout << "sjkhdfkjhsdfjkhsdfjk" << std::endl;
 		client.setRegistrationState(true);
 		std::string msg001 = ":server 001 " + client.getNick() + " :Welcome to the IRC " + client.getNick() + CRLF;
 		std::string msg002 = ":server 002 " + client.getNick() + " :Your host is server" + CRLF;

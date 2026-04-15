@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 18:04:56 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 13:34:11 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 		return (1);
 	c_size = sizeof(sockaddr_in);
 	std::cout << BLUE << std::endl;
-	std::cout << " == CREATING SERVER === " << std::endl;
+	std::cout << " === CREATING SERVER === " << std::endl;
 	std::cout << RESET << std::endl;
 	if (server.Initialize())
 	{
@@ -95,7 +95,7 @@ int main(int argc, char **argv)
 			if (vecpol[i].revents & POLLOUT)
 			{
 				bool success;
-				Client &c = server.findClient(vecpol[i].fd, success);
+				Client &c = server.findTrueClient(vecpol[i].fd, success);
 				if (success)
 				{
 					std::cout << GREEN << "fd = " << vecpol[i].fd << RESET << std::endl;
