@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/15 13:39:14 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 14:53:27 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,22 +317,35 @@ void	Server::Processmessage (int i)
 	{
 
 		std::cout << RED << "TEST" << RESET << std::endl;
+		std::cout << "The client disconnected" << std::endl;
 		// Add this to recv -1
 		// should send message when nickchange
-		std::cout << "The client disconnected" << std::endl;
 		// remove client from all channel
 		//quitCmd(exitMessage, this->_allClients[i], *this);
-		close (this->getVecPoll()[i].fd); // close fd
 		std::cout << "vec = "<< this->_vecPoll.size() << std::endl;
-		this->_vecPoll.erase(this->_vecPoll.begin() + i); // erase the client
+		// this->_vecPoll.erase(this->_vecPoll.begin() + i); // erase the client
+		// correction
+		DeleteVecElement(this->_vecPoll, i);
 		std::cout << "allCli = "<< this->_allClients.size() << std::endl;
-		if (i != 0)
+
+		bool	foundC;
+		Client	&c = this->findTrueClient(this->_vecPoll[i].fd, foundC);
+		if (!foundC)
+			return;
+		std::set<std::string> Chans = c.getJoinedChannels();
+		for (std::set<std::string>::iterator it = Chans.begin();
+		 it != Chans.end(); it++)
 		{
-			std::cout << "Client erased" << std::endl;
-			std::cout << "i = " << i << std::endl;
-			this->_allClients.erase(this->_allClients.begin() + i - 1); // erase client from clients
-			// erase true clients too
+			bool	foundChan;
+			Channel &tmpChan = this->findChan(*it, foundChan);
+			tmpChan.removeClient(&c);
 		}
+
+		DeleteVecElementClient(this->_allClients, this->_vecPoll[i].fd);
+		DeleteVecElementClient(this->_trueClients, this->_vecPoll[i].fd);
+		close (this->getVecPoll()[i].fd); // close fd
+
+
 		return ;
 	}
 	Client& cl = this->findClient(this->_vecPoll[i].fd, success);

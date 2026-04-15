@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/15 10:51:50 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 14:33:20 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,9 @@ bool		doKflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args
 bool		doLflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args);
 int			doOflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args
 			, Client &client, Server &serv);
+void		DeleteVecElement(std::vector<pollfd>& vec, int i);
+void		DeleteVecElementClient(std::vector<Client>& vec, int fd);
+
 
 
 #endif
