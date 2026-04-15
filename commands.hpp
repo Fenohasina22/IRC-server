@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 20:57:17 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 07:50:33 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ std::string	formMess(const Client	&sender,const Client &destCli
 				,const iRCMessage &mess);
 std::string	formChanMess(const Client	&sender,const Channel &destChan,
 				const iRCMessage &mess);
+bool		isNicknameInUse(Server &serv, Client &client, std::string &newNick);
 void		sendChannelState(Client &client, Channel &destChan, Server& serv);
 ChanModes	strToMode(std::string strMode, ModeAction &action);
 void		doIflag(Channel &destChan, ModeAction &act);

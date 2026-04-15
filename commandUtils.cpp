@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 19:28:50 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 07:50:05 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,4 +247,26 @@ int	doOflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args, 
 	else
 		destChan.removeOperator(&target);
 	return (0);
+}
+
+bool	isNicknameInUse(Server &serv, Client &client, std::string &newNick)
+{
+	for (unsigned int i = 0; i < serv.getAllClients().size(); i++)
+	{
+		if (serv.getAllClients()[i].getNick() == newNick)
+		{
+			if (!client.isRegistered())
+			{
+				client.ConcatenateWBuffer(FormatedMessage("433", ":server",
+					 "* " + newNick + " :Nickname is already in use"), serv);
+			}
+			else
+			{
+				client.ConcatenateWBuffer(FormatedMessage("433", ":server",
+					 client.getNick() + " " + newNick + " :Nickname is already in use"), serv);
+			}
+			return (true);
+		}
+	}
+	return (false);
 }

@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/15 07:19:54 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 07:50:54 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,38 +42,18 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 
 	if (mess.args.empty())
     {
-		//sendCodes(client.getFd(), "431", ":server", ":No nickname specified");
-		client.ConcatenateWBuffer(FormatedMessage("431", ":server", ":No nickname specified"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("431", ":server",
+			 "* :No nickname specified"), serv);
 		return (false);
 	}
 	newNick = mess.args[0];
-
 	if (!newNick.empty() && newNick[0] == ':')
 		newNick = newNick.substr(1);
-
-	/*---------------------------------fix this ----------------------------------------------*/
-	for (unsigned int i = 0; i < serv.getAllClients().size(); i++)
-	{
-		if (serv.getAllClients()[i].getNick() == newNick)
-		{
-			if (!client.isRegistered())
-			{
-				//sendCodes(client.getFd(), "433", ":server", "* " + newNick + " :Nickname is already in use"), serv;
-				client.ConcatenateWBuffer(FormatedMessage("433", ":server", "* " + newNick + " :Nickname is already in use"), serv);
-			}
-			else
-			{
-				//sendCodes(client.getFd(), "433", ":server", client.getNick() + " " + newNick + " :Nickname is already in use"), serv;
-				client.ConcatenateWBuffer(FormatedMessage("433", ":server", client.getNick() + " " + newNick + " :Nickname is already in use"), serv);
-			}
-			return (false);
-		}
-	}
-	/*-------------------------------------------------------------------------------*/
-	std::cout <<"new nick = " << newNick << std::endl;
+	if (isNicknameInUse(serv, client, newNick))
+		return (false);
 	client.setNick(newNick);
 	client.setNickState(true);
-	tryRegistration(client, serv); // concatenate
+	tryRegistration(client, serv);
 	return (true);
 }
 
