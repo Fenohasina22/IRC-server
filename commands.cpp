@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 14:14:55 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 07:45:32 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,37 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 		}
 	}
 	/*-------------------------------------------------------------------------------*/
+	
+	// :{AncienPseudo}!{User}@{Host} {NICK} :{NouveauPseudo}
+	std::string msg;
+	struct sockaddr_in tmp;
+	char	hostname[INET_ADDRSTRLEN];
+	tmp = client.getClientInfos();
+	inet_ntop(AF_INET, &(tmp.sin_addr), hostname, INET_ADDRSTRLEN);
+	msg = ":" + client.getNick() + "!" + client.getUser() + "@" + hostname + " NICK :" + newNick + CRLF;
+	
+	client.ConcatenateWBuffer(msg, serv); // send to himself right ?
+	std::set<std::string> joined = client.getJoinedChannels();
+
+
+	for (std::set<std::string>::iterator it = joined.begin(); it != joined.end(); it++)
+	{
+		/*Iterate through the channel string*/
+		bool success;
+		std::cout << BLUE << "----------------------------------" << RESET << std::endl;
+		std::cout << BLUE << *it << "msg = " << msg << RESET << std::endl;
+		std::cout << BLUE << "----------------------------------" << RESET << std::endl;
+		Channel& chan = serv.findChan(*it, success);
+		if (success)
+		{
+			std::cout << GREEN << "SUCCESS" << RESET << std::endl;
+			serv.broadcast(msg, client, chan, serv);
+		}
+		else
+		{
+			return (false);
+		}
+	}
 	std::cout <<"new nick = " << newNick << std::endl;
 	client.setNick(newNick);
 	client.setNickState(true);

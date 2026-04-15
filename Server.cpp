@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/14 10:52:03 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/15 09:11:51 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,19 +222,18 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 	return (0);
 }
 
-
 void	Server::Processmessage (int i)
 {
 	char			buff[MSG_BUFFERSIZE + 1];
 	int				retval;
 	bool			success;
-	//iRCMessage		exitMessage;
+	iRCMessage		exitMessage;
 
 
 	memset (buff, 0, MSG_BUFFERSIZE + 1);
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
 	std::cout << YELLOW << buff << RESET << std::endl;
-	//exitMessage.args.push_back("Leaving");
+	exitMessage.args.push_back("Leaving");
 	if (retval == -1)
 	{
 		if (errno == EAGAIN || errno == EWOULDBLOCK)
@@ -255,6 +254,7 @@ void	Server::Processmessage (int i)
 		std::cout << "The client disconnected" << std::endl;
 		// remove client from all channel
 		//quitCmd(exitMessage, this->_allClients[i], *this);
+
 		close (this->getVecPoll()[i].fd); // close fd
 		std::cout << "vec = "<< this->_vecPoll.size() << std::endl;
 		this->_vecPoll.erase(this->_vecPoll.begin() + i); // erase the client
