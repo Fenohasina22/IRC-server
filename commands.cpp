@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/15 11:12:03 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 13:38:17 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 
 	bool			foundClient 	= false;
 	bool			foundChan	 	= false;
-	Client			&destCli	 	= serv.findClient(mess.args[0], foundClient);
+	Client			&destCli	 	= serv.findTrueClient(mess.args[0], foundClient);
 	Channel			&destChan		= serv.findChan(mess.args[0], foundChan);
 	const Client 	&sender 		= client;
 	std::string 	messageOutput;
@@ -143,7 +143,7 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 		for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)
 		{
 			bool found = false;
-			Client &target = serv.findClient(*it, found);
+			Client &target = serv.findTrueClient(*it, found);
 			if (!found)
 				continue;
 			messageOutput = formChanMess(sender, destChan, mess);
@@ -365,7 +365,7 @@ bool	kickCmd(Client &client,iRCMessage &mess,Server &serv)
 
 	bool	foundCli = false;
 	bool	foundChan = false;
-	Client	&destCli = serv.findClient(mess.args[1], foundCli);
+	Client	&destCli = serv.findTrueClient(mess.args[1], foundCli);
 	Channel	&destChan = serv.findChan(mess.args[0], foundChan);
 
 	if (!foundChan)
@@ -428,7 +428,7 @@ bool	inviteCmd(Client &client,iRCMessage &mess,Server &serv)
 
 	bool	foundCli 	= false;
 	bool	foundChan 	= false;
-	Client 	&invitedCli = serv.findClient(mess.args[0], foundCli);
+	Client 	&invitedCli = serv.findTrueClient(mess.args[0], foundCli);
 	Client 	&senderCli  = client;
 	Channel &destChan 	= serv.findChan(mess.args[1], foundChan);
 
@@ -491,7 +491,7 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 	bool	foundChan = false;
 	bool	foundCli = false;
 	Channel &destChan = serv.findChan(mess.args[0], foundChan);
-	serv.findClient(mess.args[0], foundCli);
+	serv.findTrueClient(mess.args[0], foundCli);
 	if (!foundChan && !foundCli)
 	{
 		client.ConcatenateWBuffer(FormatedMessage("403", ":server", client.getNick() + " " + mess.args[0] + " :No such channel"), serv);

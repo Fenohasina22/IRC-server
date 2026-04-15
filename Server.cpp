@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/15 13:29:21 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 13:39:14 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -367,7 +367,7 @@ void	Server::deleteChan(std::string &chanName)
 			for (std::set<std::string>::iterator mit = members.begin(); mit != members.end(); ++mit)
 			{
 				bool found = false;
-				Client &cl = this->findClient(*mit, found);
+				Client &cl = this->findTrueClient(*mit, found);
 				if (found)
 					cl.removeChannel(chanName);
 			}
@@ -384,7 +384,7 @@ void	Server::broadcast(std::string &mess, const Client &caster, const Channel &c
 	for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)
 	{
 		bool found = false;
-		Client &cl = this->findClient(*it, found);
+		Client &cl = this->findTrueClient(*it, found);
 		if (found && cl.getFd() != caster.getFd())
 		{
 			cl.ConcatenateWBuffer(mess, serv);

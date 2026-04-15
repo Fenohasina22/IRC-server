@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/15 13:10:33 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/15 13:38:25 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,7 +217,7 @@ bool	doLflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args)
 int	doOflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args, Client &client, Server &serv)
 {
 	bool	foundTarget = false;
-	Client	target 		= serv.findClient(args[1], foundTarget);
+	Client	target 		= serv.findTrueClient(args[1], foundTarget);
 
 	if (!client.isInChannel(destChan.getName()))
 	{
