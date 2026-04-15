@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/14 10:52:03 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/15 08:36:15 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,7 +243,7 @@ void	Server::Processmessage (int i)
 		{
 			std::cout << "Recv error" << std::endl;
 			// cleanup
-		}		
+		}
 		return ;
 	}
 	else if (retval == 0)
@@ -263,7 +263,7 @@ void	Server::Processmessage (int i)
 		{
 			std::cout << "Client erased" << std::endl;
 			std::cout << "i = " << i << std::endl;
-			this->_allClients.erase(this->_allClients.begin() + i - 1); // erase client from clients 
+			this->_allClients.erase(this->_allClients.begin() + i - 1); // erase client from clients
 		}
 		return ;
 	}
@@ -336,4 +336,64 @@ pollfd&	Server::findElementByfd(int fd, bool& a)
 	a = false;
 	return (vec[i]);
 }
+
+
+void	Server::removeClientByFd(int fd)
+{
+	std::vector<pollfd> &vec = this->_vecPoll;
+	std::vector<Client> &vecCli = this->_allClients;
+	std::vector<pollfd>::iterator it;
+	std::vector<Client>::iterator itC;
+
+	it = vec.begin();
+	while (it != vec.end())
+	{
+		if ((*it).fd == fd)
+		{
+			it = vec.erase(vec.begin() + i);
+		}
+		else
+		{
+			it++;
+		}
+	}
+
+	itC = vecCli.begin();
+	while (itC != vecCli.end())
+	{
+		if ((*itC).getFd() == fd)
+		{
+			itC = vecCli.erase(vecCli.begin() + i);
+		}
+		else
+		{
+			itC++;
+		}
+	}
+}
+// {
+// 	std::vector<pollfd> &vec = this->_vecPoll;
+// 	// find pollfd index
+// 	int pollIdx = -1;
+// 	for (size_t i = 0; i < vec.size(); ++i)
+// 	{
+// 		if (vec[i].fd == fd)
+// 		{
+// 			pollIdx = static_cast<int>(i);
+// 			break;
+// 		}
+// 	}
+// 	if (pollIdx == -1)
+// 		return;
+// 	// close socket and erase pollfd
+// 	close(vec[pollIdx].fd);
+// 	this->_vecPoll.erase(this->_vecPoll.begin() + pollIdx);
+// 	// client vector maps to pollfd index-1
+// 	if (pollIdx != 0)
+// 	{
+// 		int clientIdx = pollIdx - 1;
+// 		if (clientIdx >= 0 && static_cast<size_t>(clientIdx) < this->_allClients.size())
+// 			this->_allClients.erase(this->_allClients.begin() + clientIdx);
+// 	}
+// }
 

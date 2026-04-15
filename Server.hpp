@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/12 16:05:28 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/15 08:18:56 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ class Server
 		void					deleteChan(std::string &chanName);
 		void					broadcast(std::string &mess, const Client &caster, const Channel &chan, Server& serv);
 		pollfd&					findElementByfd(int fd, bool& a);
+		void					removeClientByFd(int fd);
 };
 
 
