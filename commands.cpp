@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/15 15:07:51 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/15 16:13:49 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,18 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv, bool &validPass)
 	return (true);
 }
 
+void printSet(const std::set<std::string>& s)
+{
+	std::cout << YELLOW << "{ ";
+	for (std::set<std::string>::const_iterator it = s.begin(); it != s.end(); ++it)
+	{
+	    std::cout << *it;
+	    // Ajoute une virgule sauf pour le dernier élément
+	    std::cout << ", ";
+	}
+	std::cout << " }" << RESET << std::endl;
+}
+
 bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 {
 	std::string newNick;
@@ -70,6 +82,7 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 	std::set<std::string> joined = client.getJoinedChannels();
 
 
+	std::set<std::string> membersToNotify;
 	for (std::set<std::string>::iterator it = joined.begin(); it != joined.end(); it++)
 	{
 		/*Iterate through the channel string*/
@@ -81,12 +94,30 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 		if (success)
 		{
 			std::cout << GREEN << "SUCCESS" << RESET << std::endl;
-			serv.broadcast(msg, client, chan, serv);
+			//serv.broadcast(msg, client, chan, serv);
+			//store the members
+			std::set<std::string>::iterator it;
+			std::set<std::string>::iterator itBegin = chan.getMembers().begin();
+			std::set<std::string>::iterator itEnd = chan.getMembers().end();;
+			for (it = itBegin; it != itEnd; it++)
+			{
+				membersToNotify.insert(*it);
+			}
 		}
 		else
 		{
 			return (false);
 		}
+	}
+
+	membersToNotify.erase(client.getNick());
+	std::set<std::string>::iterator it;
+	std::set<std::string>::iterator itBegin = membersToNotify.begin();
+	std::set<std::string>::iterator itEnd = membersToNotify.end();
+	printSet(membersToNotify);
+	for (it = itBegin; it != itEnd; it++)
+	{
+		serv.broadcastWithoutChan(msg, client, membersToNotify, serv);
 	}
 	client.setNick(newNick);
 	client.setNickState(true);

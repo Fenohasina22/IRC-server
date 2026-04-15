@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/15 15:10:10 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/15 15:55:02 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -399,6 +399,20 @@ void	Server::broadcast(std::string &mess, const Client &caster, const Channel &c
 		Client &cl = this->findTrueClient(*it, found);
 		if (found && cl.getFd() != caster.getFd())
 		{
+			cl.ConcatenateWBuffer(mess, serv);
+		}
+	}
+}
+
+void	Server::broadcastWithoutChan(std::string &mess, const Client &caster, std::set<std::string> members, Server& serv)
+{
+	for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)
+	{
+		bool found = false;
+		Client &cl = this->findTrueClient(*it, found);
+		if (found && cl.getFd() != caster.getFd())
+		{
+			std::cout << YELLOW <<"sent to" << cl.getNick() << RESET<< std::endl;
 			cl.ConcatenateWBuffer(mess, serv);
 		}
 	}
