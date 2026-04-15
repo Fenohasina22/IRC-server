@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 13:29:01 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/15 14:33:20 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ typedef enum ModeAction
 }			ModeAction;
 
 /************************************COMMANDS*********************************/
-bool	capCmd(Client &client, Server& serv);
-bool	passCmd(Client &client, iRCMessage &mess, Server& serv);
+bool	capCmd(Client &client, iRCMessage &mess, Server& serv);
+bool	passCmd(Client &client, iRCMessage &mess, Server& serv, bool& validPass);
 bool	nickCmd(Client &client, iRCMessage &mess, Server& serv);
 bool	userCmd(Client &client, iRCMessage &mess, Server& serv);
 bool	pongCmd(Client &client, iRCMessage &mess, Server& serv);
@@ -67,6 +67,7 @@ std::string	formMess(const Client	&sender,const Client &destCli
 				,const iRCMessage &mess);
 std::string	formChanMess(const Client	&sender,const Channel &destChan,
 				const iRCMessage &mess);
+bool		isNicknameInUse(Server &serv, Client &client, std::string &newNick);
 void		sendChannelState(Client &client, Channel &destChan, Server& serv);
 ChanModes	strToMode(std::string strMode, ModeAction &action);
 void		doIflag(Channel &destChan, ModeAction &act);
@@ -75,6 +76,9 @@ bool		doKflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args
 bool		doLflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args);
 int			doOflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args
 			, Client &client, Server &serv);
+void		DeleteVecElement(std::vector<pollfd>& vec, int i);
+void		DeleteVecElementClient(std::vector<Client>& vec, int fd);
+
 
 
 #endif

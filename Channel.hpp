@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:05 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 08:28:24 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/14 14:59:51 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ class Channel
 		void						addInvited(Client* c);
 		void						removeClient(Client* c);
 		void						removeOperator(Client* c);
+		void						removeInvited(Client* c);
 		bool						isOps(Client &c);
 		bool						operator==(const Channel &other);
 		std::string					flagsToStr();

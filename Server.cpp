@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/15 09:11:51 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/15 15:10:10 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,12 @@ sockaddr_in	Server::getSocketstats() const
 {
 	return (this->_addr);
 }
+
+std::vector<Client>&	Server::getTrueClients()
+{
+	return (this->_trueClients);
+}
+
 
 int	Server::Initialize()
 {
@@ -136,6 +142,44 @@ Client &Server::findClient(int fd, bool	&success)
 	return (this->_allClients[fakeIdx]);
 }
 
+Client &Server::findTrueClient(int fd, bool	&success)
+{
+	int		fakeIdx = this->_trueClients.size() - 1;
+
+	success = false;
+	std::cout << "ftc size = " << this->_trueClients.size() << std::endl;
+	for (size_t idx = 0; idx < this->_trueClients.size(); ++idx)
+	{
+		std::cout << GREEN << this->_trueClients[idx].getFd() << " == " << fd << RESET << std::endl;
+		if (this->_trueClients[idx].getFd() == fd)
+		{
+			std::cout << GREEN << "YES" << RESET << std::endl;
+			success = true;
+			return (this->_trueClients[idx]);
+		}
+		std::cout << RED << "NO" << std::endl;
+		fakeIdx = idx;
+	}
+	return (this->_trueClients[fakeIdx]);
+}
+
+Client &Server::findTrueClient(std::string nick, bool	&success)
+{
+	int		fakeIdx = this->_trueClients.size() - 1;
+
+	success = false;
+	for (size_t idx = 0; idx < this->_trueClients.size(); ++idx)
+	{
+		if (this->_trueClients[idx].getNick() == nick)
+		{
+			success = true;
+			return (this->_trueClients[idx]);
+			fakeIdx = idx;
+		}
+	}
+	return (this->_trueClients[fakeIdx]);
+}
+
 Client &Server::findClient(std::string nick, bool	&success)
 {
 	int		fakeIdx = this->_allClients.size() - 1;
@@ -203,21 +247,44 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 	std::string					recvBuf;
 	size_t						count;
 	bool						foundClnt;
+	Client						*c;
+	bool						validPass;
 
+	c = NULL;
+	if (!cl.getPassState())
+		validPass = false;
+	else
+		validPass = true;
 	cl.ConcatenateRBuffer(buff);
 	recvBuf = cl.getReadBuffer();
 	count = countOccurrences(recvBuf, CRLF);
 	messages = splitCRLF(recvBuf);
 	for (size_t m = 0; m < count; ++m)
 	{
-		Client& c = server.findClient(server.getVecPoll()[i].fd, foundClnt);
+		std::cout << BLUE << "message[" << m << "] = " << messages[m] << RESET << std::endl;
+		if (!validPass)
+		{
+			std::cout << RED << "INVALID PASS" << RESET << std::endl;
+			c = &(server.findClient(server.getVecPoll()[i].fd, foundClnt));
+		}
+		else
+		{
+			std::cout << GREEN << "VALID PASS" << RESET << std::endl;
+			c = &(server.findTrueClient(server.getVecPoll()[i].fd, foundClnt));
+			// if (!c->getPassState())
+			// 	c->setPassState(true);
+			std::cout << "size = " << server.getTrueClients().size() << std::endl;
+		}
 		if (!foundClnt)
 		{
 			std::cout << "no such client" << std::endl;
 			return (1);
 		}
 		parsedMess = parseMessage(messages[m]);
-		dispatchCommand(parsedMess, c, server);
+		dispatchCommand(parsedMess, *c, server, validPass);
+		std::cout << "PASS" << c->getPassState() <<std::endl;
+		std::cout << "NICK" << c->getNickState() <<std::endl;
+		std::cout << "USER" << c->getUserState() <<std::endl;
 	}
 	return (0);
 }
@@ -242,32 +309,49 @@ void	Server::Processmessage (int i)
 		{
 			std::cout << "Recv error" << std::endl;
 			// cleanup
-		}		
+		}
 		return ;
 	}
 	else if (retval == 0)
 	{
 
 		std::cout << RED << "TEST" << RESET << std::endl;
+		std::cout << "The client disconnected" << std::endl;
 		// Add this to recv -1
 		// should send message when nickchange
-		std::cout << "The client disconnected" << std::endl;
 		// remove client from all channel
 		//quitCmd(exitMessage, this->_allClients[i], *this);
-
-		close (this->getVecPoll()[i].fd); // close fd
 		std::cout << "vec = "<< this->_vecPoll.size() << std::endl;
-		this->_vecPoll.erase(this->_vecPoll.begin() + i); // erase the client
+		// this->_vecPoll.erase(this->_vecPoll.begin() + i); // erase the client
+		// correction
+		DeleteVecElement(this->_vecPoll, i);
 		std::cout << "allCli = "<< this->_allClients.size() << std::endl;
-		if (i != 0)
+
+		bool	foundC;
+		Client	&c = this->findTrueClient(this->_vecPoll[i].fd, foundC);
+		if (!foundC)
+			return;
+		std::set<std::string> Chans = c.getJoinedChannels();
+		for (std::set<std::string>::iterator it = Chans.begin();
+		 it != Chans.end(); it++)
 		{
-			std::cout << "Client erased" << std::endl;
-			std::cout << "i = " << i << std::endl;
-			this->_allClients.erase(this->_allClients.begin() + i - 1); // erase client from clients 
+			bool	foundChan;
+			Channel &tmpChan = this->findChan(*it, foundChan);
+			tmpChan.removeClient(&c);
 		}
+
+		DeleteVecElementClient(this->_allClients, this->_vecPoll[i].fd);
+		DeleteVecElementClient(this->_trueClients, this->_vecPoll[i].fd);
+		close (this->getVecPoll()[i].fd); // close fd
+
+
 		return ;
 	}
 	Client& cl = this->findClient(this->_vecPoll[i].fd, success);
+	/*
+
+	*/
+
 	if (!HasCRLF(buff))
 	{
 		cl.ConcatenateRBuffer(buff);
@@ -295,7 +379,7 @@ void	Server::deleteChan(std::string &chanName)
 			for (std::set<std::string>::iterator mit = members.begin(); mit != members.end(); ++mit)
 			{
 				bool found = false;
-				Client &cl = this->findClient(*mit, found);
+				Client &cl = this->findTrueClient(*mit, found);
 				if (found)
 					cl.removeChannel(chanName);
 			}
@@ -312,7 +396,7 @@ void	Server::broadcast(std::string &mess, const Client &caster, const Channel &c
 	for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)
 	{
 		bool found = false;
-		Client &cl = this->findClient(*it, found);
+		Client &cl = this->findTrueClient(*it, found);
 		if (found && cl.getFd() != caster.getFd())
 		{
 			cl.ConcatenateWBuffer(mess, serv);
@@ -336,4 +420,33 @@ pollfd&	Server::findElementByfd(int fd, bool& a)
 	a = false;
 	return (vec[i]);
 }
+
+
+//
+
+// {
+// 	std::vector<pollfd> &vec = this->_vecPoll;
+// 	// find pollfd index
+// 	int pollIdx = -1;
+// 	for (size_t i = 0; i < vec.size(); ++i)
+// 	{
+// 		if (vec[i].fd == fd)
+// 		{
+// 			pollIdx = static_cast<int>(i);
+// 			break;
+// 		}
+// 	}
+// 	if (pollIdx == -1)
+// 		return;
+// 	// close socket and erase pollfd
+// 	close(vec[pollIdx].fd);
+// 	this->_vecPoll.erase(this->_vecPoll.begin() + pollIdx);
+// 	// client vector maps to pollfd index-1
+// 	if (pollIdx != 0)
+// 	{
+// 		int clientIdx = pollIdx - 1;
+// 		if (clientIdx >= 0 && static_cast<size_t>(clientIdx) < this->_allClients.size())
+// 			this->_allClients.erase(this->_allClients.begin() + clientIdx);
+// 	}
+// }
 
