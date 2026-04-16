@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 13:07:17 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 13:27:08 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 bool	passCmd(Client &client, iRCMessage &mess, Server &serv, bool &validPass)
 {
-	std::cout << BLUE<< "COUNT"<< RESET <<  std::endl;
     if (client.isRegistered())
     {
 		client.ConcatenateWBuffer(FormatedMessage("462", ":server",
