@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 09:23:53 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/16 10:22:06 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,20 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv, bool &validPass)
 			 "* PASS :Not enough parameters"), serv);
 		return (false);
 	}
+	if (client.isRegistered())
+    {
+		client.ConcatenateWBuffer(FormatedMessage("462", ":server",
+			 "* :You may not reregister"), serv);
+		return (false);
+	}
 	if (mess.args[0] != serv.getPass())
     {
 		client.ConcatenateWBuffer(FormatedMessage("464", ":server",
 			 "* :Password incorrect"), serv);
 		// serv.removeClientByFd(client.getFd());
-		return (false);
-	}
-	if (client.isRegistered())
-    {
-		client.ConcatenateWBuffer(FormatedMessage("462", ":server",
-			 "* :You may not reregister"), serv);
+		DeleteVecElement(serv.getVecPoll(), client.getFd());
+		DeleteVecElementClient(serv.getAllClients(), client.getFd());
+		close (client.getFd());
 		return (false);
 	}
     client.setPassState(true);
@@ -69,7 +72,7 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 		return (false);
 
 	/*-------------------------------------------------------------------------------*/
-	
+
 	// :{AncienPseudo}!{User}@{Host} {NICK} :{NouveauPseudo}
 	std::string msg;
 	struct sockaddr_in tmp;
@@ -77,7 +80,7 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 	tmp = client.getClientInfos();
 	inet_ntop(AF_INET, &(tmp.sin_addr), hostname, INET_ADDRSTRLEN);
 	msg = ":" + client.getNick() + "!" + client.getUser() + "@" + hostname + " NICK :" + newNick + CRLF;
-	
+
 	client.ConcatenateWBuffer(msg, serv); // send to himself right ?
 	std::set<std::string> joined = client.getJoinedChannels();
 
@@ -106,19 +109,14 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 		}
 		else
 		{
+			std::cout <<YELLOW <<" BRO WTF! " << RESET << std::endl;
 			return (false);
 		}
 	}
 
 	membersToNotify.erase(client.getNick());
-	std::set<std::string>::iterator it;
-	std::set<std::string>::iterator itBegin = membersToNotify.begin();
-	std::set<std::string>::iterator itEnd = membersToNotify.end();
 	printSet(membersToNotify);
-	for (it = itBegin; it != itEnd; it++)
-	{
-		serv.broadcastWithoutChan(msg, client, membersToNotify, serv);
-	}
+	serv.broadcastWithoutChan(msg, client, membersToNotify, serv);
 	client.setNick(newNick);
 	client.setNickState(true);
 	tryRegistration(client, serv);

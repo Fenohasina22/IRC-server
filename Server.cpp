@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/16 10:19:26 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/16 10:22:15 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,6 @@ Client &Server::findTrueClient(int fd, bool	&success)
 	int		fakeIdx = this->_trueClients.size() - 1;
 
 	success = false;
-	std::cout << "ftc size = " << this->_trueClients.size() << std::endl;
 	for (size_t idx = 0; idx < this->_trueClients.size(); ++idx)
 	{
 		std::cout << GREEN << this->_trueClients[idx].getFd() << " == " << fd << RESET << std::endl;
@@ -322,7 +321,6 @@ void	Server::Processmessage (int i)
 		// remove client from all channel
 		std::cout << "vec = "<< this->_vecPoll.size() << std::endl;
 		// correction
-		DeleteVecElement(this->_vecPoll, i);
 		std::cout << "allCli = "<< this->_allClients.size() << std::endl;
 
 		bool	foundC;
@@ -337,7 +335,7 @@ void	Server::Processmessage (int i)
 			Channel &tmpChan = this->findChan(*it, foundChan);
 			tmpChan.removeClient(&c);
 		}
-
+		DeleteVecElement(this->_vecPoll, this->_vecPoll[i].fd);
 		DeleteVecElementClient(this->_allClients, this->_vecPoll[i].fd);
 		DeleteVecElementClient(this->_trueClients, this->_vecPoll[i].fd);
 		close (this->getVecPoll()[i].fd); // close fd
@@ -433,32 +431,9 @@ pollfd&	Server::findElementByfd(int fd, bool& a)
 	return (vec[i]);
 }
 
-
-//
-
+// void	removeClientbyfd(int fd)
 // {
-// 	std::vector<pollfd> &vec = this->_vecPoll;
-// 	// find pollfd index
-// 	int pollIdx = -1;
-// 	for (size_t i = 0; i < vec.size(); ++i)
-// 	{
-// 		if (vec[i].fd == fd)
-// 		{
-// 			pollIdx = static_cast<int>(i);
-// 			break;
-// 		}
-// 	}
-// 	if (pollIdx == -1)
-// 		return;
-// 	// close socket and erase pollfd
-// 	close(vec[pollIdx].fd);
-// 	this->_vecPoll.erase(this->_vecPoll.begin() + pollIdx);
-// 	// client vector maps to pollfd index-1
-// 	if (pollIdx != 0)
-// 	{
-// 		int clientIdx = pollIdx - 1;
-// 		if (clientIdx >= 0 && static_cast<size_t>(clientIdx) < this->_allClients.size())
-// 			this->_allClients.erase(this->_allClients.begin() + clientIdx);
-// 	}
+
 // }
+//
 
