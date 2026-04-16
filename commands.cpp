@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 09:54:20 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 10:17:21 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,19 +109,14 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 		}
 		else
 		{
+			std::cout <<YELLOW <<" BRO WTF! " << RESET << std::endl;
 			return (false);
 		}
 	}
 
 	membersToNotify.erase(client.getNick());
-	std::set<std::string>::iterator it;
-	std::set<std::string>::iterator itBegin = membersToNotify.begin();
-	std::set<std::string>::iterator itEnd = membersToNotify.end();
 	printSet(membersToNotify);
-	for (it = itBegin; it != itEnd; it++)
-	{
-		serv.broadcastWithoutChan(msg, client, membersToNotify, serv);
-	}
+	serv.broadcastWithoutChan(msg, client, membersToNotify, serv);
 	client.setNick(newNick);
 	client.setNickState(true);
 	tryRegistration(client, serv);
