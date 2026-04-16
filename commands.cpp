@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 16:00:48 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 16:14:09 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -341,17 +341,8 @@ bool	inviteCmd(Client &client,iRCMessage &mess,Server &serv)
 	return (true);
 }
 
-bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
+bool	validateChannelModeAccess(Server &serv, Client &client, iRCMessage &mess)
 {
-	//MODE #channel chanmode
-
-	if (mess.args.size() < 1)
-	{
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server", client.getNick() + " MODE :Not enough parameters"), serv);
-		return (false);
-	}
-
-
 	bool	foundChan = false;
 	bool	foundCli = false;
 	Channel &destChan = serv.findChan(mess.args[0], foundChan);
@@ -366,13 +357,30 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 	if (mess.args.size() < 2)
 	{
 		client.ConcatenateWBuffer(FormatedMessage("324", ":server", client.getNick() + " " + destChan.getName() + " " + destChan.flagsToStr()), serv);
-		return (true);
+		return (false);
 	}
 	if (!destChan.isOps(client.getNick()))
 	{
 		client.ConcatenateWBuffer(FormatedMessage("482", ":server", client.getNick() + " " + mess.args[0] + " :You're not a channel operator"), serv);
 		return (false);
 	}
+	return (true);
+}
+
+bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
+{
+	if (mess.args.size() < 1)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("461", ":server", client.getNick() + " MODE :Not enough parameters"), serv);
+		return (false);
+	}
+
+	bool	foundChan = false;
+	bool	foundCli = false;
+	Channel &destChan = serv.findChan(mess.args[0], foundChan);
+
+	if (!validateChannelModeAccess(serv, client, mess))
+		return (false);
 
 	ModeAction 					act;
 	ChanModes					mode;
@@ -385,7 +393,6 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 		client.ConcatenateWBuffer(FormatedMessage("472", ":server", client.getNick() + " " + mess.args[1] + " :is unknown mode char to me"), serv);
 		return (false);
 	}
-	//server replies --> 324 nick #chan +modes
 	switch (mode)
 	{
 		case i:
