@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/15 14:32:52 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 09:41:34 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,14 +273,12 @@ bool	isNicknameInUse(Server &serv, Client &client, std::string &newNick)
 	return (false);
 }
 
-void	DeleteVecElement(std::vector<pollfd>& vec, int i)
+void	DeleteVecElement(std::vector<pollfd>& vec, int fd)
 {
-	std::vector<pollfd>::iterator itDest = vec.begin() + i;
-
 	std::vector<pollfd>::iterator it;
 	for (it = vec.begin(); it != vec.end();)
 	{
-		if (it == itDest)
+		if ((*it).fd == fd)
 		{
 			it = vec.erase(it);
 		}
