@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/15 14:33:20 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 13:08:12 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,9 @@ int			doOflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args
 			, Client &client, Server &serv);
 void		DeleteVecElement(std::vector<pollfd>& vec, int i);
 void		DeleteVecElementClient(std::vector<Client>& vec, int fd);
+void		CleanUp(Server& serv, int i);
+
+
 
 
 

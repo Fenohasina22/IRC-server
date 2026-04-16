@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/16 10:22:15 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/16 13:08:20 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,66 +288,26 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 	return (0);
 }
 
+
 void	Server::Processmessage (int i)
 {
 	char			buff[MSG_BUFFERSIZE + 1];
 	int				retval;
 	bool			success;
-	iRCMessage		exitMessage;
 
 
 	memset (buff, 0, MSG_BUFFERSIZE + 1);
-	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
 	std::cout << YELLOW << buff << RESET << std::endl;
-	exitMessage.args.push_back("Leaving");
-	if (retval == -1)
+	
+	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
+	if (retval == -1 || retval == 0)
 	{
-		if (errno == EAGAIN || errno == EWOULDBLOCK)
-			return ;
-		else
-		{
-			std::cout << "Recv error" << std::endl;
-			// cleanup
-		}
-		return ;
-	}
-	else if (retval == 0)
-	{
-
-		std::cout << RED << "TEST" << RESET << std::endl;
-		std::cout << "The client disconnected" << std::endl;
-		// Add this to recv -1
-		// should send message when nickchange
-		// remove client from all channel
-		std::cout << "vec = "<< this->_vecPoll.size() << std::endl;
-		// correction
-		std::cout << "allCli = "<< this->_allClients.size() << std::endl;
-
-		bool	foundC;
-		Client	&c = this->findTrueClient(this->_vecPoll[i].fd, foundC);
-		if (!foundC)
-			return;
-		std::set<std::string> Chans = c.getJoinedChannels();
-		for (std::set<std::string>::iterator it = Chans.begin();
-		 it != Chans.end(); it++)
-		{
-			bool	foundChan;
-			Channel &tmpChan = this->findChan(*it, foundChan);
-			tmpChan.removeClient(&c);
-		}
-		DeleteVecElement(this->_vecPoll, this->_vecPoll[i].fd);
-		DeleteVecElementClient(this->_allClients, this->_vecPoll[i].fd);
-		DeleteVecElementClient(this->_trueClients, this->_vecPoll[i].fd);
-		close (this->getVecPoll()[i].fd); // close fd
-
-
+		
+		std::cout << GREEN << "Client disconnected successfully" << RESET << std::endl;
+		CleanUp(*this, i);
 		return ;
 	}
 	Client& cl = this->findClient(this->_vecPoll[i].fd, success);
-	/*
-
-	*/
-
 	if (!HasCRLF(buff))
 	{
 		cl.ConcatenateRBuffer(buff);
