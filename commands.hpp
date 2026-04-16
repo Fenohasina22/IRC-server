@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 13:54:09 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 15:39:36 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void		DeleteVecElementClient(std::vector<Client>& vec, int fd);
 bool		getNeighbors(Client &client, Server &serv, std::set<std::string> &membersToNotify);
 bool		notifyNeighbors(Client &client, Server &serv, std::string &newNick);
 void		CleanUp(Server& serv, int i);
+bool		IsValidNick(std::string nick, Client&  client, Server& serv);
 
 
 

@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 15:08:52 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/16 15:49:10 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ bool	getParams(char **argv, Server &serv)
 void	signalHandler(int sig)
 {
 	(void)sig;
+	std::cout << "SIG HAndler" << std::endl;
 	for (unsigned int i = 0; i < AllFds.size(); i++)
 	{
-		std::cout << "fts = " << AllFds[i] << std::endl;
 		close (AllFds[i]);
 	}
 }
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
 		// poll SLEEPS AND WAKE UP WHEN AN EVENT HAPPENS LIKE POLLIN
 		if (poll(&vecpol[0], vecpol.size(), -1) < 0)
 		{
-			std::cout << "error: poll"<< std::endl;
+			//std::cout << "error: poll"<< std::endl;
 			return (0);
 		}
 		for (unsigned int i = 0; i < vecpol.size(); i++)

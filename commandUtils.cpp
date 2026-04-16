@@ -3,26 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   commandUtils.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 13:54:17 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 16:02:24 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commands.hpp"
 
-void	PrintVec(std::vector<pollfd>& container)
+bool	IsValidNick(std::string nick, Client&  client, Server& serv)
 {
-	std::cout << " === fds ===" << std::endl;
-	for (unsigned int i = 0; i < container.size(); i++)
+	std::string	a = "@!*?$#, .";
+	size_t pos;
+	unsigned int i;
+
+	i = 0;
+	while (i < a.size())
 	{
-		std::cout << "["<<container[i].fd << "] ";
+		pos = nick.find(a[i]);
+		if (pos != std::string::npos)
+		{
+			std::cout << RED << "INVALID NICK" << RESET << std::endl;
+			// :ft_irc 432 * Nick@42 :Erroneous nickname\r\n
+			client.ConcatenateWBuffer(FormatedMessage("432", ":server", "* " + nick + " :Erroneous nickname" ), serv);
+			return (false);
+		}
+		i++;
 	}
-	std::cout << std::endl;
+	return (true);
 }
-
-
 
 void	PrintClients(std::vector<Client>& container)
 {
