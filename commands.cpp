@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 13:54:39 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 14:05:04 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,20 +69,19 @@ bool	userCmd(Client &client, iRCMessage &mess, Server& serv)
 {
 	std::string newUser;
 
+	if (client.isRegistered())
+    {
+		client.ConcatenateWBuffer(FormatedMessage("462", ":server",
+			 "* :You may not reregister"), serv);
+		return (false);
+	}
 	if (mess.args.size() < 4)
     {
-		//sendCodes(client.getFd(), "461" , ":server", "* USER :Not enough parameters"), serv;
-		client.ConcatenateWBuffer(FormatedMessage("461" , ":server", "* USER :Not enough parameters"), serv);
-
+		client.ConcatenateWBuffer(FormatedMessage("461" , ":server",
+			 "* USER :Not enough parameters"), serv);
 		return (false);
 	}
 	newUser = mess.args[0];
-	if (client.isRegistered())
-    {
-		//sendCodes(client.getFd(), "462", ":server", ":You may not reregister"), serv;
-		client.ConcatenateWBuffer(FormatedMessage("462", ":server", ":You may not reregister"), serv);
-		return (false);
-	}
 	if (!newUser.empty() && newUser[0] == ':')
 		newUser = newUser.substr(1);
     client.setUser(newUser);
