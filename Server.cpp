@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/16 09:43:34 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 09:54:26 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,19 +288,18 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 	return (0);
 }
 
-
 void	Server::Processmessage (int i)
 {
 	char			buff[MSG_BUFFERSIZE + 1];
 	int				retval;
 	bool			success;
-	//iRCMessage		exitMessage;
+	iRCMessage		exitMessage;
 
 
 	memset (buff, 0, MSG_BUFFERSIZE + 1);
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
 	std::cout << YELLOW << buff << RESET << std::endl;
-	//exitMessage.args.push_back("Leaving");
+	exitMessage.args.push_back("Leaving");
 	if (retval == -1)
 	{
 		if (errno == EAGAIN || errno == EWOULDBLOCK)
@@ -398,6 +397,20 @@ void	Server::broadcast(std::string &mess, const Client &caster, const Channel &c
 		Client &cl = this->findTrueClient(*it, found);
 		if (found && cl.getFd() != caster.getFd())
 		{
+			cl.ConcatenateWBuffer(mess, serv);
+		}
+	}
+}
+
+void	Server::broadcastWithoutChan(std::string &mess, const Client &caster, std::set<std::string> members, Server& serv)
+{
+	for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)
+	{
+		bool found = false;
+		Client &cl = this->findTrueClient(*it, found);
+		if (found && cl.getFd() != caster.getFd())
+		{
+			std::cout << YELLOW <<"sent to" << cl.getNick() << RESET<< std::endl;
 			cl.ConcatenateWBuffer(mess, serv);
 		}
 	}
