@@ -64,7 +64,7 @@ Last because it's the most complex and the least critical for basic functionalit
 ---
 - [ ] **10. Handle multi-args /join and /privmsg and /modes
 
-like join a,b,c or msg a,b,c or mode +abcd
+like join a,b,c or msg a,b,c or mode +abcd + also nick check
 
 --------------------------------------
 - [ ] **11. handle this

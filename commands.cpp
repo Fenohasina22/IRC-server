@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 15:19:10 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 15:41:50 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,7 +220,6 @@ bool	partCmd(Client &client, iRCMessage &mess, Server &serv)
 	return (true);
 }
 
-//add permission chek
 bool	topicCmd(Client &client, iRCMessage &mess, Server &serv)
 {
 	bool		displayTopic	= false;
@@ -231,76 +230,21 @@ bool	topicCmd(Client &client, iRCMessage &mess, Server &serv)
 
 	if (mess.args.empty())
 	{
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server", "* TOPIC :Not enough parameters"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+			 "* TOPIC :Not enough parameters"), serv);
 		return (false);
 	}
-	else if (mess.args.size() == 1)
-		displayTopic = true;
-	else if (mess.args.size() > 1 && mess.args[1] == ":")
-		resetTopic = true;
-	else if (mess.args.size() > 1)
-		changeTopic = true;
-
 	Channel &destChan = serv.findChan(mess.args[0], foundChan);
 
 	if (!foundChan)
 	{
-		client.ConcatenateWBuffer(FormatedMessage("403", ":server", client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("403", ":server",
+			 client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
 		return (false);
 	}
-	if (displayTopic)
-	{
-		if (destChan.getTopic() == "")
-		{
-			client.ConcatenateWBuffer(FormatedMessage("331", ":server", client.getNick() + " " + destChan.getName() + " :No topic is set"), serv);
-			return (false);
-		}
-		client.ConcatenateWBuffer(FormatedMessage("332", ":server", client.getNick() + " " + destChan.getName() + " :" + destChan.getTopic()), serv);
-	}
-	else if (changeTopic)
-	{
-		if (destChan.isTopicLocked() && !destChan.isOps(client.getNick()))
-		{
-			client.ConcatenateWBuffer(FormatedMessage("482", ":server", client.getNick() + " " + destChan.getName() + " :You're not a channel operator"), serv);
-			return (false);
-		}
-		if (!client.isInChannel(destChan.getName()))
-		{
-			client.ConcatenateWBuffer(FormatedMessage("442", ":server", client.getNick() + " " + mess.args[0] + " :You're not on that channel"), serv);
-			return (false);
-		}
-	}
-	else if (resetTopic)
-	{
-		if (destChan.isTopicLocked() && !destChan.isOps(client.getNick()))
-		{
-			client.ConcatenateWBuffer(FormatedMessage("482", ":server", client.getNick() + " " + destChan.getName() + " :You're not a channel operator"), serv);
-			return (false);
-		}
-		if (!client.isInChannel(destChan.getName()))
-		{
-			client.ConcatenateWBuffer(FormatedMessage("442", ":server", client.getNick() + " " + mess.args[0] + " :You're not on that channel"), serv);
-			return (false);
-		}
-	}
-	if (changeTopic || resetTopic)
-	{
-		std::string newTopic;
-		if (resetTopic)
-			newTopic = "";
-		else
-			newTopic = mess.args[1];
-		if (!newTopic.empty() && newTopic[0] == ':')
-			newTopic = newTopic.substr(1, newTopic.size());
-		destChan.setTopic(newTopic);
-		broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
-		broadcastMess += " TOPIC ";
-		broadcastMess += destChan.getName();
-		broadcastMess += " :" + destChan.getTopic();
-		broadcastMess += CRLF;
-		client.ConcatenateWBuffer(broadcastMess, serv);
-		serv.broadcast(broadcastMess, client, destChan, serv);
-	}
+	if (!processTopicCommand(displayTopic, changeTopic, resetTopic, client, mess, serv, destChan))
+		return (false);
+	updateTopic(changeTopic, resetTopic, mess, destChan, broadcastMess, client, serv);
 	return (true);
 }
 
