@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/15 15:47:31 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/16 14:30:56 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 # define RESET   "\033[0m"
 
 
-
+extern std::vector<int> AllFds;
 
 class Server
 {

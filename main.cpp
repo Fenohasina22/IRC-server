@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 13:22:52 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 15:08:52 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "parser.hpp"
 
 /*Handle ghost user reconnection */
+std::vector<int>AllFds;
 
 bool	getParams(char **argv, Server &serv)
 {
@@ -38,8 +39,13 @@ bool	getParams(char **argv, Server &serv)
 void	signalHandler(int sig)
 {
 	(void)sig;
-	std::cout << "SIGINT caught" << std::endl;
+	for (unsigned int i = 0; i < AllFds.size(); i++)
+	{
+		std::cout << "fts = " << AllFds[i] << std::endl;
+		close (AllFds[i]);
+	}
 }
+
 
 int main(int argc, char **argv)
 {
@@ -66,7 +72,6 @@ int main(int argc, char **argv)
 	{
 		return (0);
 	}
-
 	sock.events = POLLIN;
 	sock.fd =  server.getSockfd();
 	// ensure revents is initialized to avoid valgrind uninitialized use

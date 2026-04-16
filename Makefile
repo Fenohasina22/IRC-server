@@ -8,7 +8,7 @@ SRCS = Channel.cpp          \
        main.cpp             \
        Server.cpp           \
        commandUtils.cpp     \
-       parserUtils.cpp     \
+       parserUtils.cpp      \
        commands.cpp         \
        dispatch.cpp         \
        parser.cpp
