@@ -6,9 +6,10 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 16:02:24 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/16 16:09:42 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "commands.hpp"
 
@@ -407,4 +408,251 @@ bool	notifyNeighbors(Client &client, Server &serv, std::string &newNick)
 	client.ConcatenateWBuffer(msg, serv);
 	serv.broadcastWithoutChan(msg, client, membersToNotify, serv);
 	return (true);
+}
+
+void	privmsgToChan(
+	Client		&sender,
+	Channel 	&destChan,
+	Server		&serv,
+	iRCMessage	&mess,
+	std::string &messageOutput)
+{
+	std::set<std::string> members = destChan.getMembers();
+		for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)
+		{
+			bool found = false;
+			Client &target = serv.findTrueClient(*it, found);
+			if (!found)
+				continue;
+			messageOutput = formChanMess(sender, destChan, mess);
+			if (target.getNick() != sender.getNick())
+				target.ConcatenateWBuffer(messageOutput, serv);
+		}
+}
+
+bool	checkChanRestrictions(Client &client, iRCMessage &mess, Server serv, Channel *destChan)
+{
+	if (client.isInChannel(mess.args[0]))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("443", ":server",
+			 client.getNick() + " " + mess.args[0] + " :is already on channel"), serv);
+		return (false);
+	}
+	if (destChan->isInviteOnly() && !destChan->isInvited(client.getNick()))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("473", ":server",
+			 client.getNick() + " " + destChan->getName()
+			 + " :cannot join channel (+i)"), serv);
+		return (false);
+	}
+	if (destChan->isPassRequired() && (mess.args.size() < 2 || mess.args[1] != destChan->getPass()))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("475", ":server",
+			 client.getNick() + " " + destChan->getName() +
+			  " :cannot join channel (+k)"), serv);
+		return (false);
+	}
+	if (static_cast<int>(destChan->getMembers().size() + 1) > destChan->getMaxUser())
+	{
+		client.ConcatenateWBuffer(FormatedMessage("471", ":server",
+			 client.getNick() + " " + destChan->getName() + " :cannot join channel (+l)"), serv);
+		return (false);
+	}
+	return (true);
+}
+
+bool	checkChanRestrictions(Client &client, Server &serv, iRCMessage &mess, Channel *destChan)
+{
+	if (client.isInChannel(mess.args[0]))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("443", ":server",
+			 client.getNick() + " " + mess.args[0] + " :is already on channel"), serv);
+		return (false);
+	}
+	if (destChan->isInviteOnly() && !destChan->isInvited(client.getNick()))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("473", ":server",
+			 client.getNick() + " " + destChan->getName()
+			 + " :cannot join channel (+i)"), serv);
+		return (false);
+	}
+	if (destChan->isPassRequired() && (mess.args.size() < 2 || mess.args[1] != destChan->getPass()))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("475", ":server",
+			 client.getNick() + " " + destChan->getName() +
+			  " :cannot join channel (+k)"), serv);
+		return (false);
+	}
+	if (static_cast<int>(destChan->getMembers().size() + 1) > destChan->getMaxUser())
+	{
+		client.ConcatenateWBuffer(FormatedMessage("471", ":server",
+			 client.getNick() + " " + destChan->getName() + " :cannot join channel (+l)"), serv);
+		return (false);
+	}
+	return (true);
+}
+
+void	broadcastJoin(std::string &broadcastMess, Client &client, Server &serv, Channel *destChan)
+{
+	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
+	broadcastMess += " JOIN ";
+	broadcastMess += destChan->getName();
+	broadcastMess += CRLF;
+	client.ConcatenateWBuffer(broadcastMess, serv);
+	serv.broadcast(broadcastMess, client, *destChan, serv);
+}
+
+
+bool	processTopicCommand(
+	bool &displayTopic,
+	bool &changeTopic,
+	bool &resetTopic,
+	Client &client,
+	iRCMessage &mess,
+	Server &serv,
+	Channel &destChan)
+{
+	if (mess.args.size() == 1)
+		displayTopic = true;
+	else if (mess.args.size() > 1 && mess.args[1] == ":")
+		resetTopic = true;
+	else if (mess.args.size() > 1)
+		changeTopic = true;
+	if (displayTopic)
+	{
+		if (destChan.getTopic() == "")
+		{
+			client.ConcatenateWBuffer(FormatedMessage("331", ":server",
+				 client.getNick() + " " + destChan.getName() + " :No topic is set"), serv);
+			return (false);
+		}
+		client.ConcatenateWBuffer(FormatedMessage("332", ":server",
+			 client.getNick() + " " + destChan.getName() + " :" + destChan.getTopic()), serv);
+	}
+	else if (changeTopic)
+	{
+		if (destChan.isTopicLocked() && !destChan.isOps(client.getNick()))
+		{
+			client.ConcatenateWBuffer(FormatedMessage("482", ":server",
+				 client.getNick() + " " + destChan.getName() +
+				  " :You're not a channel operator"), serv);
+			return (false);
+		}
+		if (!client.isInChannel(destChan.getName()))
+		{
+			client.ConcatenateWBuffer(FormatedMessage("442",
+				 ":server", client.getNick() + " " + mess.args[0] +
+				 " :You're not on that channel"), serv);
+			return (false);
+		}
+	}
+	else if (resetTopic)
+	{
+		if (destChan.isTopicLocked() && !destChan.isOps(client.getNick()))
+		{
+			client.ConcatenateWBuffer(FormatedMessage("482",
+				 ":server", client.getNick() + " " + destChan.getName() +
+				 " :You're not a channel operator"), serv);
+			return (false);
+		}
+		if (!client.isInChannel(destChan.getName()))
+		{
+			client.ConcatenateWBuffer(FormatedMessage("442", ":server",
+				 client.getNick() + " " + mess.args[0] +
+				  " :You're not on that channel"), serv);
+			return (false);
+		}
+	}
+	return (true);
+}
+
+void	broadcastTopicChange(
+	std::string &broadcastMess,
+	Client &client,
+	Channel &destChan,
+	Server &serv)
+{
+	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
+	broadcastMess += " TOPIC ";
+	broadcastMess += destChan.getName();
+	broadcastMess += " :" + destChan.getTopic();
+	broadcastMess += CRLF;
+	client.ConcatenateWBuffer(broadcastMess, serv);
+	serv.broadcast(broadcastMess, client, destChan, serv);
+}
+
+void	updateTopic(
+	bool &changeTopic,
+	bool &resetTopic,
+	iRCMessage &mess,
+	Channel &destChan,
+	std::string &broadcastMess,
+	Client &client, Server &serv)
+{
+	if (changeTopic || resetTopic)
+	{
+		std::string newTopic;
+		if (resetTopic)
+			newTopic = "";
+		else
+			newTopic = mess.args[1];
+		if (!newTopic.empty() && newTopic[0] == ':')
+			newTopic = newTopic.substr(1, newTopic.size());
+		destChan.setTopic(newTopic);
+		broadcastTopicChange(broadcastMess, client, destChan, serv);
+	}
+}
+
+bool	checkChannelAccess(bool &foundChan, Client &client, iRCMessage &mess, Server &serv, Client &destCli, Channel &destChan, bool &foundCli)
+{
+	if (!foundChan)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("403", ":server", client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
+		return (false);
+	}
+	if (!client.isInChannel(mess.args[0]))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("442", ":server", client.getNick() + " " + mess.args[0] + " :You're not on that channel"), serv);
+		return (false);
+	}
+	if (!foundCli)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("401", ":server", client.getNick() + " " + mess.args[1] + " :No such nick/channel"), serv);
+		return (false);
+	}
+	if (!destCli.isInChannel(mess.args[0]))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("441", ":server", destCli.getNick() + " " + mess.args[0] + " :They aren't on that channel"), serv);
+		return (false);
+	}
+	if (!destChan.isOps(client.getNick()))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("482", ":server", client.getNick() + " " + mess.args[0] + " :You're not a channel operator"), serv);
+		return (false);
+	}
+	return (true);
+}
+
+void	broadCastKick(
+	std::string &broadcastMess,
+	Client 		&client,
+	Client 		&destCli,
+	Channel 	&destChan,
+	iRCMessage 	&mess,
+	Server 		&serv)
+{
+	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
+	broadcastMess += " KICK ";
+	broadcastMess += destChan.getName() + " ";
+	broadcastMess += destCli.getNick();
+	if (mess.args.size() > 2)
+	{
+		std::string reason = mess.args[2];
+		if (!reason.empty() && reason[0] == ':')
+			reason = reason.substr(1);
+		broadcastMess += " :" + reason;
+	}
+	broadcastMess += CRLF;
+	client.ConcatenateWBuffer(broadcastMess, serv);
+	serv.broadcast(broadcastMess, client, destChan, serv);
 }

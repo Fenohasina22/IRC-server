@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:09 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 16:10:08 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 14:45:04 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ bool	Channel::isOps(const std::string &nick) const
 
 bool	Channel::isInvited(const std::string &nick) const
 {
-	return (this->ops.count(nick) > 0);
+	return (this->invited.count(nick) > 0);
 }
 
 std::string	Channel::flagsToStr()

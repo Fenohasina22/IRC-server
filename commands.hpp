@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 15:39:36 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/16 16:08:01 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv);
 void 		tryRegistration(Client &client, Server& serv);
 bool	 	chanExists(const std::string &chanName, Server &serv);
 std::string	formMess(const Client	&sender,const Client &destCli
-				,const iRCMessage &mess);
+			,const iRCMessage &mess);
 std::string	formChanMess(const Client	&sender,const Channel &destChan,
-				const iRCMessage &mess);
+			const iRCMessage &mess);
 bool		isNicknameInUse(Server &serv, Client &client, std::string &newNick);
 void		sendChannelState(Client &client, Channel &destChan, Server& serv);
 ChanModes	strToMode(std::string strMode, ModeAction &action);
@@ -82,9 +82,16 @@ bool		getNeighbors(Client &client, Server &serv, std::set<std::string> &membersT
 bool		notifyNeighbors(Client &client, Server &serv, std::string &newNick);
 void		CleanUp(Server& serv, int i);
 bool		IsValidNick(std::string nick, Client&  client, Server& serv);
-
-
-
-
-
+void		privmsgToChan(Client &sender, Channel &destChan, Server &serv,iRCMessage &mess,
+			std::string &messageOutput);
+bool		checkChanRestrictions(Client &client, Server &serv, iRCMessage &mess, Channel *destChan);
+void		broadcastJoin(std::string &broadcastMess, Client &client, Server &serv, Channel *destChan);
+bool		processTopicCommand(bool &displayTopic,bool &changeTopic,bool &resetTopic,Client &client,
+			iRCMessage &mess,Server &serv,Channel &destChan);
+void		updateTopic(bool &changeTopic,bool &resetTopic,iRCMessage &mess,Channel &destChan,
+			std::string &broadcastMess,Client &client, Server &serv);
+bool		checkChannelAccess(bool &foundChan, Client &client, iRCMessage &mess, Server &serv,
+			Client &destCli, Channel &destChan, bool &foundCli);
+void		broadCastKick(std::string &broadcastMess,Client &client,Client &destCli,
+			Channel &destChan,iRCMessage 	&mess,Server &serv);
 #endif
