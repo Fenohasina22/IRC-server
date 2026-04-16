@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 14:09:12 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 14:22:39 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,8 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 {
 	if (mess.args.size() < 2)
 	{
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server", "* PRIVMSG :Not enough parameters"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+			 "* PRIVMSG :Not enough parameters"), serv);
 		return (false);
 	}
 
@@ -122,12 +123,13 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 	bool			foundChan	 	= false;
 	Client			&destCli	 	= serv.findTrueClient(mess.args[0], foundClient);
 	Channel			&destChan		= serv.findChan(mess.args[0], foundChan);
-	const Client 	&sender 		= client;
+	Client 			&sender 		= client;
 	std::string 	messageOutput;
 
 	if (!foundClient && !foundChan)
 	{
-		client.ConcatenateWBuffer(FormatedMessage("401", ":server", client.getNick() + " " + mess.args[0] + " :No such nick/channel"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("401", ":server",
+			 client.getNick() + " " + mess.args[0] + " :No such nick/channel"), serv);
 		return (false);
 	}
 	if (foundClient)
@@ -137,19 +139,8 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 	}
 	else
 	{
-		std::set<std::string> members = destChan.getMembers();
-		for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)
-		{
-			bool found = false;
-			Client &target = serv.findTrueClient(*it, found);
-			if (!found)
-				continue;
-			messageOutput = formChanMess(sender, destChan, mess);
-			if (target.getNick() != client.getNick())
-				target.ConcatenateWBuffer(messageOutput, serv);
-		}
+		privmsgToChan(sender, destChan, serv, mess, messageOutput);
 	}
-	std::cout <<messageOutput<< std::endl;
 	return (true);
 }
 

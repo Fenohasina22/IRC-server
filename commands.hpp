@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 13:54:09 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 14:24:02 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv);
 void 		tryRegistration(Client &client, Server& serv);
 bool	 	chanExists(const std::string &chanName, Server &serv);
 std::string	formMess(const Client	&sender,const Client &destCli
-				,const iRCMessage &mess);
+			,const iRCMessage &mess);
 std::string	formChanMess(const Client	&sender,const Channel &destChan,
-				const iRCMessage &mess);
+			const iRCMessage &mess);
 bool		isNicknameInUse(Server &serv, Client &client, std::string &newNick);
 void		sendChannelState(Client &client, Channel &destChan, Server& serv);
 ChanModes	strToMode(std::string strMode, ModeAction &action);
@@ -81,9 +81,7 @@ void		DeleteVecElementClient(std::vector<Client>& vec, int fd);
 bool		getNeighbors(Client &client, Server &serv, std::set<std::string> &membersToNotify);
 bool		notifyNeighbors(Client &client, Server &serv, std::string &newNick);
 void		CleanUp(Server& serv, int i);
-
-
-
-
+void		privmsgToChan(Client &sender, Channel &destChan, Server &serv,iRCMessage &mess,
+			std::string &messageOutput);
 
 #endif

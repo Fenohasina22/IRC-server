@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 13:54:17 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 14:22:50 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -397,4 +397,24 @@ bool	notifyNeighbors(Client &client, Server &serv, std::string &newNick)
 	client.ConcatenateWBuffer(msg, serv);
 	serv.broadcastWithoutChan(msg, client, membersToNotify, serv);
 	return (true);
+}
+
+void	privmsgToChan(
+	Client		&sender,
+	Channel 	&destChan,
+	Server		&serv,
+	iRCMessage	&mess,
+	std::string &messageOutput)
+{
+	std::set<std::string> members = destChan.getMembers();
+		for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)
+		{
+			bool found = false;
+			Client &target = serv.findTrueClient(*it, found);
+			if (!found)
+				continue;
+			messageOutput = formChanMess(sender, destChan, mess);
+			if (target.getNick() != sender.getNick())
+				target.ConcatenateWBuffer(messageOutput, serv);
+		}
 }

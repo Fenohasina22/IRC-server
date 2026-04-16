@@ -73,6 +73,8 @@ MODE Not enough parameters
 19:13 -!- Irssi: Not enough parameters given gets sent into status window
 
 ----------
+
+also what happens when last opertor quits channel
 **In short:**
 
 ```
