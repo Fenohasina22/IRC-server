@@ -6,11 +6,62 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 13:50:17 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 13:54:17 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commands.hpp"
+
+void	PrintVec(std::vector<pollfd>& container)
+{
+	std::cout << " === fds ===" << std::endl;
+	for (unsigned int i = 0; i < container.size(); i++)
+	{
+		std::cout << "["<<container[i].fd << "] ";
+	}
+	std::cout << std::endl;
+}
+
+
+
+void	PrintClients(std::vector<Client>& container)
+{
+	std::cout << " === fds ===" << std::endl;
+	for (unsigned int i = 0; i < container.size(); i++)
+	{
+		std::cout << "["<<container[i].getFd() << "] ";
+	}
+	std::cout << std::endl;
+}
+
+void	CleanUp(Server& serv, int i)
+{
+	bool	foundC;
+	int		saveFd;
+
+	saveFd = serv.getVecPoll()[i].fd;
+	Client	&c = serv.findTrueClient(saveFd, foundC);
+	if (!foundC)
+	{
+		DeleteVecElement(serv.getVecPoll(), saveFd);
+		DeleteVecElementClient(serv.getAllClients(), saveFd);
+		close (saveFd);
+		return ;
+	}
+	std::set<std::string> Chans = c.getJoinedChannels();
+	for (std::set<std::string>::iterator it = Chans.begin();
+	 it != Chans.end(); it++)
+	{
+		bool	foundChan;
+		Channel &tmpChan = serv.findChan(*it, foundChan);
+		tmpChan.removeClient(&c);
+	}
+	DeleteVecElement(serv.getVecPoll(), saveFd);
+	DeleteVecElementClient(serv.getAllClients(), saveFd);
+	DeleteVecElementClient(serv.getTrueClients(), saveFd);
+	close (saveFd);
+	return ;
+}
 
 void 	tryRegistration(Client &client, Server& serv)
 {

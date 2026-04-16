@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 13:50:36 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 13:54:09 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,9 @@ void		DeleteVecElement(std::vector<pollfd>& vec, int i);
 void		DeleteVecElementClient(std::vector<Client>& vec, int fd);
 bool		getNeighbors(Client &client, Server &serv, std::set<std::string> &membersToNotify);
 bool		notifyNeighbors(Client &client, Server &serv, std::string &newNick);
+void		CleanUp(Server& serv, int i);
+
+
 
 
 
