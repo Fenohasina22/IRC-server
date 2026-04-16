@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/15 15:55:02 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/16 10:19:26 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -320,9 +320,7 @@ void	Server::Processmessage (int i)
 		// Add this to recv -1
 		// should send message when nickchange
 		// remove client from all channel
-		//quitCmd(exitMessage, this->_allClients[i], *this);
 		std::cout << "vec = "<< this->_vecPoll.size() << std::endl;
-		// this->_vecPoll.erase(this->_vecPoll.begin() + i); // erase the client
 		// correction
 		DeleteVecElement(this->_vecPoll, i);
 		std::cout << "allCli = "<< this->_allClients.size() << std::endl;
