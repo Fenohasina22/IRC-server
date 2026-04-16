@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 14:06:54 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 14:09:12 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,10 +103,9 @@ bool	pongCmd(Client &client, iRCMessage &mess, Server& serv)
 	std::string pongstr;
 
 	if (mess.args.empty())
-		pongstr = CRLF;
+		pongstr = std::string("PONG") + CRLF;
 	else
 		pongstr = "PONG " + mess.args[0] + CRLF;
-	//send(client.getFd(), pongstr.c_str(), pongstr.size(), 0);
 	client.ConcatenateWBuffer(pongstr, serv);
 	return (true);
 }
