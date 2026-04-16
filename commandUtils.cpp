@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 15:42:02 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 15:58:40 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -590,4 +590,58 @@ void	updateTopic(
 		destChan.setTopic(newTopic);
 		broadcastTopicChange(broadcastMess, client, destChan, serv);
 	}
+}
+
+bool	checkChannelAccess(bool &foundChan, Client &client, iRCMessage &mess, Server &serv, Client &destCli, Channel &destChan, bool &foundCli)
+{
+	if (!foundChan)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("403", ":server", client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
+		return (false);
+	}
+	if (!client.isInChannel(mess.args[0]))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("442", ":server", client.getNick() + " " + mess.args[0] + " :You're not on that channel"), serv);
+		return (false);
+	}
+	if (!foundCli)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("401", ":server", client.getNick() + " " + mess.args[1] + " :No such nick/channel"), serv);
+		return (false);
+	}
+	if (!destCli.isInChannel(mess.args[0]))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("441", ":server", destCli.getNick() + " " + mess.args[0] + " :They aren't on that channel"), serv);
+		return (false);
+	}
+	if (!destChan.isOps(client.getNick()))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("482", ":server", client.getNick() + " " + mess.args[0] + " :You're not a channel operator"), serv);
+		return (false);
+	}
+	return (true);
+}
+
+void	broadCastKick(
+	std::string &broadcastMess,
+	Client 		&client,
+	Client 		&destCli,
+	Channel 	&destChan,
+	iRCMessage 	&mess,
+	Server 		&serv)
+{
+	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
+	broadcastMess += " KICK ";
+	broadcastMess += destChan.getName() + " ";
+	broadcastMess += destCli.getNick();
+	if (mess.args.size() > 2)
+	{
+		std::string reason = mess.args[2];
+		if (!reason.empty() && reason[0] == ':')
+			reason = reason.substr(1);
+		broadcastMess += " :" + reason;
+	}
+	broadcastMess += CRLF;
+	client.ConcatenateWBuffer(broadcastMess, serv);
+	serv.broadcast(broadcastMess, client, destChan, serv);
 }

@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 15:43:27 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 15:59:13 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,8 @@ bool		processTopicCommand(bool &displayTopic,bool &changeTopic,bool &resetTopic,
 			iRCMessage &mess,Server &serv,Channel &destChan);
 void		updateTopic(bool &changeTopic,bool &resetTopic,iRCMessage &mess,Channel &destChan,
 			std::string &broadcastMess,Client &client, Server &serv);
+bool		checkChannelAccess(bool &foundChan, Client &client, iRCMessage &mess, Server &serv,
+			Client &destCli, Channel &destChan, bool &foundCli);
+void		broadCastKick(std::string &broadcastMess,Client &client,Client &destCli,
+			Channel &destChan,iRCMessage 	&mess,Server &serv);
 #endif
