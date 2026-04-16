@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 13:45:54 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/16 13:51:54 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,6 @@ void	CleanUp(Server& serv, int i)
 	Client	&c = serv.findTrueClient(saveFd, foundC);
 	if (!foundC)
 	{
-		std::cout << RED << "fd = " << saveFd << RESET << std::endl;
-		std::cout << RED << "NOT FOUND TRUE CLIENTS" << RESET  << std::endl;
-
 		DeleteVecElement(serv.getVecPoll(), saveFd);
 		DeleteVecElementClient(serv.getAllClients(), saveFd);
 		close (saveFd);
@@ -59,22 +56,11 @@ void	CleanUp(Server& serv, int i)
 		Channel &tmpChan = serv.findChan(*it, foundChan);
 		tmpChan.removeClient(&c);
 	}
-	std::cout << "i = " << i << std::endl;
-	std::cout << "Save = " << saveFd << std::endl;
-	PrintVec(serv.getVecPoll()); // 
 	DeleteVecElement(serv.getVecPoll(), saveFd);
-	PrintVec(serv.getVecPoll());
-	std::cout << std::endl;
-	PrintClients(serv.getAllClients());
 	DeleteVecElementClient(serv.getAllClients(), saveFd);
-	PrintClients(serv.getAllClients());
-	std::cout << std::endl;
-	PrintClients(serv.getTrueClients());
 	DeleteVecElementClient(serv.getTrueClients(), saveFd);
-	PrintClients(serv.getTrueClients());
 	close (saveFd);
 	return ;
-	//exit (0); // delete this
 }
 
 void 	tryRegistration(Client &client, Server& serv)
