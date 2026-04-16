@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 14:22:39 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 15:07:40 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,68 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 	return (true);
 }
 
+bool	checkChanRestrictions(Client &client, iRCMessage &mess, Server serv, Channel *destChan)
+{
+	if (client.isInChannel(mess.args[0]))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("443", ":server",
+			 client.getNick() + " " + mess.args[0] + " :is already on channel"), serv);
+		return (false);
+	}
+	if (destChan->isInviteOnly() && !destChan->isInvited(client.getNick()))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("473", ":server",
+			 client.getNick() + " " + destChan->getName()
+			 + " :cannot join channel (+i)"), serv);
+		return (false);
+	}
+	if (destChan->isPassRequired() && (mess.args.size() < 2 || mess.args[1] != destChan->getPass()))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("475", ":server",
+			 client.getNick() + " " + destChan->getName() +
+			  " :cannot join channel (+k)"), serv);
+		return (false);
+	}
+	if (static_cast<int>(destChan->getMembers().size() + 1) > destChan->getMaxUser())
+	{
+		client.ConcatenateWBuffer(FormatedMessage("471", ":server",
+			 client.getNick() + " " + destChan->getName() + " :cannot join channel (+l)"), serv);
+		return (false);
+	}
+	return (true);
+}
+
+bool	checkChanRestrictions(Client &client, Server &serv, iRCMessage &mess, Channel *destChan)
+{
+	if (client.isInChannel(mess.args[0]))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("443", ":server",
+			 client.getNick() + " " + mess.args[0] + " :is already on channel"), serv);
+		return (false);
+	}
+	if (destChan->isInviteOnly() && !destChan->isInvited(client.getNick()))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("473", ":server",
+			 client.getNick() + " " + destChan->getName()
+			 + " :cannot join channel (+i)"), serv);
+		return (false);
+	}
+	if (destChan->isPassRequired() && (mess.args.size() < 2 || mess.args[1] != destChan->getPass()))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("475", ":server",
+			 client.getNick() + " " + destChan->getName() +
+			  " :cannot join channel (+k)"), serv);
+		return (false);
+	}
+	if (static_cast<int>(destChan->getMembers().size() + 1) > destChan->getMaxUser())
+	{
+		client.ConcatenateWBuffer(FormatedMessage("471", ":server",
+			 client.getNick() + " " + destChan->getName() + " :cannot join channel (+l)"), serv);
+		return (false);
+	}
+	return (true);
+}
+
 bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 {
 	Channel 	*destChan;
@@ -152,14 +214,16 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 
 	if (mess.args.empty())
 	{
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server", "* JOIN :Not enough parameters"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+			 "* JOIN :Not enough parameters"), serv);
 		return (false);
 	}
 	if (!chanExists(mess.args[0], serv))
 	{
 		if (mess.args[0][0] != '#')
 		{
-			client.ConcatenateWBuffer(FormatedMessage("403", ":server", client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
+			client.ConcatenateWBuffer(FormatedMessage("403", ":server",
+				 client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
 			return (false);
 		}
 		serv.getAllChans().push_back(Channel(mess.args[0], ""));
@@ -167,45 +231,19 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 	}
 	else
 		destChan = &(serv.findChan(mess.args[0], foundChan));
-	//chck channel restrictions
-	if (client.isInChannel(mess.args[0]))
-	{
-		client.ConcatenateWBuffer(FormatedMessage("443", ":server", client.getNick() + " " + mess.args[0] + " :is already on channel"), serv);
+	if (!checkChanRestrictions(client, serv, mess, destChan))
 		return (false);
-	}
-	if (destChan->isInviteOnly() && !destChan->isInvited(client.getNick()))
-	{
-		client.ConcatenateWBuffer(FormatedMessage("473", ":server", client.getNick() + " " + destChan->getName() + " :cannot join channel (+i)"), serv);
-		return (false);
-	}
-	if (destChan->isPassRequired() && (mess.args.size() < 2 || mess.args[1] != destChan->getPass()))
-	{
-		client.ConcatenateWBuffer(FormatedMessage("475", ":server", client.getNick() + " " + destChan->getName() + " :cannot join channel (+k)"), serv);
-		return (false);
-	}
-	if (static_cast<int>(destChan->getMembers().size() + 1) > destChan->getMaxUser())
-	{
-		client.ConcatenateWBuffer(FormatedMessage("471", ":server", client.getNick() + " " + destChan->getName() + " :cannot join channel (+l)"), serv);
-		return (false);
-	}
-	//if allowed
-	//1-adduser to channel;
 	destChan->addClient(&client);
-	//2-if 1st user make user operator
 	if (destChan->getMembers().size() == 1)
 		destChan->addOperator(&client);
-	//3-broadcast join to channel
-	// :nick!user@host JOIN #channel
 	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
 	broadcastMess += " JOIN ";
 	broadcastMess += destChan->getName();
 	broadcastMess += CRLF;
-	// send(client.getFd(), broadcastMess.c_str(), broadcastMess.size(), 0);
 	client.ConcatenateWBuffer(broadcastMess, serv);
 	serv.broadcast(broadcastMess, client, *destChan, serv);
 	if (destChan->isInvited(client.getNick()))
 		destChan->removeInvited(&client);
-	//4-send channel state (topic+userlist)
 	sendChannelState(client, *destChan, serv);
 	return (true);
 }

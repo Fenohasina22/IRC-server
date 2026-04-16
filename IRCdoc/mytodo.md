@@ -74,7 +74,7 @@ MODE Not enough parameters
 
 ----------
 
-also what happens when last opertor quits channel
+also what happens when last opertor quits channel, handle banlist
 **In short:**
 
 ```
