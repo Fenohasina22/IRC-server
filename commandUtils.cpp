@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 09:41:34 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 13:50:17 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,4 +299,51 @@ void	DeleteVecElementClient(std::vector<Client>& vec, int fd)
 		else
 			++it;
 	}
+}
+
+bool	getNeighbors(Client &client, Server &serv, std::set<std::string> &membersToNotify)
+{
+	std::set<std::string> joined = client.getJoinedChannels();
+	for (std::set<std::string>::iterator it = joined.begin(); it != joined.end(); it++)
+	{
+		bool success;
+		Channel& chan = serv.findChan(*it, success);
+		if (success)
+		{
+			std::set<std::string>::iterator it;
+			std::set<std::string>::iterator itBegin = chan.getMembers().begin();
+			std::set<std::string>::iterator itEnd = chan.getMembers().end();;
+			for (it = itBegin; it != itEnd; it++)
+			{
+				membersToNotify.insert(*it);
+			}
+		}
+		else
+		{
+			return (false);
+		}
+	}
+	membersToNotify.erase(client.getNick());
+	return (true);
+}
+
+bool	notifyNeighbors(Client &client, Server &serv, std::string &newNick)
+{
+	std::string				msg;
+	struct sockaddr_in		tmp;
+	char					hostname[INET_ADDRSTRLEN];
+	std::set<std::string>	membersToNotify;
+
+	tmp = client.getClientInfos();
+	inet_ntop(AF_INET, &(tmp.sin_addr), hostname, INET_ADDRSTRLEN);
+	msg += ":" + client.getNick() + "!" + client.getUser() + "@" + hostname;
+	msg += " NICK :";
+	msg += newNick;
+	msg += CRLF;
+
+	if (!getNeighbors(client, serv, membersToNotify))
+		return (false);
+	client.ConcatenateWBuffer(msg, serv);
+	serv.broadcastWithoutChan(msg, client, membersToNotify, serv);
+	return (true);
 }
