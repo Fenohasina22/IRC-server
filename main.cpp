@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/15 13:34:11 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 13:22:52 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,13 +95,17 @@ int main(int argc, char **argv)
 			if (vecpol[i].revents & POLLOUT)
 			{
 				bool success;
-				Client &c = server.findTrueClient(vecpol[i].fd, success);
-				if (success)
+				Client *c = NULL;
+
+				c = &(server.findTrueClient(vecpol[i].fd, success));
+				if (!success)
+					c = &(server.findClient(vecpol[i].fd, success));
+				if (success && c != NULL)
 				{
 					std::cout << GREEN << "fd = " << vecpol[i].fd << RESET << std::endl;
-					std::cout << "Message sent to client |" << c.getWriteBuffer() << "|" << std::endl;
-					send(vecpol[i].fd, c.getWriteBuffer().c_str(), c.getWriteBuffer().size(), 0);
-					c.setWriteBuffer("");
+					std::cout << "Message sent to client |" << (*c).getWriteBuffer() << "|" << std::endl;
+					send(vecpol[i].fd, (*c).getWriteBuffer().c_str(), (*c).getWriteBuffer().size(), 0);
+					(*c).setWriteBuffer("");
 					vecpol[i].events &= ~POLLOUT;
 				}
 			}
