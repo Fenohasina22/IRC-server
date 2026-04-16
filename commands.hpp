@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 14:24:02 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 15:13:10 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,7 @@ bool		notifyNeighbors(Client &client, Server &serv, std::string &newNick);
 void		CleanUp(Server& serv, int i);
 void		privmsgToChan(Client &sender, Channel &destChan, Server &serv,iRCMessage &mess,
 			std::string &messageOutput);
+bool		checkChanRestrictions(Client &client, Server &serv, iRCMessage &mess, Channel *destChan);
+void		broadcastJoin(std::string &broadcastMess, Client &client, Server &serv, Channel *destChan);
 
 #endif
