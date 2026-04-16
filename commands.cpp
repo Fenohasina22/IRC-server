@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 14:05:04 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/16 14:06:54 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,10 +93,6 @@ bool	userCmd(Client &client, iRCMessage &mess, Server& serv)
 
 bool	capCmd(Client &client, iRCMessage &mess, Server& serv)
 {
-    //send(client.getFd(), ":server CAP * LS :\r\n", 21, 0);
-    //send(client.getFd(), ":server CAP * END\r\n", 20, 0);
-	std::string		cap;
-
 	if (!mess.args.empty() && mess.args[0] == "LS")
 		client.ConcatenateWBuffer(":server CAP * LS :\r\n", serv);
 	return (true);
