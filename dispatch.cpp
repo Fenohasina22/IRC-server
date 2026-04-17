@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 15:57:19 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 18:09:30 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv, bool &valid
 			break;
 		default:
 			client.ConcatenateWBuffer(FormatedMessage("421", ":server",
-				 client.getNick() + " " + mess.strCmd + " :UnknownCommand"), serv);
+				 client.getNick() + " " + mess.strCmd + " :Unknown command"), serv);
 			std::cout << RED << "UNKNOWN COMMAND" << RESET << std::endl;
 			break;
 	}

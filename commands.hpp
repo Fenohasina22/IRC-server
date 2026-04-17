@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 15:25:08 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 17:26:57 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,4 +101,6 @@ bool		processModeChange(ChanModes &mode,iRCMessage &mess,ModeAction &act,
 bool		validateInvite(bool  &foundCli,Client &client,bool  &foundChan,
 			Client  &senderCli,iRCMessage 	&mess,Channel &destChan,
 			Server  &serv,Client  &invitedCli);
+bool		updateChannels(Client &client, Server &serv, std::string &newNick);
+
 #endif

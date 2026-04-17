@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:05 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 14:59:51 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 17:29:33 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,9 @@ class Channel
 	public:
 		const std::string			getName() const;
 		const std::string			getTopic() const;
-		const std::set<std::string>	&getMembers() const;
+		std::set<std::string>		&getMembers();
+		std::set<std::string>		&getOps();
+		std::set<std::string>		&getInvited();
 		const std::string			getPass() const;
 		void						setPass(const std::string &p);
 		int							getMaxUser() const;

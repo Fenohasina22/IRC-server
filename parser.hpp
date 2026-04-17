@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:40 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 15:51:15 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 18:30:43 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,6 @@ std::vector<std::string>	split(const std::string& str, char delimiter);
 std::vector<std::string>	splitCRLF(const std::string& str);
 void						createTypeTab(std::vector<std::string>	&types);
 void						assignCommand(std::vector<std::string>	&t, std::string	&cmd, iRCMessage &msg);
-void						handleTrailingArgs(iRCMessage &parsedMess,
-							const std::vector<std::string>	&splitMess, bool &trailing, size_t	&i);
-
-
-
+void						handleTrailingArgs(iRCMessage &parsedMess, std::vector<std::string>	&splitMess,
+							bool &trailing,size_t &i);
 #endif

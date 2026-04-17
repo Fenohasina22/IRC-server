@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 15:30:02 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 17:28:45 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 		return (false);
 	if (!notifyNeighbors(client, serv, newNick))
 		return (false);
-
+	if (!updateChannels(client, serv, newNick))
+		return (false);
 	client.setNick(newNick);
 	client.setNickState(true);
 	tryRegistration(client, serv);

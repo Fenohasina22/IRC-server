@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 15:54:08 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 18:31:01 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	getCommand(
 }
 
 void	getArgs(
-	const std::vector<std::string>	&splitMess,
+	std::vector<std::string>		&splitMess,
 	iRCMessage 						&parsedMess,
 	size_t							&index)
 {

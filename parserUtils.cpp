@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 19:01:29 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 15:52:35 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 18:38:39 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,17 @@ void	assignCommand(std::vector<std::string>	&t, std::string	&cmd, iRCMessage &ms
 
 void	handleTrailingArgs(
 	iRCMessage 						&parsedMess,
-	const std::vector<std::string>	&splitMess,
+	std::vector<std::string>		&splitMess,
 	bool 							&trailing,
 	size_t 							&i)
 {
+	std::string copy = splitMess[i];
+	if (copy.size() >= 2 && copy.find(CRLF) != copy.npos
+	&& copy.find(CRLF)== copy.size() - 2)
+	{
+		copy.resize(copy.size() - 2);
+		splitMess[i] = copy;
+	}
 	parsedMess.args.push_back(splitMess[i]);
 	if (!splitMess[i].empty() && splitMess[i][0] == ':')
 		trailing = true;
