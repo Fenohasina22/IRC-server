@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 15:26:38 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 15:30:02 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,7 +245,8 @@ bool	topicCmd(Client &client, iRCMessage &mess, Server &serv)
 			 client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
 		return (false);
 	}
-	if (!processTopicCommand(displayTopic, changeTopic, resetTopic, client, mess, serv, destChan))
+	if (!processTopicCommand(displayTopic, changeTopic, resetTopic,
+		 client, mess, serv, destChan))
 		return (false);
 	updateTopic(changeTopic, resetTopic, mess, destChan, broadcastMess, client, serv);
 	return (true);
@@ -309,7 +310,8 @@ bool	inviteCmd(Client &client,iRCMessage &mess,Server &serv)
 	confirmationMess += invitedCli.getNick() + " ";
 	confirmationMess += destChan.getName();
 	invitedCli.ConcatenateWBuffer(invitationMess, serv);
-	senderCli.ConcatenateWBuffer(FormatedMessage("341", ":server", confirmationMess), serv);
+	senderCli.ConcatenateWBuffer(FormatedMessage("341", ":server",
+		 confirmationMess), serv);
 	destChan.addInvited(&invitedCli);
 	return (true);
 }
@@ -318,7 +320,8 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 {
 	if (mess.args.size() < 1)
 	{
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server", client.getNick() + " MODE :Not enough parameters"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+			 client.getNick() + " MODE :Not enough parameters"), serv);
 		return (false);
 	}
 
@@ -345,9 +348,13 @@ bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 	struct sockaddr_in		tmp = client.getClientInfos();
 
 	inet_ntop(AF_INET, &tmp.sin_addr, hostname, INET_ADDRSTRLEN);
-	msg = ":" + client.getNick() + "!" + client.getUser() + "@" + hostname + " QUIT " + mess.args[0] + CRLF;
+	msg += ":" + client.getNick() + "!" + client.getUser() + "@" + hostname;
+	msg += " QUIT ";
+	msg += mess.args[0];
+	msg += CRLF;
 	joinedChannel = client.getJoinedChannels();
-	for (std::set<std::string>::iterator it = joinedChannel.begin(); it != joinedChannel.end(); it++)
+	for (std::set<std::string>::iterator it = joinedChannel.begin();
+			it != joinedChannel.end(); it++)
 	{
 		bool success;
 		Channel& chan = serv.findChan(*it, success);
@@ -357,9 +364,7 @@ bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 			chan.removeClient(&client);
 		}
 		else
-		{
 			return (false);
-		}
 	}
 	std::cout << RED << msg << RESET << std::endl;
 	std::cout << GREEN  << "Bye " << client.getUser() << RESET << std::endl;
