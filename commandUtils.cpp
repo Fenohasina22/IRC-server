@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 14:46:07 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 14:47:25 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ bool	IsValidNick(std::string nick, Client&  client, Server& serv)
 		if (pos != std::string::npos)
 		{
 			std::cout << RED << "INVALID NICK" << RESET << std::endl;
-			// :ft_irc 432 * Nick@42 :Erroneous nickname\r\n
-			client.ConcatenateWBuffer(FormatedMessage("432", ":server", "* " + nick + " :Erroneous nickname" ), serv);
+			client.ConcatenateWBuffer(FormatedMessage("432", ":server",
+				 "* " + nick + " :Erroneous nickname" ), serv);
 			return (false);
 		}
 		i++;
