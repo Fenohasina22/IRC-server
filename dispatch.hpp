@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dispatch.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:56:54 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/15 10:52:28 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 21:55:38 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

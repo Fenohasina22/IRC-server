@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:40 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 19:07:41 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 21:56:35 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # include <vector>
 # include <string>
 # include <algorithm>
-
 //commands number
 # ifndef COM_NUM
 #  define COM_NUM 14
@@ -27,6 +26,11 @@
 # define CRLF "\r\n"
 # endif
 
+# define RED     "\033[31m"
+# define GREEN   "\033[32m"
+# define YELLOW  "\033[33m"
+# define BLUE    "\033[1;36m"
+# define RESET   "\033[0m"
 
 
 
@@ -84,6 +88,7 @@ void						createTypeTab(std::vector<std::string>	&types);
 void						assignCommand(std::vector<std::string>	&t, std::string	&cmd, iRCMessage &msg);
 void						handleTrailingArgs(iRCMessage &parsedMess,
 							const std::vector<std::string>	&splitMess, bool &trailing, size_t	&i);
+std::string					strtrim(std::string &str);
 
 
 

@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 19:19:47 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/17 22:03:50 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ void	PrintArg(std::vector<std::string>& a)
 	std::cout << YELLOW << "----------------------" << std::endl;
 	for (unsigned int i = 0; i < a.size(); i++)
 	{
-		std::cout << a[i] << " ";
+		std::cout << "a[" << i << "] = "<< a[i] << " ";
 	}
 	std::cout << "\n----------------------"<< RESET<< std::endl;
 }
@@ -162,37 +162,54 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 	Channel 	*destChan;
 	bool		foundChan = false;
 	std::string broadcastMess;
+	std::vector<std::string> vec;
 
 
-	
-	if (mess.args.empty())
+	unsigned int	idx;
+
+	idx = 0;
+	while (idx < mess.args.size())
 	{
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
-			 "* JOIN :Not enough parameters"), serv);
-		return (false);
-	}
-	if (!chanExists(mess.args[0], serv))
-	{
-		if (mess.args[0][0] != '#')
+		vec = split(mess.args[idx],',');
+		unsigned int i;
+		i = 0;
+		while (i < vec.size())
 		{
-			client.ConcatenateWBuffer(FormatedMessage("403", ":server",
-				 client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
-			return (false);
+			vec[i] = strtrim(vec[i]);
+			std::cout << RED << vec[i] << RESET << std::endl;
+			if (vec[i].empty())
+			{
+				client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+					 "* JOIN :Not enough parameters"), serv);
+				return (false);
+			}
+			if (!chanExists(vec[i], serv))
+			{
+				if (vec[i][0] != '#')
+				{
+					client.ConcatenateWBuffer(FormatedMessage("403", ":server",
+						 client.getNick() + " " + vec[i] + " :No such channel"), serv);
+					return (false);
+				}
+				serv.getAllChans().push_back(Channel(vec[i], ""));
+				destChan = &(serv.getAllChans().back());
+			}
+			else
+				destChan = &(serv.findChan(vec[i], foundChan));
+			if (!checkChanRestrictions(client, serv, mess, destChan))
+				return (false);
+			destChan->addClient(&client);
+			if (destChan->getMembers().size() == 1)
+				destChan->addOperator(&client);
+			broadcastJoin(broadcastMess, client, serv, destChan);
+			if (destChan->isInvited(client.getNick()))
+				destChan->removeInvited(&client);
+			sendChannelState(client, *destChan, serv);
+			i++;
 		}
-		serv.getAllChans().push_back(Channel(mess.args[0], ""));
-		destChan = &(serv.getAllChans().back());
+		idx++;
 	}
-	else
-		destChan = &(serv.findChan(mess.args[0], foundChan));
-	if (!checkChanRestrictions(client, serv, mess, destChan))
-		return (false);
-	destChan->addClient(&client);
-	if (destChan->getMembers().size() == 1)
-		destChan->addOperator(&client);
-	broadcastJoin(broadcastMess, client, serv, destChan);
-	if (destChan->isInvited(client.getNick()))
-		destChan->removeInvited(&client);
-	sendChannelState(client, *destChan, serv);
+	
 	return (true);
 }
 
