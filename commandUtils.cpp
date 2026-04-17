@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 15:58:40 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 14:42:08 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,32 +267,41 @@ bool	doLflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args)
 
 int	doOflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args, Client &client, Server &serv)
 {
+	if (args.size() < 3)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+			 client.getNick() + " MODE :Not enough parameters"), serv);
+		return (3);
+	}
+
 	bool	foundTarget = false;
-	Client	target 		= serv.findTrueClient(args[1], foundTarget);
+	Client	target 		= serv.findTrueClient(args[2], foundTarget);
 
 	if (!client.isInChannel(destChan.getName()))
 	{
-		client.ConcatenateWBuffer(FormatedMessage("442", ":server", client.getNick() + " " + destChan.getName() + " :You're not on that channel"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("442", ":server",
+			 client.getNick() + " " + destChan.getName()
+			 + " :You're not on that channel"), serv);
 		return (1);
 	}
 	if (!destChan.isOps(client.getNick()))
 	{
-		client.ConcatenateWBuffer(FormatedMessage("482", ":server", client.getNick() + " " + destChan.getName() + " :You're not a channel operator"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("482", ":server",
+			 client.getNick() + " " + destChan.getName()
+			 + " :You're not a channel operator"), serv);
 		return (2);
-	}
-	if (args.size() < 2)
-	{
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server", client.getNick() + " MODE :Not enough parameters"), serv);
-		return (3);
 	}
 	if (!foundTarget)
 	{
-		client.ConcatenateWBuffer(FormatedMessage("401", ":server", client.getNick() + " " + args[1] + " :No such nick"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("401", ":server",
+			 client.getNick() + " " + args[2] + " :No such nick"), serv);
 		return (4);
 	}
 	if (!target.isInChannel(destChan.getName()))
 	{
-		client.ConcatenateWBuffer(FormatedMessage("441", ":server", target.getNick() + " " + destChan.getName() + " :They aren't on that channel"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("441", ":server",
+			 client.getNick() + " " + target.getNick() + " " + destChan.getName()
+			 + " :They aren't on that channel"), serv);
 		return (5);
 	}
 	if (act == ADD)
@@ -596,27 +605,32 @@ bool	checkChannelAccess(bool &foundChan, Client &client, iRCMessage &mess, Serve
 {
 	if (!foundChan)
 	{
-		client.ConcatenateWBuffer(FormatedMessage("403", ":server", client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("403", ":server",
+			 client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
 		return (false);
 	}
 	if (!client.isInChannel(mess.args[0]))
 	{
-		client.ConcatenateWBuffer(FormatedMessage("442", ":server", client.getNick() + " " + mess.args[0] + " :You're not on that channel"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("442", ":server",
+			 client.getNick() + " " + mess.args[0] + " :You're not on that channel"), serv);
 		return (false);
 	}
 	if (!foundCli)
 	{
-		client.ConcatenateWBuffer(FormatedMessage("401", ":server", client.getNick() + " " + mess.args[1] + " :No such nick/channel"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("401", ":server",
+			 client.getNick() + " " + mess.args[1] + " :No such nick/channel"), serv);
 		return (false);
 	}
 	if (!destCli.isInChannel(mess.args[0]))
 	{
-		client.ConcatenateWBuffer(FormatedMessage("441", ":server", destCli.getNick() + " " + mess.args[0] + " :They aren't on that channel"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("441", ":server",
+			 destCli.getNick() + " " + mess.args[0] + " :They aren't on that channel"), serv);
 		return (false);
 	}
 	if (!destChan.isOps(client.getNick()))
 	{
-		client.ConcatenateWBuffer(FormatedMessage("482", ":server", client.getNick() + " " + mess.args[0] + " :You're not a channel operator"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("482", ":server",
+			 client.getNick() + " " + mess.args[0] + " :You're not a channel operator"), serv);
 		return (false);
 	}
 	return (true);
@@ -644,4 +658,98 @@ void	broadCastKick(
 	broadcastMess += CRLF;
 	client.ConcatenateWBuffer(broadcastMess, serv);
 	serv.broadcast(broadcastMess, client, destChan, serv);
+}
+
+bool	validateChannelModeAccess(Server &serv, Client &client, iRCMessage &mess)
+{
+	bool	foundChan = false;
+	bool	foundCli = false;
+	Channel &destChan = serv.findChan(mess.args[0], foundChan);
+	serv.findTrueClient(mess.args[0], foundCli);
+	if (!foundChan && !foundCli)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("403", ":server",
+			 client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
+		return (false);
+	}
+	if (foundCli)
+		return (false);
+	if (mess.args.size() < 2)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("324", ":server",
+			 client.getNick() + " " + destChan.getName() + " " + destChan.flagsToStr()), serv);
+		return (false);
+	}
+	if (!destChan.isOps(client.getNick()))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("482", ":server",
+			 client.getNick() + " " + mess.args[0] + " :You're not a channel operator"), serv);
+		return (false);
+	}
+	return (true);
+}
+
+bool	processModeChange(
+	ChanModes 	&mode,
+	iRCMessage 	&mess,
+	ModeAction 	&act,
+	Channel		&destChan,
+	Client 		&client,
+	Server		&serv)
+{
+	mode = strToMode(mess.args[1], act);
+	if (mode == unknown || act == NO_ACTION)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("472", ":server",
+			 client.getNick() + " " + mess.args[1] + " :is unknown mode char to me"), serv);
+		return (false);
+	}
+	switch (mode)
+	{
+		case i:
+			doIflag(destChan, act);
+			break;
+
+		case t:
+			doTflag(destChan, act);
+			break;
+
+		case k:
+			if (!doKflag(destChan, act, mess.args))
+			{
+				client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+					 client.getNick() + " MODE :Not enough parameters"), serv);
+				return (false);
+			}
+			break;
+
+		case l:
+			if (!doLflag(destChan, act, mess.args))
+			{
+				client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+					 client.getNick() + " MODE :Not enough parameters"), serv);
+				return (false);
+			}
+			break;
+		case o:
+			if (doOflag(destChan, act, mess.args, client, serv))
+				return (false);
+		default:
+			break;
+	}
+	return (true);
+}
+
+void	broacastModeChange(Client &client, Channel &destChan, iRCMessage &mess, Server &serv)
+{
+	std::string broadcastMess;
+
+	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
+	broadcastMess += " MODE ";
+	broadcastMess += destChan.getName() + " ";
+	broadcastMess += mess.args[1];
+	broadcastMess += CRLF;
+
+	serv.broadcast(broadcastMess, client, destChan, serv);
+	client.ConcatenateWBuffer(broadcastMess, serv);
 }

@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 15:59:13 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 14:44:06 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,4 +93,8 @@ bool		checkChannelAccess(bool &foundChan, Client &client, iRCMessage &mess, Serv
 			Client &destCli, Channel &destChan, bool &foundCli);
 void		broadCastKick(std::string &broadcastMess,Client &client,Client &destCli,
 			Channel &destChan,iRCMessage 	&mess,Server &serv);
+bool		validateChannelModeAccess(Server &serv, Client &client, iRCMessage &mess);
+void		broacastModeChange(Client &client, Channel &destChan, iRCMessage &mess, Server &serv);
+bool		processModeChange(ChanModes &mode,iRCMessage &mess,ModeAction &act,
+			Channel	&destChan,Client 	&client,Server		&serv);
 #endif
