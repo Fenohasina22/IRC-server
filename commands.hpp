@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 14:44:06 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 14:46:01 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void		DeleteVecElementClient(std::vector<Client>& vec, int fd);
 bool		getNeighbors(Client &client, Server &serv, std::set<std::string> &membersToNotify);
 bool		notifyNeighbors(Client &client, Server &serv, std::string &newNick);
 void		CleanUp(Server& serv, int i);
+bool		IsValidNick(std::string nick, Client&  client, Server& serv);
 void		privmsgToChan(Client &sender, Channel &destChan, Server &serv,iRCMessage &mess,
 			std::string &messageOutput);
 bool		checkChanRestrictions(Client &client, Server &serv, iRCMessage &mess, Channel *destChan);

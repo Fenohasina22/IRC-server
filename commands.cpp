@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 14:43:58 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 14:45:55 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,13 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 	newNick = mess.args[0];
 	if (!newNick.empty() && newNick[0] == ':')
 		newNick = newNick.substr(1);
+	if (!IsValidNick(newNick, client, serv))
+		return (false);
 	if (isNicknameInUse(serv, client, newNick))
 		return (false);
 	if (!notifyNeighbors(client, serv, newNick))
 		return (false);
+
 	client.setNick(newNick);
 	client.setNickState(true);
 	tryRegistration(client, serv);

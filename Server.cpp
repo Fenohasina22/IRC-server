@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/16 13:08:20 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/17 14:31:46 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,7 @@ int	Server::Initialize()
 		return (1);
 	}
 	if (bind(this->_sockfd, (struct sockaddr *)&(this->_addr), sizeof(this->_addr)) == 0)
-	{
 		std::cout << GREEN << "Binding successfull" << RESET<< std::endl;
-	}
 	else
 	{
 		std::cout << RED <<"Binding failed" << RESET << std::endl;
@@ -97,15 +95,14 @@ int	Server::Initialize()
 		return (1);
 	}
 	if (listen(this->_sockfd, SOMAXCONN) == 0)
-	{
 		std::cout << GREEN << "Listen successful" << RESET <<  std::endl;
-	}
 	else
 	{
 		std::cout << RED << "Listen failed" << RESET << std::endl;
 		close (this->_sockfd);
 		return (1);
 	}
+	AllFds.push_back(this->_sockfd);
 	return (0);
 }
 
@@ -122,6 +119,7 @@ bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 	client.setFd(tmp.fd);
 	client.setClientInfos(clientinfo);
 	this->_allClients.push_back(client);
+	AllFds.push_back(tmp.fd);
 	return (true);
 }
 
@@ -262,18 +260,10 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 	{
 		std::cout << BLUE << "message[" << m << "] = " << messages[m] << RESET << std::endl;
 		if (!validPass)
-		{
-			std::cout << RED << "INVALID PASS" << RESET << std::endl;
 			c = &(server.findClient(server.getVecPoll()[i].fd, foundClnt));
-		}
+
 		else
-		{
-			std::cout << GREEN << "VALID PASS" << RESET << std::endl;
 			c = &(server.findTrueClient(server.getVecPoll()[i].fd, foundClnt));
-			// if (!c->getPassState())
-			// 	c->setPassState(true);
-			std::cout << "size = " << server.getTrueClients().size() << std::endl;
-		}
 		if (!foundClnt)
 		{
 			std::cout << "no such client" << std::endl;
@@ -281,9 +271,6 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 		}
 		parsedMess = parseMessage(messages[m]);
 		dispatchCommand(parsedMess, *c, server, validPass);
-		std::cout << "PASS" << c->getPassState() <<std::endl;
-		std::cout << "NICK" << c->getNickState() <<std::endl;
-		std::cout << "USER" << c->getUserState() <<std::endl;
 	}
 	return (0);
 }
@@ -302,8 +289,7 @@ void	Server::Processmessage (int i)
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
 	if (retval == -1 || retval == 0)
 	{
-		
-		std::cout << GREEN << "Client disconnected successfully" << RESET << std::endl;
+		std::cout << GREEN << "Client disconnected" << RESET << std::endl;
 		CleanUp(*this, i);
 		return ;
 	}
@@ -390,10 +376,3 @@ pollfd&	Server::findElementByfd(int fd, bool& a)
 	a = false;
 	return (vec[i]);
 }
-
-// void	removeClientbyfd(int fd)
-// {
-
-// }
-//
-
