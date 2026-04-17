@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 15:49:10 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/17 14:28:57 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 #include "dispatch.hpp"
 #include "parser.hpp"
 
-/*Handle ghost user reconnection */
-std::vector<int>AllFds;
+std::vector<int>	AllFds;
+bool				signalCaught = false;
 
 bool	getParams(char **argv, Server &serv)
 {
@@ -39,13 +39,54 @@ bool	getParams(char **argv, Server &serv)
 void	signalHandler(int sig)
 {
 	(void)sig;
-	std::cout << "SIG HAndler" << std::endl;
+	std::cout << RED << "SIGNAL"<< RESET  << std::endl;
 	for (unsigned int i = 0; i < AllFds.size(); i++)
 	{
 		close (AllFds[i]);
 	}
+	signalCaught = true;
 }
 
+void	SendtoCorrectClient(int i, Server& serv)
+{
+	bool success;
+	Client *c = NULL;
+
+	c = &(serv.findTrueClient(serv.getVecPoll()[i].fd, success));
+	if (!success)
+		c = &(serv.findClient(serv.getVecPoll()[i].fd, success));
+	if (success && c != NULL)
+	{
+		std::cout << GREEN << "fd = " << serv.getVecPoll()[i].fd << RESET << std::endl;
+		std::cout << "Message sent to client |" << (*c).getWriteBuffer() << "|" << std::endl;
+		send(serv.getVecPoll()[i].fd, (*c).getWriteBuffer().c_str(), (*c).getWriteBuffer().size(), 0);
+		(*c).setWriteBuffer("");
+		serv.getVecPoll()[i].events &= ~POLLOUT;
+	}
+}
+
+void	WatchEvents(sockaddr_in clientinfo, Server& server)
+{
+	std::vector<pollfd>& vecpol = server.getVecPoll();
+	socklen_t	c_size;
+
+	c_size = sizeof(sockaddr_in);
+	for (unsigned int i = 0; i < vecpol.size(); i++)
+	{
+		if (vecpol[i].fd == server.getSockfd() && (vecpol[i].revents & POLLIN))
+		{
+			server.NewUserHandling(clientinfo, c_size);
+		}
+		else if (vecpol[i].revents & POLLIN)
+		{
+			server.Processmessage(i);
+		}
+		if (vecpol[i].revents & POLLOUT)
+		{
+			SendtoCorrectClient(i, server);
+		}
+	}
+}
 
 int main(int argc, char **argv)
 {
@@ -54,67 +95,30 @@ int main(int argc, char **argv)
 		std::cout << "Usage: ./ft_irc <port> <pass>" << std::endl;
 		return (1);
 	}
-	// signal handling
 	signal(SIGPIPE, SIG_IGN);
 	signal(SIGINT, signalHandler);
-	struct sockaddr_in	clientinfo;
-	struct pollfd		sock; // for initialization of the first element of vecpol
-	socklen_t			c_size;
+	
 	Server				server;
+	sockaddr_in			clientinfo;
+	pollfd				sock; // for initialization of the first element of vecpol
 
-	if (!getParams(argv, server))
+	if (!getParams(argv, server)) // remove errno
 		return (1);
-	c_size = sizeof(sockaddr_in);
-	std::cout << BLUE << std::endl;
-	std::cout << " === CREATING SERVER === " << std::endl;
-	std::cout << RESET << std::endl;
+		/*print smth nice*/
 	if (server.Initialize())
-	{
 		return (0);
-	}
 	sock.events = POLLIN;
 	sock.fd =  server.getSockfd();
-	// ensure revents is initialized to avoid valgrind uninitialized use
 	sock.revents = 0;
+	// ensure revents is initialized to avoid valgrind uninitialized use
 	std::vector<pollfd>&	vecpol = server.getVecPoll();
 	vecpol.push_back(sock);
-	std::string			message;
 	while (1)
 	{
 		// poll SLEEPS AND WAKE UP WHEN AN EVENT HAPPENS LIKE POLLIN
-		if (poll(&vecpol[0], vecpol.size(), -1) < 0)
-		{
-			//std::cout << "error: poll"<< std::endl;
-			return (0);
-		}
-		for (unsigned int i = 0; i < vecpol.size(); i++)
-		{
-			if (vecpol[i].fd == server.getSockfd() && (vecpol[i].revents & POLLIN))
-			{
-				server.NewUserHandling(clientinfo, c_size);
-			}
-			else if (vecpol[i].revents & POLLIN)
-			{
-				server.Processmessage(i);
-			}
-			if (vecpol[i].revents & POLLOUT)
-			{
-				bool success;
-				Client *c = NULL;
-
-				c = &(server.findTrueClient(vecpol[i].fd, success));
-				if (!success)
-					c = &(server.findClient(vecpol[i].fd, success));
-				if (success && c != NULL)
-				{
-					std::cout << GREEN << "fd = " << vecpol[i].fd << RESET << std::endl;
-					std::cout << "Message sent to client |" << (*c).getWriteBuffer() << "|" << std::endl;
-					send(vecpol[i].fd, (*c).getWriteBuffer().c_str(), (*c).getWriteBuffer().size(), 0);
-					(*c).setWriteBuffer("");
-					vecpol[i].events &= ~POLLOUT;
-				}
-			}
-		}
+		if (signalCaught || poll(&vecpol[0], vecpol.size(), -1) < 0)
+			return (1);
+		WatchEvents(clientinfo, server);
 	}
 	return (0);
 }

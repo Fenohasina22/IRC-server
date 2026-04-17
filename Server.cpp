@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/16 14:36:08 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/17 14:31:46 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,7 @@ int	Server::Initialize()
 		return (1);
 	}
 	if (bind(this->_sockfd, (struct sockaddr *)&(this->_addr), sizeof(this->_addr)) == 0)
-	{
 		std::cout << GREEN << "Binding successfull" << RESET<< std::endl;
-	}
 	else
 	{
 		std::cout << RED <<"Binding failed" << RESET << std::endl;
@@ -97,9 +95,7 @@ int	Server::Initialize()
 		return (1);
 	}
 	if (listen(this->_sockfd, SOMAXCONN) == 0)
-	{
 		std::cout << GREEN << "Listen successful" << RESET <<  std::endl;
-	}
 	else
 	{
 		std::cout << RED << "Listen failed" << RESET << std::endl;
