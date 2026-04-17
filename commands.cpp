@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 19:17:16 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/17 19:19:47 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,9 +164,7 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 	std::string broadcastMess;
 
 
-	/**/
-	//PrintArg(mess.args);
-	/**/
+	
 	if (mess.args.empty())
 	{
 		client.ConcatenateWBuffer(FormatedMessage("461", ":server",

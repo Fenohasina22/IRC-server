@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 19:18:07 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/17 19:31:59 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -657,12 +657,13 @@ void	broadCastKick(
 	serv.broadcast(broadcastMess, client, destChan, serv);
 }
 
-char	*CurrentHostname(Client& client)
+std::string	CurrentHostname(Client& client)
 {
 	struct sockaddr_in		tmp;
 	char					hostname[INET_ADDRSTRLEN];
-
+	std::string				host;
 	tmp = client.getClientInfos();
 	inet_ntop(AF_INET, &(tmp.sin_addr), hostname, INET_ADDRSTRLEN);
-	return (hostname);
+	host = hostname;
+	return (host);
 }

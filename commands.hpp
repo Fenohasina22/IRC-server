@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 19:15:47 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/17 19:32:14 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,8 @@ bool		checkChannelAccess(bool &foundChan, Client &client, iRCMessage &mess, Serv
 			Client &destCli, Channel &destChan, bool &foundCli);
 void		broadCastKick(std::string &broadcastMess,Client &client,Client &destCli,
 			Channel &destChan,iRCMessage 	&mess,Server &serv);
+std::string	CurrentHostname(Client& client);
 
-char		*CurrentHostname(Client& client);
 
 /*Debug*/
 void	PrintArg(std::vector<std::string>& a);
