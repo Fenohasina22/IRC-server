@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 15:25:42 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 15:26:38 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -344,8 +344,6 @@ bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 	char					hostname[INET_ADDRSTRLEN];
 	struct sockaddr_in		tmp = client.getClientInfos();
 
-
-	// transform the binary into string
 	inet_ntop(AF_INET, &tmp.sin_addr, hostname, INET_ADDRSTRLEN);
 	msg = ":" + client.getNick() + "!" + client.getUser() + "@" + hostname + " QUIT " + mess.args[0] + CRLF;
 	joinedChannel = client.getJoinedChannels();
