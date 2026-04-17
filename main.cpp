@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 14:28:57 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/17 14:46:23 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	SendtoCorrectClient(int i, Server& serv)
 	}
 }
 
-void	WatchEvents(sockaddr_in clientinfo, Server& server)
+void	WatchEvents(sockaddr_in& clientinfo, Server& server)
 {
 	std::vector<pollfd>& vecpol = server.getVecPoll();
 	socklen_t	c_size;
