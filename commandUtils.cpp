@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 14:47:25 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 15:24:13 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -763,4 +763,50 @@ void	broacastModeChange(Client &client, Channel &destChan, iRCMessage &mess, Ser
 
 	serv.broadcast(broadcastMess, client, destChan, serv);
 	client.ConcatenateWBuffer(broadcastMess, serv);
+}
+
+bool	validateInvite(
+	bool 		&foundCli,
+	Client		&client,
+	bool 		&foundChan,
+	Client 		&senderCli,
+	iRCMessage 	&mess,
+	Channel		&destChan,
+	Server 		&serv,
+	Client 		&invitedCli)
+{
+	if (!foundCli)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("401", ":server",
+			 client.getNick() + " " + mess.args[0] + " :No such nick"), serv);
+		return (false);
+	}
+	if (!foundChan)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("403", ":server",
+      	  client.getNick() + " " + mess.args[1] + " :No such channel"), serv);
+		return (false);
+	}
+	if (!senderCli.isInChannel(mess.args[1]))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("442", ":server",
+			 client.getNick() + " " + destChan.getName()
+			 + " :You're not on that channel"), serv);
+		return (false);
+	}
+	if (!destChan.isOps(senderCli.getNick()))
+	{
+		client.ConcatenateWBuffer(FormatedMessage("482", ":server",
+			 client.getNick() + " " + destChan.getName()
+			 + " :You're not a channel operator"), serv);
+		return (false);
+	}
+	if (invitedCli.isInChannel(destChan.getName()))
+	{
+	    client.ConcatenateWBuffer(FormatedMessage("443", ":server",
+	        client.getNick() + " " + invitedCli.getNick() + " " + destChan.getName()
+			+ " :is already on channel"), serv);
+	    return (false);
+	}
+	return (true);
 }

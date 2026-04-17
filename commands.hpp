@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 14:46:01 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 15:25:08 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,4 +98,7 @@ bool		validateChannelModeAccess(Server &serv, Client &client, iRCMessage &mess);
 void		broacastModeChange(Client &client, Channel &destChan, iRCMessage &mess, Server &serv);
 bool		processModeChange(ChanModes &mode,iRCMessage &mess,ModeAction &act,
 			Channel	&destChan,Client 	&client,Server		&serv);
+bool		validateInvite(bool  &foundCli,Client &client,bool  &foundChan,
+			Client  &senderCli,iRCMessage 	&mess,Channel &destChan,
+			Server  &serv,Client  &invitedCli);
 #endif
