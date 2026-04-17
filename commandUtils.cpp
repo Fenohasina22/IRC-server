@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 21:33:07 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 22:20:54 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,10 +230,12 @@ bool	doKflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args)
 {
 	if (act == ADD)
 	{
-		if (args.size() < 3)
+		if (args.size() < 1)
 			return (false);
 		destChan.addFlag("k");
-		destChan.setPass(args[2]);
+		// destChan.setPass(args[2]);
+		destChan.setPass(args[0]);
+		args.erase(args.begin());
 		destChan.setPassRequired(true);
 	}
 	else
@@ -251,11 +253,11 @@ bool	doLflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args)
 	char	*endptr;
 	if (act == ADD)
 	{
-		if (args.size() < 3)
+		if (args.size() < 1)
 			return (false);
 		errno = 0;
-		newLimit = std::strtol(args[2].c_str(), &endptr, 10);
-		if (*endptr || endptr == args[2])
+		newLimit = std::strtol(args[0].c_str(), &endptr, 10);
+		if (*endptr || endptr == args[0])
 			return (false);
 		if (errno)
 			return (false);
@@ -263,6 +265,7 @@ bool	doLflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args)
 			return (false);
 		if (newLimit > 512)
 			newLimit = 512;
+		args.erase(args.begin());
 		destChan.addFlag("l");
 		destChan.setMaxUser(newLimit);
 		destChan.setUserLimitEnabled(true);
@@ -278,7 +281,7 @@ bool	doLflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args)
 
 int	doOflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args, Client &client, Server &serv)
 {
-	if (args.size() < 3)
+	if (args.size() < 1)
 	{
 		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
 			 client.getNick() + " MODE :Not enough parameters"), serv);
@@ -286,7 +289,7 @@ int	doOflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args, 
 	}
 
 	bool	foundTarget = false;
-	Client	target 		= serv.findTrueClient(args[2], foundTarget);
+	Client	target 		= serv.findTrueClient(args[0], foundTarget);
 
 	if (!client.isInChannel(destChan.getName()))
 	{
@@ -305,7 +308,7 @@ int	doOflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args, 
 	if (!foundTarget)
 	{
 		client.ConcatenateWBuffer(FormatedMessage("401", ":server",
-			 client.getNick() + " " + args[2] + " :No such nick"), serv);
+			 client.getNick() + " " + args[0] + " :No such nick"), serv);
 		return (4);
 	}
 	if (!target.isInChannel(destChan.getName()))
@@ -319,6 +322,7 @@ int	doOflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args, 
 		destChan.addOperator(&target);
 	else
 		destChan.removeOperator(&target);
+	args.erase(args.begin());
 	return (0);
 }
 
@@ -750,19 +754,19 @@ bool	validateChannelModeAccess(Server &serv, Client &client, iRCMessage &mess)
 }
 
 bool	processModeChange(
+	std::vector<std::string> &args,
+	std::string	&modeChange,
 	ChanModes 	&mode,
-	iRCMessage 	&mess,
 	ModeAction 	&act,
 	Channel		&destChan,
 	Client 		&client,
 	Server		&serv)
 {
-
-	mode = strToMode(mess.args[1], act);
+	mode = strToMode(modeChange, act);
 	if (mode == unknown || act == NO_ACTION)
 	{
 		client.ConcatenateWBuffer(FormatedMessage("472", ":server",
-			 client.getNick() + " " + mess.args[1] + " :is unknown mode char to me"), serv);
+			 client.getNick() + " " + modeChange + " :is unknown mode char to me"), serv);
 		return (false);
 	}
 	switch (mode)
@@ -776,7 +780,7 @@ bool	processModeChange(
 			break;
 
 		case k:
-			if (!doKflag(destChan, act, mess.args))
+			if (!doKflag(destChan, act, args))
 			{
 				client.ConcatenateWBuffer(FormatedMessage("461", ":server",
 					 client.getNick() + " MODE :Not enough parameters"), serv);
@@ -785,7 +789,7 @@ bool	processModeChange(
 			break;
 
 		case l:
-			if (!doLflag(destChan, act, mess.args))
+			if (!doLflag(destChan, act, args))
 			{
 				client.ConcatenateWBuffer(FormatedMessage("461", ":server",
 					 client.getNick() + " MODE :Not enough parameters"), serv);
@@ -793,7 +797,7 @@ bool	processModeChange(
 			}
 			break;
 		case o:
-			if (doOflag(destChan, act, mess.args, client, serv))
+			if (doOflag(destChan, act, args, client, serv))
 				return (false);
 		default:
 			break;
@@ -801,14 +805,14 @@ bool	processModeChange(
 	return (true);
 }
 
-void	broacastModeChange(Client &client, Channel &destChan, iRCMessage &mess, Server &serv)
+void	broacastModeChange(Client &client, Channel &destChan, const std::string &finalModeStr, Server &serv)
 {
 	std::string broadcastMess;
 
 	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
 	broadcastMess += " MODE ";
 	broadcastMess += destChan.getName() + " ";
-	broadcastMess += mess.args[1];
+	broadcastMess += finalModeStr;
 	broadcastMess += CRLF;
 
 	serv.broadcast(broadcastMess, client, destChan, serv);

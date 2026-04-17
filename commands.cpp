@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 21:31:17 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 22:45:04 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -343,40 +343,47 @@ std::vector<std::string>	getChangesToDo(std::vector<std::string>	&args)
 std::vector<std::string> getArgList(std::vector<std::string> &args)
 {
 	std::vector<std::string> res;
-	if (args.size() < 2)
-		return res;
-	// keep channel and mode string as first two elements
-	res.push_back(args[0]);
-	res.push_back(args[1]);
-	if (args.size() <= 2)
-		return res;
-	std::string &changeString = args[1];
-	std::string sign;
-	size_t argIdx = 2;
-	for (size_t i = 0; i < changeString.size(); ++i)
+
+	for (size_t i = 2; i < args.size(); i++)
+		res.push_back(args[i]);
+	return (res);
+}
+
+void	processFlags(
+	std::vector<std::string>	&changesToDo,
+	std::vector<std::string>	&argList,
+	ChanModes					&mode,
+	ModeAction					&act,
+	Channel						&destChan,
+	Client						&client,
+	char						&currentSign,
+	std::string					&finalFlags,
+	std::string					&finalArgs,
+	Server						&serv
+)
+{
+	for (size_t i = 0; i < changesToDo.size(); i++)
 	{
-		if (changeString[i] == '+' || changeString[i] == '-')
+		std::string potentialArg = argList.empty() ? "" : argList.front();
+		size_t oldSize = argList.size();
+
+		if (processModeChange(argList, changesToDo[i] , mode, act, destChan, client, serv))
 		{
-			sign = changeString[i];
-			continue;
-		}
-		char modeChar = changeString[i];
-		// modes that require a parameter when being added: k, l
-		// mode that always requires a parameter: o
-		bool needsParam = false;
-		if (modeChar == 'o')
-			needsParam = true;
-		else if ((modeChar == 'k' || modeChar == 'l') && sign == "+")
-			needsParam = true;
-		if (needsParam)
-		{
-			if (argIdx < args.size())
-				res.push_back(args[argIdx++]);
-			else
-				res.push_back(std::string());
+			if (currentSign != changesToDo[i][0])
+			{
+				currentSign = changesToDo[i][0];
+				finalFlags += currentSign;
+			}
+			finalFlags += changesToDo[i][1];
+
+			if (argList.size() < oldSize)
+			{
+				if (!finalArgs.empty())
+					finalArgs += " ";
+				finalArgs += potentialArg;
+			}
 		}
 	}
-	return res;
 }
 
 bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
@@ -392,21 +399,24 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 	Channel 					&destChan	= serv.findChan(mess.args[0], foundChan);
 	ModeAction 					act;
 	ChanModes					mode;
-	std::vector<std::string>	args = mess.args;
+	std::vector<std::string>	args 		= mess.args;
+	std::vector<std::string>	changesToDo;
+	std::string					finalFlags;
+	std::string					finalArgs;
+	char						currentSign = '\0';
+	std::vector<std::string>	argList;
 
 	if (!validateChannelModeAccess(serv, client, mess))
 		return (false);
-
-	std::vector<std::string>	changesToDo;
-	std::vector<std::string>	finalChangesMade;
-	std::vector<std::string>	argList;
-
 	changesToDo = getChangesToDo(args);
 	argList = getArgList(args);
-	mess.args = argList;
-	if (!processModeChange(mode, mess, act, destChan, client, serv))
-		return (false);
-	broacastModeChange(client, destChan, mess, serv);
+	processFlags(changesToDo, argList, mode, act, destChan, client,
+		 currentSign, finalFlags, finalArgs, serv);
+	std::string finalModeStr = finalFlags;
+	if (!finalArgs.empty())
+		finalModeStr += " " + finalArgs;
+	if (!finalModeStr.empty())
+		broacastModeChange(client, destChan, finalModeStr, serv);
 	return (true);
 }
 
