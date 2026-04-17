@@ -16,7 +16,8 @@ Third because every other command requires a registered client. Get irssi to suc
 
 ---
 
-- [ ] **4. QUIT and cleanup**
+- [x] **4. QUIT and cleanup** 
+	done by fsamy-an
 
 Do this right after registration, not at the end. You'll be connecting and disconnecting constantly while testing everything else. If QUIT is broken, your server leaks state and crashes during testing of other commands.
 

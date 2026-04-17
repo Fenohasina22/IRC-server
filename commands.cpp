@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 17:28:45 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 21:31:17 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,6 +317,68 @@ bool	inviteCmd(Client &client,iRCMessage &mess,Server &serv)
 	return (true);
 }
 
+std::vector<std::string>	getChangesToDo(std::vector<std::string>	&args)
+{
+	std::vector<std::string>	res;
+	std::string 				&changeString 	= args[1];
+	std::string					sign;
+
+	for (size_t i = 0; i < changeString.size(); i++)
+	{
+		if (changeString[i] == '+')
+		{
+			sign = "+";
+			continue;
+		}
+		if (changeString[i] == '-')
+		{
+			sign = "-";
+			continue;
+		}
+		res.push_back(sign + std::string(1, changeString[i]));
+	}
+	return (res);
+}
+
+std::vector<std::string> getArgList(std::vector<std::string> &args)
+{
+	std::vector<std::string> res;
+	if (args.size() < 2)
+		return res;
+	// keep channel and mode string as first two elements
+	res.push_back(args[0]);
+	res.push_back(args[1]);
+	if (args.size() <= 2)
+		return res;
+	std::string &changeString = args[1];
+	std::string sign;
+	size_t argIdx = 2;
+	for (size_t i = 0; i < changeString.size(); ++i)
+	{
+		if (changeString[i] == '+' || changeString[i] == '-')
+		{
+			sign = changeString[i];
+			continue;
+		}
+		char modeChar = changeString[i];
+		// modes that require a parameter when being added: k, l
+		// mode that always requires a parameter: o
+		bool needsParam = false;
+		if (modeChar == 'o')
+			needsParam = true;
+		else if ((modeChar == 'k' || modeChar == 'l') && sign == "+")
+			needsParam = true;
+		if (needsParam)
+		{
+			if (argIdx < args.size())
+				res.push_back(args[argIdx++]);
+			else
+				res.push_back(std::string());
+		}
+	}
+	return res;
+}
+
 bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 {
 	if (mess.args.size() < 1)
@@ -335,6 +397,13 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 	if (!validateChannelModeAccess(serv, client, mess))
 		return (false);
 
+	std::vector<std::string>	changesToDo;
+	std::vector<std::string>	finalChangesMade;
+	std::vector<std::string>	argList;
+
+	changesToDo = getChangesToDo(args);
+	argList = getArgList(args);
+	mess.args = argList;
 	if (!processModeChange(mode, mess, act, destChan, client, serv))
 		return (false);
 	broacastModeChange(client, destChan, mess, serv);

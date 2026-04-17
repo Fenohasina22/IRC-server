@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 17:39:26 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 21:33:07 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -757,6 +757,7 @@ bool	processModeChange(
 	Client 		&client,
 	Server		&serv)
 {
+
 	mode = strToMode(mess.args[1], act);
 	if (mode == unknown || act == NO_ACTION)
 	{
