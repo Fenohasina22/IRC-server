@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:40 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 19:07:41 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 15:51:15 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ struct iRCMessage
 {
 	std::string 				prefix;
 	command						cmd;
+	std::string					strCmd;
 	std::vector<std::string>	args;
 	std::string 				crlf;
 	size_t						len;
@@ -77,7 +78,7 @@ struct iRCMessage
 
 void						initialiseIRCMessage(iRCMessage &msg);
 iRCMessage					parseMessage(const std::string &strMess);
-bool						isMessValid(const iRCMessage &mess);
+bool						isMessValid(iRCMessage &mess);
 std::vector<std::string>	split(const std::string& str, char delimiter);
 std::vector<std::string>	splitCRLF(const std::string& str);
 void						createTypeTab(std::vector<std::string>	&types);

@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 19:01:29 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 19:12:02 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 15:52:35 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void	initialiseIRCMessage(iRCMessage &msg)
 {
     msg.prefix = "";
     msg.cmd = UNKNOWN;
+	msg.strCmd = "";
     msg.args = std::vector<std::string>();
     msg.crlf = "";
     msg.len = 0;

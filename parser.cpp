@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 19:12:26 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 15:54:08 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	getCommand(
 	if (splitMess.size() < index + 1)
 		return ;
 	strCommand = splitMess[index];
+	parsedMess.strCmd = strCommand;
 	index ++;
 	createTypeTab(types);
 	assignCommand(types, strCommand, parsedMess);
@@ -89,22 +90,11 @@ iRCMessage parseMessage(const std::string &strMess)
 	return (parsedMess);
 }
 
-bool	isMessValid(const iRCMessage &mess)
+bool	isMessValid(iRCMessage &mess)
 {
 	if (mess.crlf != "\r\n")
 		return (false);
 	if (mess.len == 0)
-		return (false);
-	if (mess.args.empty()
-		&& mess.cmd == UNKNOWN && mess.crlf.empty())
-		return (false);
-	if (mess.cmd == UNKNOWN)
-		return (false);
-	if (std::count(mess.args.back().begin() + 1
-		, mess.args.back().end(), ':') > 1)
-		return (false);
-	if (std::count(mess.ogMess.begin(), mess.ogMess.end(), '\r') > 1
-		|| std::count(mess.ogMess.begin(), mess.ogMess.end(), '\n') > 1)
 		return (false);
 	if (mess.len > 512)
 		return (false);
