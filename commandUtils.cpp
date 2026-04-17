@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 16:09:42 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/17 19:18:07 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -392,9 +392,9 @@ bool	getNeighbors(Client &client, Server &serv, std::set<std::string> &membersTo
 bool	notifyNeighbors(Client &client, Server &serv, std::string &newNick)
 {
 	std::string				msg;
+	std::set<std::string>	membersToNotify;
 	struct sockaddr_in		tmp;
 	char					hostname[INET_ADDRSTRLEN];
-	std::set<std::string>	membersToNotify;
 
 	tmp = client.getClientInfos();
 	inet_ntop(AF_INET, &(tmp.sin_addr), hostname, INET_ADDRSTRLEN);
@@ -494,7 +494,7 @@ bool	checkChanRestrictions(Client &client, Server &serv, iRCMessage &mess, Chann
 
 void	broadcastJoin(std::string &broadcastMess, Client &client, Server &serv, Channel *destChan)
 {
-	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
+	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@" + CurrentHostname(client);
 	broadcastMess += " JOIN ";
 	broadcastMess += destChan->getName();
 	broadcastMess += CRLF;
@@ -572,7 +572,7 @@ void	broadcastTopicChange(
 	Channel &destChan,
 	Server &serv)
 {
-	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
+	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@" + CurrentHostname(client);
 	broadcastMess += " TOPIC ";
 	broadcastMess += destChan.getName();
 	broadcastMess += " :" + destChan.getTopic();
@@ -641,7 +641,7 @@ void	broadCastKick(
 	iRCMessage 	&mess,
 	Server 		&serv)
 {
-	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
+	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@" + CurrentHostname(client);
 	broadcastMess += " KICK ";
 	broadcastMess += destChan.getName() + " ";
 	broadcastMess += destCli.getNick();
@@ -655,4 +655,14 @@ void	broadCastKick(
 	broadcastMess += CRLF;
 	client.ConcatenateWBuffer(broadcastMess, serv);
 	serv.broadcast(broadcastMess, client, destChan, serv);
+}
+
+char	*CurrentHostname(Client& client)
+{
+	struct sockaddr_in		tmp;
+	char					hostname[INET_ADDRSTRLEN];
+
+	tmp = client.getClientInfos();
+	inet_ntop(AF_INET, &(tmp.sin_addr), hostname, INET_ADDRSTRLEN);
+	return (hostname);
 }

@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 16:07:07 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/17 19:17:16 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,12 +147,26 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 	return (true);
 }
 
+void	PrintArg(std::vector<std::string>& a)
+{
+	std::cout << YELLOW << "----------------------" << std::endl;
+	for (unsigned int i = 0; i < a.size(); i++)
+	{
+		std::cout << a[i] << " ";
+	}
+	std::cout << "\n----------------------"<< RESET<< std::endl;
+}
+
 bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 {
 	Channel 	*destChan;
 	bool		foundChan = false;
 	std::string broadcastMess;
 
+
+	/**/
+	//PrintArg(mess.args);
+	/**/
 	if (mess.args.empty())
 	{
 		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
@@ -209,7 +223,7 @@ bool	partCmd(Client &client, iRCMessage &mess, Server &serv)
 	}
 	Channel &destChan = serv.findChan(mess.args[0], foundChan);
 
-	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
+	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@" + CurrentHostname(client);
 	broadcastMess += " PART ";
 	broadcastMess += destChan.getName();
 	if (mess.args.size() > 1)
@@ -327,7 +341,7 @@ bool	inviteCmd(Client &client,iRCMessage &mess,Server &serv)
 	//to the invited ---> :nick!user@host INVITE target #channel
 	//to the sender ---> :server 341 sender target #channel
 
-	invitationMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
+	invitationMess += ":" + client.getNick() + "!" + client.getUser() + "@" + CurrentHostname(client);
 	invitationMess += " INVITE ";
 	invitationMess += invitedCli.getNick() + " ";
 	invitationMess += destChan.getName();
@@ -422,7 +436,7 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 	}
 	std::string broadcastMess;
 
-	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@host";
+	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@" + CurrentHostname(client);
 	broadcastMess += " MODE ";
 	broadcastMess += destChan.getName() + " ";
 	broadcastMess += mess.args[1];
