@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:09 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 17:29:55 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:23:10 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 #include "Client.hpp"
 
 Channel::Channel()
-: name("")
-, topic("")
-, members()
-, ops()
-, pass("")
-, maxUser(512)
+: _name("")
+, _topic("")
+, _members()
+, _ops()
+, _pass("")
+, _maxUser(512)
 , _isInviteOnly(false)
 , _isTopicLocked(false)
 , _isPassRequired(false)
@@ -28,12 +28,12 @@ Channel::Channel()
 }
 
 Channel::Channel(std::string n, std::string t)
-: name(n)
-, topic(t)
-, members()
-, ops()
-, pass("")
-, maxUser(512)
+: _name(n)
+, _topic(t)
+, _members()
+, _ops()
+, _pass("")
+, _maxUser(512)
 , _isInviteOnly(false)
 , _isTopicLocked(false)
 , _isPassRequired(false)
@@ -47,47 +47,47 @@ Channel::~Channel()
 
 const std::string	Channel::getName() const
 {
-	return (this->name);
+	return (this->_name);
 }
 
 const std::string	Channel::getTopic() const
 {
-	return (this->topic);
+	return (this->_topic);
 }
 
 std::set<std::string> &Channel::getMembers()
 {
-	return (this->members);
+	return (this->_members);
 }
 
 std::set<std::string> &Channel::getOps()
 {
-	return (this->ops);
+	return (this->_ops);
 }
 
 std::set<std::string> &Channel::getInvited()
 {
-	return (this->invited);
+	return (this->_invited);
 }
 
 const std::string	Channel::getPass() const
 {
-	return (this->pass);
+	return (this->_pass);
 }
 
 void	Channel::setPass(const std::string &p)
 {
-	this->pass = p;
+	this->_pass = p;
 }
 
 int	Channel::getMaxUser() const
 {
-	return (this->maxUser);
+	return (this->_maxUser);
 }
 
 void	Channel::setMaxUser(int v)
 {
-	this->maxUser = v;
+	this->_maxUser = v;
 }
 
 bool	Channel::isInviteOnly() const
@@ -132,80 +132,80 @@ void	Channel::setUserLimitEnabled(bool v)
 
 void	Channel::setName(const std::string &toSet)
 {
-	this->name = toSet;
+	this->_name = toSet;
 }
 
 void	Channel::setTopic(const std::string &toSet)
 {
-	this->topic = toSet;
+	this->_topic = toSet;
 }
 
 bool	Channel::operator==(const Channel &other)
 {
-	if (this->name == other.getName())
+	if (this->_name == other.getName())
 		return (true);
 	return (false);
 }
 
 void	Channel::addClient(Client* c)
 {
-	this->members.insert(c->getNick());
-	c->addChannel(this->name);
+	this->_members.insert(c->getNick());
+	c->addChannel(this->_name);
 }
 
 void	Channel::addOperator(Client* c)
 {
-	this->ops.insert(c->getNick());
+	this->_ops.insert(c->getNick());
 }
 
 void	Channel::addInvited(Client* c)
 {
-	this->invited.insert(c->getNick());
+	this->_invited.insert(c->getNick());
 }
 
 void	Channel::removeClient(Client* c)
 {
-	this->members.erase(c->getNick());
+	this->_members.erase(c->getNick());
 	if (this->isOps(c->getNick()))
 		this->removeOperator(c);
-	c->removeChannel(this->name);
+	c->removeChannel(this->_name);
 }
 
 void	Channel::removeOperator(Client* c)
 {
-	this->ops.erase(c->getNick());
+	this->_ops.erase(c->getNick());
 }
 
 void	Channel::addFlag(std::string flag)
 {
-	this->flags.insert(flag);
+	this->_flags.insert(flag);
 }
 
 void	Channel::removeFlag(std::string flag)
 {
-	if (!flags.empty())
-		this->flags.erase(flag);
+	if (!_flags.empty())
+		this->_flags.erase(flag);
 }
 
 void	Channel::removeInvited(Client *c)
 {
-	if (!invited.empty())
-		this->invited.erase(c->getNick());
+	if (!_invited.empty())
+		this->_invited.erase(c->getNick());
 }
 
 bool	Channel::isOps(Client &c)
 {
-	return (this->ops.count(c.getNick()) > 0);
+	return (this->_ops.count(c.getNick()) > 0);
 }
 
 bool	Channel::isOps(const std::string &nick) const
 {
-	return (this->ops.count(nick) > 0);
+	return (this->_ops.count(nick) > 0);
 }
 
 bool	Channel::isInvited(const std::string &nick) const
 {
-	return (this->invited.count(nick) > 0);
+	return (this->_invited.count(nick) > 0);
 }
 
 std::string	Channel::flagsToStr()
@@ -222,14 +222,14 @@ std::string	Channel::flagsToStr()
 	if (this->isPassRequired())
 	{
 		res += "k";
-		args.push_back(this->pass);
+		args.push_back(this->_pass);
 	}
 	if (this->isUserLimitEnabled())
 	{
 		std::stringstream	ss;
 		std::string 		strMax;
 
-		ss << this->maxUser;
+		ss << this->_maxUser;
 		ss >> strMax;
 
 		res += "l";

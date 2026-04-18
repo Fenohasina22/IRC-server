@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:05 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 17:29:33 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:23:14 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,14 @@ class Client;
 class Channel
 {
 	private:
-		std::string 				name;
-		std::string					topic;
-		std::set<std::string>		members;
-		std::set<std::string>		ops;
-		std::set<std::string>		invited;
-		std::set<std::string>		flags;
-		std::string					pass;
-		int							maxUser;
+		std::string 				_name;
+		std::string					_topic;
+		std::set<std::string>		_members;
+		std::set<std::string>		_ops;
+		std::set<std::string>		_invited;
+		std::set<std::string>		_flags;
+		std::string					_pass;
+		int							_maxUser;
 		bool						_isInviteOnly;
 		bool						_isTopicLocked;
 		bool						_isPassRequired;

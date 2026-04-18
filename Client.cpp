@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:01:25 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 08:12:01 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:26:19 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 #include <algorithm>
 
 Client::Client()
-: fd(-1)
-, nickname("")
-, username("")
-, realname("")
-, isPassOk(false)
-, isNickOk(false)
-, isUserOk(false)
-, userIsRegistered(false)
+: _fd(-1)
+, _nickname("")
+, _username("")
+, _realname("")
+, _isPassOk(false)
+, _isNickOk(false)
+, _isUserOk(false)
+, _userIsRegistered(false)
 , _readBuffer("")
 , _writeBuffer("")
 
@@ -34,52 +34,52 @@ Client::~Client()
 
 int 			Client::getFd() const
 {
-	return (this->fd);
+	return (this->_fd);
 }
 
 std::string	Client::getNick() const
 {
-	return (this->nickname);
+	return (this->_nickname);
 }
 
 std::string	Client::getUser() const
 {
-	return (this->username);
+	return (this->_username);
 }
 
 std::string	Client::getReal() const
 {
-	return (this->realname);
+	return (this->_realname);
 }
 
 bool			Client::getNickState() const
 {
-	return (this->isNickOk);
+	return (this->_isNickOk);
 }
 
 bool			Client::getUserState() const
 {
-	return (this->isUserOk);
+	return (this->_isUserOk);
 }
 
 bool			Client::getPassState() const
 {
-	return (this->isPassOk);
+	return (this->_isPassOk);
 }
 
-struct sockaddr_in	Client::getClientInfos() 
+struct sockaddr_in	Client::getClientInfos()
 {
 	return (this->_clientinfos);
 }
 
 bool			Client::isRegistered() const
 {
-	return (this->userIsRegistered);
+	return (this->_userIsRegistered);
 }
 
 std::set<std::string>	Client::getJoinedChannels() const
 {
-	return (this->joinedChannels);
+	return (this->_joinedChannels);
 }
 
 void			Client::setClientInfos(struct sockaddr_in& infos)
@@ -93,42 +93,42 @@ void			Client::setClientInfos(struct sockaddr_in& infos)
 
 void 				Client::setFd(int fd)
 {
-	this->fd  = fd;
+	this->_fd  = fd;
 }
 
 void				Client::setNick(std::string toSet)
 {
-	this->nickname = toSet;
+	this->_nickname = toSet;
 }
 
 void				Client::setUser(std::string toSet)
 {
-	this->username = toSet;
+	this->_username = toSet;
 }
 
 void				Client::setReal(std::string toSet)
 {
-	this->realname = toSet;
+	this->_realname = toSet;
 }
 
 void				Client::setPassState(bool state)
 {
-	this->isPassOk = state;
+	this->_isPassOk = state;
 }
 
 void				Client::setNickState(bool state)
 {
-	this->isNickOk = state;
+	this->_isNickOk = state;
 }
 
 void				Client::setUserState(bool state)
 {
-	this->isUserOk = state;
+	this->_isUserOk = state;
 }
 
 void				Client::setRegistrationState(bool state)
 {
-	this->userIsRegistered = state;
+	this->_userIsRegistered = state;
 }
 
 
@@ -136,7 +136,7 @@ bool 	Client::isInChannel(Channel* c) const
 {
 	if (!c)
 		return (false);
-	if (joinedChannels.count(c->getName()) > 0)
+	if (_joinedChannels.count(c->getName()) > 0)
 		return (true);
 	return (false);
 }
@@ -146,27 +146,27 @@ bool 	Client::isInChannel(std::string name) const
 {
 	if (name.empty())
 		return (false);
-	return (this->joinedChannels.count(name) > 0);
+	return (this->_joinedChannels.count(name) > 0);
 }
 
 /*never call this*/
 void	Client::addChannel(std::string chanName)
 {
-	this->joinedChannels.insert(chanName);
+	this->_joinedChannels.insert(chanName);
 }
 
 /*never call this*/
 void	Client::removeChannel(std::string chanName)
 {
-	this->joinedChannels.erase(chanName);
+	this->_joinedChannels.erase(chanName);
 }
 
-std::string	Client::getWriteBuffer() const 
+std::string	Client::getWriteBuffer() const
 {
-	return (this->_writeBuffer);	
+	return (this->_writeBuffer);
 }
 
-std::string	Client::getReadBuffer() const 
+std::string	Client::getReadBuffer() const
 {
 	return (this->_readBuffer);
 }
@@ -184,7 +184,7 @@ void	Client::setWriteBuffer(std::string str)
 void	Client::ConcatenateWBuffer(std::string str, Server& server)
 {
 	bool a = false;
-	pollfd&	tmp = server.findElementByfd(this->fd, a);
+	pollfd&	tmp = server.findElementByfd(this->_fd, a);
 
 	if (a == false)
 	{
@@ -204,18 +204,17 @@ Client&	Client::operator=(const Client& c)
 {
     if (this != &c)
     {
-        this->fd = c.fd;
-        this->nickname = c.nickname;
-        this->username = c.username;
-        this->realname = c.realname;
-        this->isPassOk = c.isPassOk;
-        this->isNickOk = c.isNickOk;
-        this->isUserOk = c.isUserOk;
-        this->userIsRegistered = c.userIsRegistered;
+        this->_fd = c._fd;
+        this->_nickname = c._nickname;
+        this->_username = c._username;
+        this->_realname = c._realname;
+        this->_isPassOk = c._isPassOk;
+        this->_isNickOk = c._isNickOk;
+        this->_isUserOk = c._isUserOk;
+        this->_userIsRegistered = c._userIsRegistered;
         this->_readBuffer = c._readBuffer;
         this->_writeBuffer = c._writeBuffer;
-        // Copying the set of channels. This performs a shallow copy of the pointers.
-        this->joinedChannels = c.joinedChannels; 
+        this->_joinedChannels = c._joinedChannels;
     }
     return (*this);
 }
