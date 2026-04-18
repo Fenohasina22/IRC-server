@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 22:03:50 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 07:54:18 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,27 +122,37 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 		return (false);
 	}
 
-	bool			foundClient 	= false;
-	bool			foundChan	 	= false;
-	Client			&destCli	 	= serv.findTrueClient(mess.args[0], foundClient);
-	Channel			&destChan		= serv.findChan(mess.args[0], foundChan);
-	Client 			&sender 		= client;
-	std::string 	messageOutput;
+	std::vector<std::string> vec;
 
-	if (!foundClient && !foundChan)
+	vec = split(mess.args[0], ',');
+	unsigned int		i;
+
+	i = 0;
+	while (i < vec.size())
 	{
-		client.ConcatenateWBuffer(FormatedMessage("401", ":server",
-			 client.getNick() + " " + mess.args[0] + " :No such nick/channel"), serv);
-		return (false);
-	}
-	if (foundClient)
-	{
-		messageOutput = formMess(sender, destCli, mess);
-		destCli.ConcatenateWBuffer(messageOutput, serv);
-	}
-	else
-	{
-		privmsgToChan(sender, destChan, serv, mess, messageOutput);
+		bool			foundClient 	= false;
+		bool			foundChan	 	= false;
+		Client			&destCli	 	= serv.findTrueClient(vec[i], foundClient);
+		Channel			&destChan		= serv.findChan(vec[i], foundChan);
+		Client 			&sender 		= client;
+		std::string 	messageOutput;
+	
+		if (!foundClient && !foundChan)
+		{
+			client.ConcatenateWBuffer(FormatedMessage("401", ":server",
+				 client.getNick() + " " + vec[i] + " :No such nick/channel"), serv);
+			return (false);
+		}
+		if (foundClient)
+		{
+			messageOutput = formMess(sender, destCli, mess);
+			destCli.ConcatenateWBuffer(messageOutput, serv);
+		}
+		else
+		{
+			privmsgToChan(sender, destChan, serv, mess, messageOutput);
+		}
+		i++;
 	}
 	return (true);
 }
