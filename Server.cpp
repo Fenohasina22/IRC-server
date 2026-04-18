@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/17 14:31:46 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 09:08:17 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	Server::Initialize()
 	opt = 1;
 	if (setsockopt(this->_sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
 	{
-		std::cout << RED << "setsockopt error" << RESET << std::endl;
+		std::cout << RED << "Setsockopt error" << RESET << std::endl;
 		return (1);
 	}
 	if (bind(this->_sockfd, (struct sockaddr *)&(this->_addr), sizeof(this->_addr)) == 0)
@@ -147,14 +147,14 @@ Client &Server::findTrueClient(int fd, bool	&success)
 	success = false;
 	for (size_t idx = 0; idx < this->_trueClients.size(); ++idx)
 	{
-		std::cout << GREEN << this->_trueClients[idx].getFd() << " == " << fd << RESET << std::endl;
+		//std::cout << GREEN << this->_trueClients[idx].getFd() << " == " << fd << RESET << std::endl;
 		if (this->_trueClients[idx].getFd() == fd)
 		{
-			std::cout << GREEN << "YES" << RESET << std::endl;
+			//std::cout << GREEN << "YES" << RESET << std::endl;
 			success = true;
 			return (this->_trueClients[idx]);
 		}
-		std::cout << RED << "NO" << std::endl;
+		//std::cout << RED << "NO" << std::endl;
 		fakeIdx = idx;
 	}
 	return (this->_trueClients[fakeIdx]);
@@ -258,7 +258,6 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 	messages = splitCRLF(recvBuf);
 	for (size_t m = 0; m < count; ++m)
 	{
-		std::cout << BLUE << "message[" << m << "] = " << messages[m] << RESET << std::endl;
 		if (!validPass)
 			c = &(server.findClient(server.getVecPoll()[i].fd, foundClnt));
 
@@ -284,7 +283,7 @@ void	Server::Processmessage (int i)
 
 
 	memset (buff, 0, MSG_BUFFERSIZE + 1);
-	std::cout << YELLOW << buff << RESET << std::endl;
+	//std::cout << YELLOW << buff << RESET << std::endl;
 	
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
 	if (retval == -1 || retval == 0)
@@ -354,7 +353,7 @@ void	Server::broadcastWithoutChan(std::string &mess, const Client &caster, std::
 		Client &cl = this->findTrueClient(*it, found);
 		if (found && cl.getFd() != caster.getFd())
 		{
-			std::cout << YELLOW <<"sent to" << cl.getNick() << RESET<< std::endl;
+			//std::cout << YELLOW <<"sent to" << cl.getNick() << RESET<< std::endl;
 			cl.ConcatenateWBuffer(mess, serv);
 		}
 	}

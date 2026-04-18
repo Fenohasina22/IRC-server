@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 07:54:18 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 08:55:13 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 bool	passCmd(Client &client, iRCMessage &mess, Server &serv, bool &validPass)
 {
+	PrintArg(mess.args);
     if (client.isRegistered())
     {
 		client.ConcatenateWBuffer(FormatedMessage("462", ":server",
@@ -22,7 +23,8 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv, bool &validPass)
 	}
 	if (mess.args.empty())
     {
-		std::cout << RED << mess.ogMess << RESET << std::endl;
+		std::cout << RED << "HEY PASS" << RESET << std::endl;
+		//std::cout << RED << mess.ogMess << RESET << std::endl;
 		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
 			 "* PASS :Not enough parameters"), serv);
 		return (false);
@@ -186,7 +188,7 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 		while (i < vec.size())
 		{
 			vec[i] = strtrim(vec[i]);
-			std::cout << RED << vec[i] << RESET << std::endl;
+			//std::cout << RED << vec[i] << RESET << std::endl;
 			if (vec[i].empty())
 			{
 				client.ConcatenateWBuffer(FormatedMessage("461", ":server",
@@ -498,8 +500,7 @@ bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 			return (false);
 		}
 	}
-	std::cout << RED << msg << RESET << std::endl;
-	std::cout << GREEN  << "Bye " << client.getUser() << RESET << std::endl;
+	std::cout << GREEN  << "Bye " << client.getNick() << RESET << std::endl;
 	return (true);
 }
 

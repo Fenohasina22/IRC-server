@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 19:31:59 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 08:17:13 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	IsValidNick(std::string nick, Client&  client, Server& serv)
 		pos = nick.find(a[i]);
 		if (pos != std::string::npos)
 		{
-			std::cout << RED << "INVALID NICK" << RESET << std::endl;
+			std::cout << RED << "INVALID NICKNAME WAS ENTERED" << RESET << std::endl;
 			// :ft_irc 432 * Nick@42 :Erroneous nickname\r\n
 			client.ConcatenateWBuffer(FormatedMessage("432", ":server", "* " + nick + " :Erroneous nickname" ), serv);
 			return (false);
@@ -76,12 +76,10 @@ void	CleanUp(Server& serv, int i)
 
 void 	tryRegistration(Client &client, Server& serv)
 {
-	std::cout << RED << "Registration" << RESET << std::endl;
 	if (client.isRegistered())
 		return ;
 	if (client.getNickState() && client.getPassState() && client.getUserState())
 	{
-		std::cout << "sjkhdfkjhsdfjkhsdfjk" << std::endl;
 		client.setRegistrationState(true);
 		std::string msg001 = ":server 001 " + client.getNick() + " :Welcome to the IRC " + client.getNick() + CRLF;
 		std::string msg002 = ":server 002 " + client.getNick() + " :Your host is server" + CRLF;

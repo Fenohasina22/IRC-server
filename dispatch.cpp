@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 18:59:37 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 09:35:26 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv, bool &valid
 		return ;
 	// if (!isMessValid(mess))
 	// 	return ;
-	PrintArg(mess.args);
+	//PrintArg(mess.args);
 	switch (mess.cmd)
 	{
 		case (CAP):

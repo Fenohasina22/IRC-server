@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 14:46:23 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 08:20:52 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ bool	getParams(char **argv, Server &serv)
 void	signalHandler(int sig)
 {
 	(void)sig;
-	std::cout << RED << "SIGNAL"<< RESET  << std::endl;
 	for (unsigned int i = 0; i < AllFds.size(); i++)
 	{
 		close (AllFds[i]);
@@ -57,8 +56,8 @@ void	SendtoCorrectClient(int i, Server& serv)
 		c = &(serv.findClient(serv.getVecPoll()[i].fd, success));
 	if (success && c != NULL)
 	{
-		std::cout << GREEN << "fd = " << serv.getVecPoll()[i].fd << RESET << std::endl;
-		std::cout << "Message sent to client |" << (*c).getWriteBuffer() << "|" << std::endl;
+		//std::cout << GREEN << "fd = " << serv.getVecPoll()[i].fd << RESET << std::endl;
+		//std::cout << "Message sent to client |" << (*c).getWriteBuffer() << "|" << std::endl;
 		send(serv.getVecPoll()[i].fd, (*c).getWriteBuffer().c_str(), (*c).getWriteBuffer().size(), 0);
 		(*c).setWriteBuffer("");
 		serv.getVecPoll()[i].events &= ~POLLOUT;

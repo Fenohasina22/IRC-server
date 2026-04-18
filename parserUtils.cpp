@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 19:01:29 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 21:56:41 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 08:18:27 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,11 @@ std::string		strtrim(std::string &str)
 	if (begin == std::string::npos)
 	{
 		begin = 0;
-		std::cout << RED << "begin = " << begin << RESET << std::endl;
 	}
 	last = str.find_last_not_of(" \t");
 	if (last == std::string::npos)
 	{
 		last = str.size() - 1;
-		std::cout << RED << "last = " << last << RESET << std::endl;
-
 	}
 	cleaned = str.substr(begin, last + 1);
 	return (cleaned);
