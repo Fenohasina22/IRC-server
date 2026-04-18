@@ -6,12 +6,20 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:09 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:23:10 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 19:32:48 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 #include "Client.hpp"
+
+std::string toLower(const std::string& str) {
+    std::string result = str;
+    for (size_t i = 0; i < result.size(); ++i) {
+        result[i] = std::tolower(result[i]);
+    }
+    return result;
+}
 
 Channel::Channel()
 : _name("")
@@ -149,18 +157,24 @@ bool	Channel::operator==(const Channel &other)
 
 void	Channel::addClient(Client* c)
 {
-	this->_members.insert(c->getNick());
+	std::string nick = c->getNick();
+	std::transform(nick.begin(), nick.end(), nick.begin(), ::tolower);
+	this->_members.insert(nick);
 	c->addChannel(this->_name);
 }
 
 void	Channel::addOperator(Client* c)
 {
-	this->_ops.insert(c->getNick());
+	std::string nick = c->getNick();
+	std::transform(nick.begin(), nick.end(), nick.begin(), ::tolower);
+	this->_ops.insert(nick);
 }
 
 void	Channel::addInvited(Client* c)
 {
-	this->_invited.insert(c->getNick());
+	std::string nick = c->getNick();
+	std::transform(nick.begin(), nick.end(), nick.begin(), ::tolower);
+	this->_invited.insert(nick);
 }
 
 void	Channel::removeClient(Client* c)
@@ -195,17 +209,40 @@ void	Channel::removeInvited(Client *c)
 
 bool	Channel::isOps(Client &c)
 {
-	return (this->_ops.count(c.getNick()) > 0);
+	std::string nick = toLower(c.getNick());
+	for (std::set<std::string>::iterator it = _ops.begin(); it != _ops.end(); ++it)
+	{
+		std::string opNick = toLower(*it);
+		if (opNick == nick)
+			return true;
+	}
+	return false;
 }
 
 bool	Channel::isOps(const std::string &nick) const
 {
-	return (this->_ops.count(nick) > 0);
+	std::string lowerNick = nick;
+	std::transform(lowerNick.begin(), lowerNick.end(), lowerNick.begin(), ::tolower);
+	for (std::set<std::string>::const_iterator it = _ops.begin(); it != _ops.end(); ++it)
+	{
+		std::string opNick = *it;
+		std::transform(opNick.begin(), opNick.end(), opNick.begin(), ::tolower);
+		if (opNick == lowerNick)
+			return true;
+	}
+	return false;
 }
 
 bool	Channel::isInvited(const std::string &nick) const
 {
-	return (this->_invited.count(nick) > 0);
+	std::string lowerNick = toLower(nick);
+	for (std::set<std::string>::const_iterator it = _invited.begin(); it != _invited.end(); ++it)
+	{
+		std::string invNick = toLower(*it);
+		if (invNick == lowerNick)
+			return true;
+	}
+	return false;
 }
 
 std::string	Channel::flagsToStr()
