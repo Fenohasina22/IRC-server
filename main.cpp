@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 11:40:18 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:27:58 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 	}
 	signal(SIGPIPE, SIG_IGN);
 	signal(SIGINT, signalHandler);
-	
+
 	Server				server;
 	sockaddr_in			clientinfo;
 	pollfd				sock; // for initialization of the first element of vecpol
