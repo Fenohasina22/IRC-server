@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:40 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 21:56:35 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:09:11 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ struct iRCMessage
 {
 	std::string 				prefix;
 	command						cmd;
+	std::string					strCmd;
 	std::vector<std::string>	args;
 	std::string 				crlf;
 	size_t						len;
@@ -81,15 +82,12 @@ struct iRCMessage
 
 void						initialiseIRCMessage(iRCMessage &msg);
 iRCMessage					parseMessage(const std::string &strMess);
-bool						isMessValid(const iRCMessage &mess);
+bool						isMessValid(iRCMessage &mess);
 std::vector<std::string>	split(const std::string& str, char delimiter);
 std::vector<std::string>	splitCRLF(const std::string& str);
 void						createTypeTab(std::vector<std::string>	&types);
 void						assignCommand(std::vector<std::string>	&t, std::string	&cmd, iRCMessage &msg);
-void						handleTrailingArgs(iRCMessage &parsedMess,
-							const std::vector<std::string>	&splitMess, bool &trailing, size_t	&i);
+void						handleTrailingArgs(iRCMessage &parsedMess, std::vector<std::string>	&splitMess,
+							bool &trailing,size_t &i);
 std::string					strtrim(std::string &str);
-
-
-
 #endif

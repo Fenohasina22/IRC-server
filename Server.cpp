@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/18 14:10:41 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:08:52 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,7 +269,7 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 			//return (1);
 			return (1);
 		}
-		parsedMess = parseMessage(messages[m]);
+		parsedMess = parseMessage(messages[m] + CRLF);
 		dispatchCommand(parsedMess, *c, server, validPass);
 	}
 	return (0);
@@ -332,7 +332,7 @@ void	Server::deleteChan(std::string &chanName)
 	}
 }
 
-void	Server::broadcast(std::string &mess, const Client &caster, const Channel &chan, Server& serv)
+void	Server::broadcast(std::string &mess, const Client &caster, Channel &chan, Server& serv)
 {
 	std::set<std::string> members = chan.getMembers();
 	for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)

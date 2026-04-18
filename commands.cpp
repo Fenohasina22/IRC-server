@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 11:00:03 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:14:18 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,8 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 		return (false);
 	if (!notifyNeighbors(client, serv, newNick))
 		return (false);
-	
+	if (!updateChannels(client, serv, newNick))
+		return (false);
 	client.setNick(newNick);
 	client.setNickState(true);
 	tryRegistration(client, serv);
@@ -321,7 +322,8 @@ bool	topicCmd(Client &client, iRCMessage &mess, Server &serv)
 			 client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
 		return (false);
 	}
-	if (!processTopicCommand(displayTopic, changeTopic, resetTopic, client, mess, serv, destChan))
+	if (!processTopicCommand(displayTopic, changeTopic, resetTopic,
+		 client, mess, serv, destChan))
 		return (false);
 	updateTopic(changeTopic, resetTopic, mess, destChan, broadcastMess, client, serv);
 	return (true);
@@ -359,153 +361,69 @@ bool	kickCmd(Client &client,iRCMessage &mess,Server &serv)
 
 bool	inviteCmd(Client &client,iRCMessage &mess,Server &serv)
 {
-	// Usage: INVITE nick #channel
-	std::string	invitationMess;
-	std::string	confirmationMess;
-
 	if (mess.args.size() < 2)
 	{
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server", "* INVITE :Not enough parameters"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+			 "* INVITE :Not enough parameters"), serv);
 		return (false);
 	}
+	std::string	invitationMess;
+	std::string	confirmationMess;
+	bool		foundCli 	= false;
+	bool		foundChan 	= false;
+	Client 		&invitedCli = serv.findTrueClient(mess.args[0], foundCli);
+	Client 		&senderCli  = client;
+	Channel 	&destChan 	= serv.findChan(mess.args[1], foundChan);
 
-	bool	foundCli 	= false;
-	bool	foundChan 	= false;
-	Client 	&invitedCli = serv.findTrueClient(mess.args[0], foundCli);
-	Client 	&senderCli  = client;
-	Channel &destChan 	= serv.findChan(mess.args[1], foundChan);
-
-	if (!foundCli)
-	{
-		client.ConcatenateWBuffer(FormatedMessage("401", ":server", client.getNick() + " " + mess.args[0] + " :No such nick"), serv);
+	if (!validateInvite(foundCli, client, foundChan, senderCli,
+		 mess, destChan, serv, invitedCli))
 		return (false);
-	}
-	if (!foundChan)
-	{
-		client.ConcatenateWBuffer(FormatedMessage("403", ":server", destChan.getName() + " " + mess.args[1] + " :No such channel"), serv);
-		return (false);
-	}
-	if (!senderCli.isInChannel(mess.args[1]))
-	{
-		client.ConcatenateWBuffer(FormatedMessage("442", ":server", client.getNick() + " " + destChan.getName() + " :You're not on that channel"), serv);
-		return (false);
-	}
-	if (!destChan.isOps(senderCli.getNick()))
-	{
-		client.ConcatenateWBuffer(FormatedMessage("482", ":server", client.getNick() + " " + destChan.getName() + " :You're not a channel operator"), serv);
-		return (false);
-	}
-	if (invitedCli.isInChannel(destChan.getName()))
-	{
-		client.ConcatenateWBuffer(FormatedMessage("443", ":server", client.getNick() + " " + destChan.getName() + " :is already on channel"), serv);
-		return (false);
-	}
-	//to the invited ---> :nick!user@host INVITE target #channel
-	//to the sender ---> :server 341 sender target #channel
-
 	invitationMess += ":" + client.getNick() + "!" + client.getUser() + "@" + CurrentHostname(client);
 	invitationMess += " INVITE ";
 	invitationMess += invitedCli.getNick() + " ";
 	invitationMess += destChan.getName();
 	invitationMess += CRLF;
-
 	confirmationMess += senderCli.getNick() + " ";
 	confirmationMess += invitedCli.getNick() + " ";
 	confirmationMess += destChan.getName();
-
 	invitedCli.ConcatenateWBuffer(invitationMess, serv);
-	senderCli.ConcatenateWBuffer(FormatedMessage("341", ":server", confirmationMess), serv);
-
+	senderCli.ConcatenateWBuffer(FormatedMessage("341", ":server",
+		 confirmationMess), serv);
 	destChan.addInvited(&invitedCli);
 	return (true);
 }
 
 bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 {
-	//MODE #channel chanmode
-
 	if (mess.args.size() < 1)
 	{
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server", client.getNick() + " MODE :Not enough parameters"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+			 client.getNick() + " MODE :Not enough parameters"), serv);
 		return (false);
 	}
 
-
-	bool	foundChan = false;
-	bool	foundCli = false;
-	Channel &destChan = serv.findChan(mess.args[0], foundChan);
-	serv.findTrueClient(mess.args[0], foundCli);
-	if (!foundChan && !foundCli)
-	{
-		client.ConcatenateWBuffer(FormatedMessage("403", ":server", client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
-		return (false);
-	}
-	if (foundCli)
-		return (false);
-	if (mess.args.size() < 2)
-	{
-		client.ConcatenateWBuffer(FormatedMessage("324", ":server", client.getNick() + " " + destChan.getName() + " " + destChan.flagsToStr()), serv);
-		return (true);
-	}
-	if (!destChan.isOps(client.getNick()))
-	{
-		client.ConcatenateWBuffer(FormatedMessage("482", ":server", client.getNick() + " " + mess.args[0] + " :You're not a channel operator"), serv);
-		return (false);
-	}
-
+	bool						foundChan	= false;
+	Channel 					&destChan	= serv.findChan(mess.args[0], foundChan);
 	ModeAction 					act;
 	ChanModes					mode;
-	std::vector<std::string>	args = mess.args;
+	std::vector<std::string>	args 		= mess.args;
+	std::vector<std::string>	changesToDo;
+	std::string					finalFlags;
+	std::string					finalArgs;
+	char						currentSign = '\0';
+	std::vector<std::string>	argList;
 
-	mode = strToMode(mess.args[1], act);
-	if (mode == unknown || act == NO_ACTION)
-	{
-		// 472 nick x :is unknown mode char to me
-		client.ConcatenateWBuffer(FormatedMessage("472", ":server", client.getNick() + " " + mess.args[1] + " :is unknown mode char to me"), serv);
+	if (!validateChannelModeAccess(serv, client, mess))
 		return (false);
-	}
-	//server replies --> 324 nick #chan +modes
-	switch (mode)
-	{
-		case i:
-			doIflag(destChan, act);
-			break;
-
-		case t:
-			doTflag(destChan, act);
-			break;
-
-		case k:
-			if (!doKflag(destChan, act, mess.args))
-			{
-				client.ConcatenateWBuffer(FormatedMessage("461", ":server", client.getNick() + " MODE :Not enough parameters"), serv);
-				return (false);
-			}
-			break;
-
-		case l:
-			if (!doLflag(destChan, act, mess.args))
-			{
-				client.ConcatenateWBuffer(FormatedMessage("461", ":server", client.getNick() + " MODE :Not enough parameters"), serv);
-				return (false);
-			}
-			break;
-		case o:
-			if (doOflag(destChan, act, mess.args, client, serv))
-				return (false);
-		default:
-			break;
-	}
-	std::string broadcastMess;
-
-	broadcastMess += ":" + client.getNick() + "!" + client.getUser() + "@" + CurrentHostname(client);
-	broadcastMess += " MODE ";
-	broadcastMess += destChan.getName() + " ";
-	broadcastMess += mess.args[1];
-	broadcastMess += CRLF;
-
-	serv.broadcast(broadcastMess, client, destChan, serv);
-	client.ConcatenateWBuffer(broadcastMess, serv);
+	changesToDo = getChangesToDo(args);
+	argList = getArgList(args);
+	processFlags(changesToDo, argList, mode, act, destChan, client,
+		 currentSign, finalFlags, finalArgs, serv);
+	std::string finalModeStr = finalFlags;
+	if (!finalArgs.empty())
+		finalModeStr += " " + finalArgs;
+	if (!finalModeStr.empty())
+		broacastModeChange(client, destChan, finalModeStr, serv);
 	return (true);
 }
 
@@ -516,12 +434,14 @@ bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 	char					hostname[INET_ADDRSTRLEN];
 	struct sockaddr_in		tmp = client.getClientInfos();
 
-
-	// transform the binary into string
 	inet_ntop(AF_INET, &tmp.sin_addr, hostname, INET_ADDRSTRLEN);
-	msg = ":" + client.getNick() + "!" + client.getUser() + "@" + hostname + " QUIT " + mess.args[0] + CRLF;
+	msg += ":" + client.getNick() + "!" + client.getUser() + "@" + hostname;
+	msg += " QUIT ";
+	msg += mess.args[0];
+	msg += CRLF;
 	joinedChannel = client.getJoinedChannels();
-	for (std::set<std::string>::iterator it = joinedChannel.begin(); it != joinedChannel.end(); it++)
+	for (std::set<std::string>::iterator it = joinedChannel.begin();
+			it != joinedChannel.end(); it++)
 	{
 		bool success;
 		Channel& chan = serv.findChan(*it, success);
@@ -531,9 +451,7 @@ bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 			chan.removeClient(&client);
 		}
 		else
-		{
 			return (false);
-		}
 	}
 	std::cout << GREEN  << "Bye " << client.getNick() << RESET << std::endl;
 	return (true);

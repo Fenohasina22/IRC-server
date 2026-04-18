@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 19:01:29 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 08:18:27 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:08:58 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,17 @@ void	assignCommand(std::vector<std::string>	&t, std::string	&cmd, iRCMessage &ms
 
 void	handleTrailingArgs(
 	iRCMessage 						&parsedMess,
-	const std::vector<std::string>	&splitMess,
+	std::vector<std::string>		&splitMess,
 	bool 							&trailing,
 	size_t 							&i)
 {
+	std::string copy = splitMess[i];
+	if (copy.size() >= 2 && copy.find(CRLF) != copy.npos
+	&& copy.find(CRLF)== copy.size() - 2)
+	{
+		copy.resize(copy.size() - 2);
+		splitMess[i] = copy;
+	}
 	parsedMess.args.push_back(splitMess[i]);
 	if (!splitMess[i].empty() && splitMess[i][0] == ':')
 		trailing = true;
@@ -96,6 +103,7 @@ void	initialiseIRCMessage(iRCMessage &msg)
 {
     msg.prefix = "";
     msg.cmd = UNKNOWN;
+	msg.strCmd = "";
     msg.args = std::vector<std::string>();
     msg.crlf = "";
     msg.len = 0;

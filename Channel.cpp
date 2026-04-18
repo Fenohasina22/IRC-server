@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:09 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/16 14:45:04 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/17 17:29:55 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,19 @@ const std::string	Channel::getTopic() const
 	return (this->topic);
 }
 
-const std::set<std::string> &Channel::getMembers() const
+std::set<std::string> &Channel::getMembers()
 {
 	return (this->members);
+}
+
+std::set<std::string> &Channel::getOps()
+{
+	return (this->ops);
+}
+
+std::set<std::string> &Channel::getInvited()
+{
+	return (this->invited);
 }
 
 const std::string	Channel::getPass() const

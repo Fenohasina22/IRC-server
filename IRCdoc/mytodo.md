@@ -16,7 +16,8 @@ Third because every other command requires a registered client. Get irssi to suc
 
 ---
 
-- [ ] **4. QUIT and cleanup**
+- [x] **4. QUIT and cleanup** 
+	done by fsamy-an
 
 Do this right after registration, not at the end. You'll be connecting and disconnecting constantly while testing everything else. If QUIT is broken, your server leaks state and crashes during testing of other commands.
 
@@ -62,12 +63,12 @@ Last because it's the most complex and the least critical for basic functionalit
 · l: Set/remove the user limit to channel
 
 ---
-- [ ] **10. Handle multi-args /join and /privmsg and /modes
+- [/] **10. Handle multi-args /join and /privmsg and /modes
 
 like join a,b,c or msg a,b,c or mode +abcd + also nick check
 
 --------------------------------------
-- [ ] **11. handle this
+- [x] **11. handle this
 
 MODE Not enough parameters
 19:13 -!- Irssi: Not enough parameters given gets sent into status window
