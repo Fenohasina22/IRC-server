@@ -6,12 +6,22 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/18 17:12:23 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 19:31:15 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "parser.hpp"
+
+std::string toLower(const std::string& str)
+{
+    std::string result = str;
+    for (size_t i = 0; i < result.size(); ++i)
+	{
+        result[i] = std::tolower(result[i]);
+    }
+    return result;
+}
 
 Server::Server()
 {
@@ -172,9 +182,11 @@ Client &Server::findTrueClient(std::string nick, bool	&success)
 	int		fakeIdx = this->_trueClients.size() - 1;
 
 	success = false;
+	std::string lowerNick = toLower(nick);
 	for (size_t idx = 0; idx < this->_trueClients.size(); ++idx)
 	{
-		if (this->_trueClients[idx].getNick() == nick)
+		std::string clientNick = toLower(this->_trueClients[idx].getNick());
+		if (clientNick == lowerNick)
 		{
 			success = true;
 			return (this->_trueClients[idx]);
@@ -207,9 +219,11 @@ Channel &Server::findChan(std::string name, bool &success)
 
 	if (this->_allChannels.empty())
 		return (this->_allChannels[chanIndex]);
+	std::string lowerName = toLower(name);
 	for (size_t idx = 0; idx < this->_allChannels.size(); ++idx)
 	{
-		if (this->_allChannels[idx].getName() == name)
+		std::string chanName = toLower(this->_allChannels[idx].getName());
+		if (chanName == lowerName)
 		{
 			success = true;
 			chanIndex = static_cast<int>(idx);

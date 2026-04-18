@@ -6,13 +6,23 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 18:16:23 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 19:30:55 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "commands.hpp"
 #include <climits>
+
+std::string toLower(const std::string& str)
+{
+    std::string result = str;
+    for (size_t i = 0; i < result.size(); ++i)
+	{
+        result[i] = std::tolower(result[i]);
+    }
+    return result;
+}
 
 bool	IsValidNick(std::string nick, Client&  client, Server& serv)
 {
@@ -328,9 +338,11 @@ int	doOflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args, 
 
 bool	isNicknameInUse(Server &serv, Client &client, std::string &newNick)
 {
+	std::string lowerNewNick = toLower(newNick);
 	for (unsigned int i = 0; i < serv.getTrueClients().size(); i++)
 	{
-		if (serv.getTrueClients()[i].getNick() == newNick)
+		std::string clientNick = toLower(serv.getTrueClients()[i].getNick());
+		if (clientNick == lowerNewNick)
 		{
 			if (!client.isRegistered())
 			{

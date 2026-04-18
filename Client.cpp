@@ -6,12 +6,22 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:01:25 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:54:21 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 19:31:02 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 #include <algorithm>
+
+std::string toLower(const std::string& str)
+{
+    std::string result = str;
+    for (size_t i = 0; i < result.size(); ++i)
+	{
+        result[i] = std::tolower(result[i]);
+    }
+    return result;
+}
 
 Client::Client()
 : _fd(-1)
@@ -135,9 +145,14 @@ bool 	Client::isInChannel(Channel* c) const
 {
 	if (!c)
 		return (false);
-	if (_joinedChannels.count(c->getName()) > 0)
-		return (true);
-	return (false);
+	std::string chanName = toLower(c->getName());
+	for (std::set<std::string>::const_iterator it = _joinedChannels.begin(); it != _joinedChannels.end(); ++it)
+	{
+		std::string joined = toLower(*it);
+		if (joined == chanName)
+			return true;
+	}
+	return false;
 }
 
 
@@ -145,7 +160,14 @@ bool 	Client::isInChannel(std::string name) const
 {
 	if (name.empty())
 		return (false);
-	return (this->_joinedChannels.count(name) > 0);
+	std::string lowerName = toLower(name);
+	for (std::set<std::string>::const_iterator it = _joinedChannels.begin(); it != _joinedChannels.end(); ++it)
+	{
+		std::string joined = toLower(*it);
+		if (joined == lowerName)
+			return true;
+	}
+	return false;
 }
 
 /*never call this*/
