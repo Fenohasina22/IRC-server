@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dispatch.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:56:54 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:09:23 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 18:44:36 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,7 @@ class Server ;
 
 void		dispatchCommand(iRCMessage &mess, Client &client, Server &serv,
 			bool& validPass);
-void		sendCodes(const int &fd, std::string code, const std::string &prefix,
-	 		const::std::string &msg);
 std::string	FormatedMessage(std::string code, const std::string &prefix,
-			const::std::string &msg);
+			const std::string &msg);
 
 #endif

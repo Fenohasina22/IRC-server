@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:00:12 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/14 08:18:22 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:53:01 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,23 +25,19 @@ class Server;
 class Client
 {
 	private:
-		int						fd;
-		std::string 			nickname;
-		std::string 			username;
-		std::string 			realname;
-		bool					isPassOk;
-		bool					isNickOk;
-		bool					isUserOk;
-		bool					userIsRegistered;
-		std::string				_readBuffer; /*Read buffer pollin to stock here per client*/
-		std::string				_writeBuffer;/*Write buffer pollout to stock here per client*/
-		std::set<std::string>	joinedChannels;
+		int						_fd;
+		std::string 			_nickname;
+		std::string 			_username;
+		std::string 			_realname;
+		bool					_isPassOk;
+		bool					_isNickOk;
+		bool					_isUserOk;
+		bool					_userIsRegistered;
+		std::string				_readBuffer;
+		std::string				_writeBuffer;
+		std::set<std::string>	_joinedChannels;
 		struct sockaddr_in		_clientinfos;
-		
-		/*
-			prevNick and CurrentNick
-			to broadcast nick change;
-		*/
+
 	public:
 		int 				getFd() const;
 		std::string			getNick() const;
@@ -67,17 +63,15 @@ class Client
 		void			setUserState(bool state);
 		void			setRegistrationState(bool state);
 		void			setClientInfos(struct sockaddr_in& infos);
-		
+
 		bool		 	isInChannel(std::string name) const;
 		bool			isInChannel(Channel* c) const;
 		void			addChannel(std::string chanName);
 		void			removeChannel(std::string chanName);
 
-		//void			ConcatenateWBuffer(std::string str);
 		void			ConcatenateWBuffer(std::string str, Server& server);
-
 		void			ConcatenateRBuffer(std::string str);
-		
+
 		std::set<std::string>	getJoinedChannels() const;
 		Client();
 		Client&	operator=(const Client& c);

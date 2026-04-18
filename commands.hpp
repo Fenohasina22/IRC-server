@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:12:51 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:30:49 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,9 @@
 # include "parser.hpp"
 # include "Client.hpp"
 # include <sys/socket.h>
-#include <arpa/inet.h>
+# include <arpa/inet.h>
 # include "Server.hpp"
-#include <sstream>
-# include <errno.h>
+# include <sstream>
 
 # ifndef	CRLF
 # define CRLF "\r\n"
@@ -105,13 +104,8 @@ std::vector<std::string>	getChangesToDo(std::vector<std::string>	&args);
 std::vector<std::string>	getArgList(std::vector<std::string> &args);
 void						processFlags(std::vector<std::string>&changesToDo,std::vector<std::string>&argList,
 							ChanModes&mode,ModeAction&act,Channel&destChan,Client&client,char&currentSign,
-							std::string&finalFlags,std::string&finalArgs,Server&serv
-);
-
-std::string	CurrentHostname(Client& client);
-
-
-/*Debug*/
-void	PrintArg(std::vector<std::string>& a);
+							std::string&finalFlags,std::string&finalArgs,Server&serv);
+std::string					CurrentHostname(Client& client);
+void						PrintArg(std::vector<std::string>& a);
 
 #endif

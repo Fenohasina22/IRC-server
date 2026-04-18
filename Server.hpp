@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/18 16:08:38 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 18:17:03 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,13 @@
 # define SERVER_HPP
 
 # include <iostream>
-# include <poll.h> // pour poll
-# include <sys/socket.h> // pour socket , bind , etc
+# include <poll.h>
+# include <sys/socket.h>
 # include <netinet/in.h>
 # include <unistd.h>
 # include <vector>
 # include "Client.hpp"
 # include <cstring>
-# include <errno.h>
 # include "dispatch.hpp"
 #include <signal.h>
 # define	MSG_BUFFERSIZE 1024
@@ -50,8 +49,8 @@ class Server
 		std::vector<Client>		_trueClients;
 		std::vector<Channel>	_allChannels;
 		std::string				_password;
+		std::string				_name;
 		int						_port;
-
 
 	public:
 		Server();
@@ -62,10 +61,12 @@ class Server
 		sockaddr_in				getSocketstats() const;
 		int						getPort() const;
 		const std::string		getPass() const;
+		const std::string		getName() const;
 		std::vector<Client>&	getTrueClients();
 		int						Initialize();
 		void 					setPass(std::string newPass);
 		void					setPort(int newPort);
+		void					setName(std::string newName);
 		std::vector<Client>		&getAllClients();
 		std::vector<Channel>	&getAllChans();
 		Client 					&findClient(int fd, bool &success);
@@ -79,7 +80,6 @@ class Server
 		void					broadcastWithoutChan(std::string &mess, const Client &caster, std::set<std::string> members, Server& serv);
 		void					broadcast(std::string &mess, const Client &caster, Channel &chan, Server& serv);
 		pollfd&					findElementByfd(int fd, bool& a);
-		void					removeClientByFd(int fd);
 
 	};
 
