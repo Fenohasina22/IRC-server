@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/18 17:11:16 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 18:17:03 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ class Server
 		void					broadcastWithoutChan(std::string &mess, const Client &caster, std::set<std::string> members, Server& serv);
 		void					broadcast(std::string &mess, const Client &caster, Channel &chan, Server& serv);
 		pollfd&					findElementByfd(int fd, bool& a);
-		void					removeClientByFd(int fd);
 
 	};
 
