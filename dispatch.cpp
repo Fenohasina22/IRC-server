@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 18:44:45 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 19:22:22 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,12 @@
 void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv, bool &validPass)
 {
 	if (!client.isRegistered() && mess.cmd != CAP
-		&& mess.cmd != PASS && mess.cmd != NICK && mess.cmd != USER)
+	&& mess.cmd != PASS && mess.cmd != NICK && mess.cmd != USER)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("451", ":" + serv.getName(),
+		 "* :You have not registered"), serv);
 		return ;
+	}
 	if (!isMessValid(mess))
 		return ;
 	switch (mess.cmd)
