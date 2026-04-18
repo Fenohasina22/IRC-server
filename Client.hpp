@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:00:12 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:23:45 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:53:01 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,7 @@ class Client
 		void			addChannel(std::string chanName);
 		void			removeChannel(std::string chanName);
 
-		//void			ConcatenateWBuffer(std::string str);
 		void			ConcatenateWBuffer(std::string str, Server& server);
-
 		void			ConcatenateRBuffer(std::string str);
 
 		std::set<std::string>	getJoinedChannels() const;
