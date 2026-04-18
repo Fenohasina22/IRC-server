@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:27:14 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:30:49 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,9 @@
 # include "parser.hpp"
 # include "Client.hpp"
 # include <sys/socket.h>
-#include <arpa/inet.h>
+# include <arpa/inet.h>
 # include "Server.hpp"
-#include <sstream>
-# include <errno.h>
+# include <sstream>
 
 # ifndef	CRLF
 # define CRLF "\r\n"

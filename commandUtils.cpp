@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   commandUtils.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:11:55 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:38:44 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "commands.hpp"
+#include <climits>
 
 bool	IsValidNick(std::string nick, Client&  client, Server& serv)
 {
@@ -247,20 +248,23 @@ bool	doKflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args)
 
 bool	doLflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args)
 {
-	int 	newLimit = 0;
-	char	*endptr;
+	int     newLimit = 0;
+	char    *endptr = NULL;
+	long    testLimit = 0;
+
 	if (act == ADD)
 	{
 		if (args.size() < 1)
 			return (false);
-		errno = 0;
-		newLimit = std::strtol(args[0].c_str(), &endptr, 10);
-		if (*endptr || endptr == args[0])
+		const char *s = args[0].c_str();
+		testLimit = std::strtol(s, &endptr, 10);
+		if (endptr == s || *endptr != '\0')
 			return (false);
-		if (errno)
+		if (testLimit == LONG_MAX || testLimit == LONG_MIN)
 			return (false);
-		if (newLimit < 0 || newLimit > 9999)
+		if (testLimit < 0 || testLimit > 9999)
 			return (false);
+		newLimit = static_cast<int>(testLimit);
 		if (newLimit > 512)
 			newLimit = 512;
 		args.erase(args.begin());
