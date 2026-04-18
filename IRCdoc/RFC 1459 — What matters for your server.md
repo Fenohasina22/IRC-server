@@ -9,7 +9,7 @@ Every single IRC message follows this structure:
 [:prefix] <command> [params] <CRLF>
 ```
 
-- The prefix (`:servername` or `:nick!user@host`) is optional — clients don't send it, servers add it when broadcasting
+- The prefix (`":" + serv.getName()name` or `:nick!user@host`) is optional — clients don't send it, servers add it when broadcasting
 - The command is either a word (`JOIN`, `PRIVMSG`) or a 3-digit number (`001`, `353`)
 - Parameters are space-separated. The last parameter can contain spaces if prefixed with `:`
 - Every message ends with `\r\n` — not just `\n`
@@ -34,10 +34,10 @@ USER <username> <hostname> <servername> :<realname>
 Your server's welcome response after a successful handshake:
 
 ```
-:server 001 nick :Welcome to the network
-:server 002 nick :Your host is servername
-:server 003 nick :This server was created ...
-:server 004 nick :servername version modes
+":" + serv.getName() 001 nick :Welcome to the network
+":" + serv.getName() 002 nick :Your host is servername
+":" + serv.getName() 003 nick :This server was created ...
+":" + serv.getName() 004 nick ":" + serv.getName()name version modes
 ```
 
 ---
@@ -106,9 +106,9 @@ When a user successfully joins a channel your server must send back in this orde
 
 ```
 :nick!user@host JOIN #channel        (broadcast to everyone in channel)
-:server 332 nick #channel :topic     (RPL_TOPIC — or 331 if no topic)
-:server 353 nick = #channel :@op user1 user2   (RPL_NAMREPLY)
-:server 366 nick #channel :End of /NAMES list  (RPL_ENDOFNAMES)
+":" + serv.getName() 332 nick #channel :topic     (RPL_TOPIC — or 331 if no topic)
+":" + serv.getName() 353 nick = #channel :@op user1 user2   (RPL_NAMREPLY)
+":" + serv.getName() 366 nick #channel :End of /NAMES list  (RPL_ENDOFNAMES)
 ```
 
 ---
@@ -117,8 +117,8 @@ When a user successfully joins a channel your server must send back in this orde
 
 ***Welcome sequence (registration / connection setup)***
 ```
-001 RPL_WELCOME — registration complete  
-002 RPL_YOURHOST — server info  
+001 RPL_WELCOME — registration complete
+002 RPL_YOURHOST — server info
 003 RPL_CREATED — server creation date
 004 RPL_MYINFO — server capabilities
 ```
@@ -127,32 +127,32 @@ When a user successfully joins a channel your server must send back in this orde
 ***Channel responses (channel state / info)***
 
 ```
-331 RPL_NOTOPIC — no topic set  
-332 RPL_TOPIC — channel topic  
-341 RPL_INVITING — invite sent  
-353 RPL_NAMREPLY — list of names  
-366 RPL_ENDOFNAMES — end of names  
-375 RPL_MOTDSTART — start of MOTD  
-372 RPL_MOTD — a line of MOTD  
+331 RPL_NOTOPIC — no topic set
+332 RPL_TOPIC — channel topic
+341 RPL_INVITING — invite sent
+353 RPL_NAMREPLY — list of names
+366 RPL_ENDOFNAMES — end of names
+375 RPL_MOTDSTART — start of MOTD
+372 RPL_MOTD — a line of MOTD
 376 RPL_ENDOFMOTD — end of MOTD
 ```
 ---
 
 ***Error replies (all failure cases)***
 ```
-401 ERR_NOSUCHNICK — nick not found  
-403 ERR_NOSUCHCHANNEL — channel not found  
-421 ERR_UNKNOWNCOMMAND — bad command  
-431 ERR_NONICKNAMEGIVEN — missing nick  
-432 ERR_ERRONEUSNICKNAME — invalid nick  
-433 ERR_NICKNAMEINUSE — nick taken  
-442 ERR_NOTONCHANNEL — not in channel  
-443 ERR_USERONCHANNEL — already in channel  
-451 ERR_NOTREGISTERED — not registered  
-461 ERR_NEEDMOREPARAMS — missing params  
-471 ERR_CHANNELISFULL — limit reached  
-473 ERR_INVITEONLYCHAN — invite only  
-475 ERR_BADCHANNELKEY — wrong password  
+401 ERR_NOSUCHNICK — nick not found
+403 ERR_NOSUCHCHANNEL — channel not found
+421 ERR_UNKNOWNCOMMAND — bad command
+431 ERR_NONICKNAMEGIVEN — missing nick
+432 ERR_ERRONEUSNICKNAME — invalid nick
+433 ERR_NICKNAMEINUSE — nick taken
+442 ERR_NOTONCHANNEL — not in channel
+443 ERR_USERONCHANNEL — already in channel
+451 ERR_NOTREGISTERED — not registered
+461 ERR_NEEDMOREPARAMS — missing params
+471 ERR_CHANNELISFULL — limit reached
+473 ERR_INVITEONLYCHAN — invite only
+475 ERR_BADCHANNELKEY — wrong password
 482 ERR_CHANOPRIVSNEEDED — need chanop privileges
 
 ```

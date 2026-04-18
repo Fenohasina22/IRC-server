@@ -613,7 +613,7 @@ client.recv_buf.<span class="n">append</span>(tmp, n);   <span class="c">// accu
 
   <h3>The welcome burst</h3>
   <p>Once registration is complete, the server must send a sequence of numeric replies called the <strong>welcome burst</strong>:</p>
-  <pre><span class="c">// All replies take the form: :server_name CODE client_nick :message</span>
+  <pre><span class="c">// All replies take the form: ":" + serv.getName()_name CODE client_nick :message</span>
 <span class="s">":irc.server 001 alice :Welcome to the IRC network alice!alice@host"</span>
 <span class="s">":irc.server 002 alice :Your host is irc.server, running version 1.0"</span>
 <span class="s">":irc.server 003 alice :This server was created ..."</span>
@@ -641,9 +641,9 @@ JOIN #secret secretpass    <span class="c">// join with key (+k mode)</span>
 
 <span class="c">// Server must respond to a successful JOIN:</span>
 <span class="s">":alice!alice@host JOIN #general"</span>     <span class="c">// broadcast to all in channel</span>
-<span class="s">":server 332 alice #general :Topic here"</span>  <span class="c">// topic (if set)</span>
-<span class="s">":server 353 alice = #general :@alice bob"</span> <span class="c">// NAMES list</span>
-<span class="s">":server 366 alice #general :End of NAMES"</span> <span class="c">// end of NAMES</span>
+<span class="s">"":" + serv.getName() 332 alice #general :Topic here"</span>  <span class="c">// topic (if set)</span>
+<span class="s">"":" + serv.getName() 353 alice = #general :@alice bob"</span> <span class="c">// NAMES list</span>
+<span class="s">"":" + serv.getName() 366 alice #general :End of NAMES"</span> <span class="c">// end of NAMES</span>
 
 <span class="c">// Client leaves</span>
 PART #general :Goodbye!</pre>
@@ -672,7 +672,7 @@ TOPIC #general :Welcome to the main channel!
 TOPIC #general
 
 <span class="c">// Response: 332 if topic exists, 331 if no topic</span>
-<span class="s">":server 332 alice #general :Welcome to the main channel!"</span></pre>
+<span class="s">"":" + serv.getName() 332 alice #general :Welcome to the main channel!"</span></pre>
 
   <h3>NAMES and WHO</h3>
   <pre><span class="c">// List users in a channel</span>
@@ -680,8 +680,8 @@ NAMES #general
 
 <span class="c">// Response: 353 lists users, 366 ends the list</span>
 <span class="c">// @ prefix = operator, no prefix = regular user</span>
-<span class="s">":server 353 alice = #general :@alice bob @carol"</span>
-<span class="s">":server 366 alice #general :End of /NAMES list"</span></pre>
+<span class="s">"":" + serv.getName() 353 alice = #general :@alice bob @carol"</span>
+<span class="s">"":" + serv.getName() 366 alice #general :End of /NAMES list"</span></pre>
 </section>
 
 <!-- 13. COMMANDS -->
@@ -712,7 +712,7 @@ NAMES #general
   <h3>PING / PONG — the keep-alive</h3>
   <p>IRC clients can go idle. The server periodically sends a <code>PING</code> and expects a <code>PONG</code> back within a timeout (typically 60–120s). If no reply, the server disconnects the client. Your server should also respond to <code>PING</code> from the client.</p>
   <pre><span class="c">// Server → Client</span>
-<span class="s">":server PING :1234567890"</span>
+<span class="s">"":" + serv.getName() PING :1234567890"</span>
 
 <span class="c">// Client → Server (must echo the exact token)</span>
 <span class="s">"PONG :1234567890"</span></pre>
@@ -761,7 +761,7 @@ MODE #chan -l           <span class="c">// remove limit</span>
 <section class="section" id="numerics">
   <span class="section-tag tag-adv">Advanced</span>
   <h2>15. Numeric Replies</h2>
-  <p>The server communicates status back to clients using <strong>three-digit numeric codes</strong>. They always take the form: <code>:server CODE nick :message</code>. Codes 001–099 are welcome/info, 200–399 are informational, 400–599 are errors.</p>
+  <p>The server communicates status back to clients using <strong>three-digit numeric codes</strong>. They always take the form: <code>":" + serv.getName() CODE nick :message</code>. Codes 001–099 are welcome/info, 200–399 are informational, 400–599 are errors.</p>
 
   <h3>Codes you must implement</h3>
   <div class="num-grid">
@@ -1018,7 +1018,7 @@ const MSGS = [
   'NICK alice',
   'USER bob 0 * :Bob Smith',
   ':alice!alice@host JOIN #channel',
-  ':server 001 alice :Welcome to the IRC network',
+  '":" + serv.getName() 001 alice :Welcome to the IRC network',
   'PING :1234567890',
   ':alice!alice@host QUIT :Goodbye!',
   'MODE #chan +o alice',

@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/18 16:56:23 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 17:12:23 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,11 @@ void						Server::setPort(int newPort)
 	this->_port = newPort;
 }
 
+void					Server::setName(std::string newName)
+{
+	this->_name = newName;
+}
+
 int						Server::getPort() const
 {
 	return (this->_port);
@@ -58,6 +63,11 @@ int						Server::getPort() const
 const std::string				Server::getPass() const
 {
 	return (this->_password);
+}
+
+const std::string				Server::getName() const
+{
+	return (this->_name);
 }
 
 sockaddr_in	Server::getSocketstats() const
@@ -75,6 +85,7 @@ int	Server::Initialize()
 {
 	int opt;
 
+	this->_name = "seen.nowhere";
 	this->_addr.sin_family = AF_INET;
 	this->_addr.sin_port = htons(this->_port);
 	this->_addr.sin_addr.s_addr = INADDR_ANY;

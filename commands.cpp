@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:54:35 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 17:17:08 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,20 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv, bool &validPass)
 	PrintArg(mess.args);
     if (client.isRegistered())
     {
-		client.ConcatenateWBuffer(FormatedMessage("462", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("462", ":" + serv.getName(),
 			 "* :You may not reregister"), serv);
 		return (false);
 	}
 	if (mess.args.empty())
     {
 		std::cout << RED << "HEY PASS" << RESET << std::endl;
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
 			 "* PASS :Not enough parameters"), serv);
 		return (false);
 	}
 	if (mess.args[0] != serv.getPass())
     {
-		client.ConcatenateWBuffer(FormatedMessage("464", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("464", ":" + serv.getName(),
 			 "* :Password incorrect"), serv);
 		DeleteVecElement(serv.getVecPoll(), client.getFd());
 		DeleteVecElementClient(serv.getAllClients(), client.getFd());
@@ -63,7 +63,7 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 	{
 		PrintVec(serv.getAllClients());
 		PrintVec(serv.getTrueClients());
-		client.ConcatenateWBuffer(FormatedMessage("464", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("464", ":" + serv.getName(),
 			 "* :Password incorrect"), serv);
 		DeleteVecElement(serv.getVecPoll(), client.getFd());
 		DeleteVecElementClient(serv.getAllClients(), client.getFd());
@@ -72,7 +72,7 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 	}
 	if (mess.args.empty())
     {
-		client.ConcatenateWBuffer(FormatedMessage("431", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("431", ":" + serv.getName(),
 			 "* :No nickname specified"), serv);
 		return (false);
 	}
@@ -101,7 +101,7 @@ bool	userCmd(Client &client, iRCMessage &mess, Server& serv)
 	{
 		PrintVec(serv.getAllClients());
 		PrintVec(serv.getTrueClients());
-		client.ConcatenateWBuffer(FormatedMessage("464", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("464", ":" + serv.getName(),
 			 "* :Password incorrect"), serv);
 		DeleteVecElement(serv.getVecPoll(), client.getFd());
 		DeleteVecElementClient(serv.getAllClients(), client.getFd());
@@ -110,13 +110,13 @@ bool	userCmd(Client &client, iRCMessage &mess, Server& serv)
 	}
 	if (client.isRegistered())
     {
-		client.ConcatenateWBuffer(FormatedMessage("462", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("462", ":" + serv.getName(),
 			 "* :You may not reregister"), serv);
 		return (false);
 	}
 	if (mess.args.size() < 4)
     {
-		client.ConcatenateWBuffer(FormatedMessage("461" , ":server",
+		client.ConcatenateWBuffer(FormatedMessage("461" , ":" + serv.getName(),
 			 "* USER :Not enough parameters"), serv);
 		return (false);
 	}
@@ -133,7 +133,7 @@ bool	userCmd(Client &client, iRCMessage &mess, Server& serv)
 bool	capCmd(Client &client, iRCMessage &mess, Server& serv)
 {
 	if (!mess.args.empty() && mess.args[0] == "LS")
-		client.ConcatenateWBuffer(":server CAP * LS :\r\n", serv);
+		client.ConcatenateWBuffer(":" + serv.getName() + " CAP * LS :\r\n", serv);
 	return (true);
 }
 
@@ -153,7 +153,7 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 {
 	if (mess.args.size() < 2)
 	{
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
 			 "* PRIVMSG :Not enough parameters"), serv);
 		return (false);
 	}
@@ -175,7 +175,7 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 
 		if (!foundClient && !foundChan)
 		{
-			client.ConcatenateWBuffer(FormatedMessage("401", ":server",
+			client.ConcatenateWBuffer(FormatedMessage("401", ":" + serv.getName(),
 				 client.getNick() + " " + vec[i] + " :No such nick/channel"), serv);
 			return (false);
 		}
@@ -224,7 +224,7 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 			vec[i] = strtrim(vec[i]);
 			if (vec[i].empty())
 			{
-				client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+				client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
 					 "* JOIN :Not enough parameters"), serv);
 				return (false);
 			}
@@ -232,7 +232,7 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 			{
 				if (vec[i][0] != '#')
 				{
-					client.ConcatenateWBuffer(FormatedMessage("403", ":server",
+					client.ConcatenateWBuffer(FormatedMessage("403", ":" + serv.getName(),
 						 client.getNick() + " " + vec[i] + " :No such channel"), serv);
 					return (false);
 				}
@@ -265,19 +265,19 @@ bool	partCmd(Client &client, iRCMessage &mess, Server &serv)
 
 	if (mess.args.empty())
 	{
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
 			 "* PART :Not enough parameters"), serv);
 		return (false);
 	}
 	if (!chanExists(mess.args[0], serv))
 	{
-		client.ConcatenateWBuffer(FormatedMessage("403", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("403", ":" + serv.getName(),
 			 client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
 		return (false);
 	}
 	if (!client.isInChannel(mess.args[0]))
 	{
-		client.ConcatenateWBuffer(FormatedMessage("442", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("442", ":" + serv.getName(),
 			 client.getNick() + " " + mess.args[0] + " :You're not on that channel"), serv);
 		return (false);
 	}
@@ -307,7 +307,7 @@ bool	topicCmd(Client &client, iRCMessage &mess, Server &serv)
 
 	if (mess.args.empty())
 	{
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
 			 "* TOPIC :Not enough parameters"), serv);
 		return (false);
 	}
@@ -315,7 +315,7 @@ bool	topicCmd(Client &client, iRCMessage &mess, Server &serv)
 
 	if (!foundChan)
 	{
-		client.ConcatenateWBuffer(FormatedMessage("403", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("403", ":" + serv.getName(),
 			 client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
 		return (false);
 	}
@@ -330,13 +330,13 @@ bool	kickCmd(Client &client,iRCMessage &mess,Server &serv)
 {
 	if (mess.args.size() < 2)
 	{
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
 			 "* KICK :Not enough parameters"), serv);
 		return (false);
 	}
 	if (!chanExists(mess.args[0], serv))
 	{
-		client.ConcatenateWBuffer(FormatedMessage("403", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("403", ":" + serv.getName(),
 			 client.getNick() + " " + mess.args[0] + " :No such channel"), serv);
 		return (false);
 	}
@@ -360,7 +360,7 @@ bool	inviteCmd(Client &client,iRCMessage &mess,Server &serv)
 {
 	if (mess.args.size() < 2)
 	{
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
 			 "* INVITE :Not enough parameters"), serv);
 		return (false);
 	}
@@ -384,7 +384,7 @@ bool	inviteCmd(Client &client,iRCMessage &mess,Server &serv)
 	confirmationMess += invitedCli.getNick() + " ";
 	confirmationMess += destChan.getName();
 	invitedCli.ConcatenateWBuffer(invitationMess, serv);
-	senderCli.ConcatenateWBuffer(FormatedMessage("341", ":server",
+	senderCli.ConcatenateWBuffer(FormatedMessage("341", ":" + serv.getName(),
 		 confirmationMess), serv);
 	destChan.addInvited(&invitedCli);
 	return (true);
@@ -394,7 +394,7 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 {
 	if (mess.args.size() < 1)
 	{
-		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
+		client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
 			 client.getNick() + " MODE :Not enough parameters"), serv);
 		return (false);
 	}

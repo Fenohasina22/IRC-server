@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/18 16:56:36 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 17:11:16 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ class Server
 		std::vector<Client>		_trueClients;
 		std::vector<Channel>	_allChannels;
 		std::string				_password;
+		std::string				_name;
 		int						_port;
-
 
 	public:
 		Server();
@@ -61,10 +61,12 @@ class Server
 		sockaddr_in				getSocketstats() const;
 		int						getPort() const;
 		const std::string		getPass() const;
+		const std::string		getName() const;
 		std::vector<Client>&	getTrueClients();
 		int						Initialize();
 		void 					setPass(std::string newPass);
 		void					setPort(int newPort);
+		void					setName(std::string newName);
 		std::vector<Client>		&getAllClients();
 		std::vector<Channel>	&getAllChans();
 		Client 					&findClient(int fd, bool &success);
