@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/18 16:08:52 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:56:23 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,7 @@ int	Server::Initialize()
 	this->_addr.sin_family = AF_INET;
 	this->_addr.sin_port = htons(this->_port);
 	this->_addr.sin_addr.s_addr = INADDR_ANY;
-	this->_sockfd = socket(AF_INET, SOCK_STREAM, 0); // Creates a socket IPv4, TCP
-	// bind adding info to the socket
+	this->_sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	opt = 1;
 	if (setsockopt(this->_sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
 	{
@@ -147,14 +146,11 @@ Client &Server::findTrueClient(int fd, bool	&success)
 	success = false;
 	for (size_t idx = 0; idx < this->_trueClients.size(); ++idx)
 	{
-		//std::cout << GREEN << this->_trueClients[idx].getFd() << " == " << fd << RESET << std::endl;
 		if (this->_trueClients[idx].getFd() == fd)
 		{
-			//std::cout << GREEN << "YES" << RESET << std::endl;
 			success = true;
 			return (this->_trueClients[idx]);
 		}
-		//std::cout << RED << "NO" << std::endl;
 		fakeIdx = idx;
 	}
 	return (this->_trueClients[fakeIdx]);
@@ -227,10 +223,10 @@ bool		HasCRLF(std::string	str)
 
 int countOccurrences(const std::string& text, const std::string& target) {
     int count = 0;
-    size_t pos = text.find(target, 0); // Start searching from index 0
+    size_t pos = text.find(target, 0);
     while (pos != std::string::npos) {
         count++;
-        pos = text.find(target, pos + target.length()); // Move past current match
+        pos = text.find(target, pos + target.length());
     }
     return count;
 }
@@ -266,7 +262,6 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 		if (!foundClnt)
 		{
 			std::cout << RED << "Client couldn't connect (incorrect password)" << RESET << std::endl;
-			//return (1);
 			return (1);
 		}
 		parsedMess = parseMessage(messages[m] + CRLF);
@@ -284,8 +279,6 @@ void	Server::Processmessage (int i)
 
 
 	memset (buff, 0, MSG_BUFFERSIZE + 1);
-	//std::cout << YELLOW << buff << RESET << std::endl;
-	
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
 	if (retval == -1 || retval == 0)
 	{
@@ -300,7 +293,7 @@ void	Server::Processmessage (int i)
 		return ;
 	}
 	if (ParseAndExecute(i, buff, cl, *this))
-		return ; // err pass
+		return ;
 
 	size_t		pos;
 	pos = cl.getReadBuffer().rfind("\r\n");
@@ -354,7 +347,6 @@ void	Server::broadcastWithoutChan(std::string &mess, const Client &caster, std::
 		Client &cl = this->findTrueClient(*it, found);
 		if (found && cl.getFd() != caster.getFd())
 		{
-			//std::cout << YELLOW <<"sent to" << cl.getNick() << RESET<< std::endl;
 			cl.ConcatenateWBuffer(mess, serv);
 		}
 	}

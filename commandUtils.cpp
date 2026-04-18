@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:53:47 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:54:43 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,6 @@ void	sendChannelState(Client &client, Channel &destChan, Server &serv)
 
 	if (destChan.getTopic() == "")
 	{
-		// 331 nick #channel :No topic is set
 		client.ConcatenateWBuffer(FormatedMessage("331", ":server"
 			, client.getNick() + " " + destChan.getName() + " :No topic is set"), serv);
 	}
@@ -232,7 +231,6 @@ bool	doKflag(Channel &destChan, ModeAction &act, std::vector<std::string> &args)
 		if (args.size() < 1)
 			return (false);
 		destChan.addFlag("k");
-		// destChan.setPass(args[2]);
 		destChan.setPass(args[0]);
 		args.erase(args.begin());
 		destChan.setPassRequired(true);

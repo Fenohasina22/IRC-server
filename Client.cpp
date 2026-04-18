@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:01:25 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:26:19 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:54:21 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ void			Client::setClientInfos(struct sockaddr_in& infos)
 	this->_clientinfos.sin_addr = infos.sin_addr;
 	this->_clientinfos.sin_family = infos.sin_family;
 	this->_clientinfos.sin_port = infos.sin_port;
-	//this->_clientinfos.sin_zero = infos.sin_zero;
 }
 
 

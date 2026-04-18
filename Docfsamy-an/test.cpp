@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/07 16:41:01 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:58:57 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int main(int argc, char **argv)
 
 	We use struct sockaddr_in to initialize what we need to bind
 	We don't directly use sockaddr cuz it's harder to initialize and not optimal
-	So we use sockaddr_in then cast it to sockaddr , 
+	So we use sockaddr_in then cast it to sockaddr ,
 
 	*/
 	struct sockaddr_in addr;
@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 
 	addr.sin_family = AF_INET; // Address Family - Internet Protocol v4 (IPv4)
 	addr.sin_port = htons(6667); // conversion
-	addr.sin_addr.s_addr = INADDR_ANY; // 0.0.0.0, There are others macro to change this but we initilize it like that to begin 
+	addr.sin_addr.s_addr = INADDR_ANY; // 0.0.0.0, There are others macro to change this but we initilize it like that to begin
 
 	fd = socket(AF_INET, SOCK_STREAM, 0); // SOCK_STREAM is for TCP
 	if (bind(fd, (struct sockaddr *)&addr, sizeof(addr)) == 0)
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 	int clientfd;
 	struct sockaddr_in clientinfo;
 	socklen_t	clientinfosize;
-	
+
 	clientinfosize = sizeof(struct sockaddr_in);
 
 	clientfd = accept(fd, (struct sockaddr*)&clientinfo, &clientinfosize);
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
 	{
 		std::cout << "Hey there" << std::endl;
 	}
-	
+
 
 	struct pollfd tabfd[10]; // peut contenir 1 socket listen et 9 socket clients crees via accept
 
@@ -105,9 +105,9 @@ int main(int argc, char **argv)
 	{
 		std::cout << "Timeout" << std::endl;
 	}
-	
 
-	
+
+
 	/*
 	main loop for poll
 	*/

@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/18 16:31:32 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:56:36 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define SERVER_HPP
 
 # include <iostream>
-# include <poll.h> // pour poll
-# include <sys/socket.h> // pour socket , bind , etc
+# include <poll.h>
+# include <sys/socket.h>
 # include <netinet/in.h>
 # include <unistd.h>
 # include <vector>

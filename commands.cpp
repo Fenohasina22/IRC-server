@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:14:18 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:54:35 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv, bool &validPass)
 	if (mess.args.empty())
     {
 		std::cout << RED << "HEY PASS" << RESET << std::endl;
-		//std::cout << RED << mess.ogMess << RESET << std::endl;
 		client.ConcatenateWBuffer(FormatedMessage("461", ":server",
 			 "* PASS :Not enough parameters"), serv);
 		return (false);
@@ -60,7 +59,6 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 {
 	std::string newNick;
 
-	//std::cout << "U're here " << serv.getPass() << std::endl;
 	if (!client.getPassState())
 	{
 		PrintVec(serv.getAllClients());
@@ -174,7 +172,7 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 		Channel			&destChan		= serv.findChan(vec[i], foundChan);
 		Client 			&sender 		= client;
 		std::string 	messageOutput;
-	
+
 		if (!foundClient && !foundChan)
 		{
 			client.ConcatenateWBuffer(FormatedMessage("401", ":server",
@@ -224,7 +222,6 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 		while (i < vec.size())
 		{
 			vec[i] = strtrim(vec[i]);
-			//std::cout << RED << vec[i] << RESET << std::endl;
 			if (vec[i].empty())
 			{
 				client.ConcatenateWBuffer(FormatedMessage("461", ":server",
@@ -257,7 +254,7 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 		}
 		idx++;
 	}
-	
+
 	return (true);
 }
 
