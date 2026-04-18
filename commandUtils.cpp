@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 22:20:54 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 06:04:54 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -863,4 +863,74 @@ bool	validateInvite(
 	    return (false);
 	}
 	return (true);
+}
+
+
+std::vector<std::string>	getChangesToDo(std::vector<std::string>	&args)
+{
+	std::vector<std::string>	res;
+	std::string 				&changeString 	= args[1];
+	std::string					sign;
+
+	for (size_t i = 0; i < changeString.size(); i++)
+	{
+		if (changeString[i] == '+')
+		{
+			sign = "+";
+			continue;
+		}
+		if (changeString[i] == '-')
+		{
+			sign = "-";
+			continue;
+		}
+		res.push_back(sign + std::string(1, changeString[i]));
+	}
+	return (res);
+}
+
+std::vector<std::string> getArgList(std::vector<std::string> &args)
+{
+	std::vector<std::string> res;
+
+	for (size_t i = 2; i < args.size(); i++)
+		res.push_back(args[i]);
+	return (res);
+}
+
+void	processFlags(
+	std::vector<std::string>	&changesToDo,
+	std::vector<std::string>	&argList,
+	ChanModes					&mode,
+	ModeAction					&act,
+	Channel						&destChan,
+	Client						&client,
+	char						&currentSign,
+	std::string					&finalFlags,
+	std::string					&finalArgs,
+	Server						&serv
+)
+{
+	for (size_t i = 0; i < changesToDo.size(); i++)
+	{
+		std::string potentialArg = argList.empty() ? "" : argList.front();
+		size_t oldSize = argList.size();
+
+		if (processModeChange(argList, changesToDo[i] , mode, act, destChan, client, serv))
+		{
+			if (currentSign != changesToDo[i][0])
+			{
+				currentSign = changesToDo[i][0];
+				finalFlags += currentSign;
+			}
+			finalFlags += changesToDo[i][1];
+
+			if (argList.size() < oldSize)
+			{
+				if (!finalArgs.empty())
+					finalArgs += " ";
+				finalArgs += potentialArg;
+			}
+		}
+	}
 }
