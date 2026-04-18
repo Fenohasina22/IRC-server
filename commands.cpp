@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:14:18 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 18:34:28 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 bool	passCmd(Client &client, iRCMessage &mess, Server &serv, bool &validPass)
 {
+	std::cout << YELLOW << "IN PASS" << RESET << std::endl;
 	PrintArg(mess.args);
     if (client.isRegistered())
     {

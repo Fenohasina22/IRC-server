@@ -6,13 +6,18 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/18 16:08:52 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 19:03:40 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "parser.hpp"
 
+/*
+
+PASS with no password
+
+*/
 Server::Server()
 {
 }
@@ -256,17 +261,16 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 	recvBuf = cl.getReadBuffer();
 	count = countOccurrences(recvBuf, CRLF);
 	messages = splitCRLF(recvBuf);
+	std::cout << "PAE\n count = "<< count << std::endl;
 	for (size_t m = 0; m < count; ++m)
 	{
 		if (!validPass)
 			c = &(server.findClient(server.getVecPoll()[i].fd, foundClnt));
-
 		else
 			c = &(server.findTrueClient(server.getVecPoll()[i].fd, foundClnt));
 		if (!foundClnt)
 		{
 			std::cout << RED << "Client couldn't connect (incorrect password)" << RESET << std::endl;
-			//return (1);
 			return (1);
 		}
 		parsedMess = parseMessage(messages[m] + CRLF);

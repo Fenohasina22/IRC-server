@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 18:31:01 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 19:20:00 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	getPrefix(
 }
 
 void	getCommand(
-	const std::vector<std::string>	&splitMess,
+	std::vector<std::string>	&splitMess,
 	iRCMessage 						&parsedMess,
 	size_t 							&index)
 {
@@ -36,6 +36,13 @@ void	getCommand(
 
 	if (splitMess.size() < index + 1)
 		return ;
+	std::string copy = splitMess[index];
+	if (copy.size() >= 2 && copy.find(CRLF) != copy.npos
+	&& copy.find(CRLF)== copy.size() - 2)
+	{
+		copy.resize(copy.size() - 2);
+		splitMess[index] = copy;
+	}
 	strCommand = splitMess[index];
 	parsedMess.strCmd = strCommand;
 	index ++;

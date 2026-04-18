@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:09:34 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 19:18:06 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,20 @@
 
 void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv, bool &validPass)
 {
+	PrintArg(mess.args);
+	std::cout << RED << "X--" << mess.ogMess << "--X" << RESET << std::endl;
 	if (!client.isRegistered() && mess.cmd != CAP
 		&& mess.cmd != PASS && mess.cmd != NICK && mess.cmd != USER)
+	{
+		std::cout << "YYTYTYT" << std::endl;
 		return ;
+	}
 	if (!isMessValid(mess))
+	{
+		std::cout << "0_0" << std::endl;
 		return ;
+	}
+	std::cout << BLUE << mess.cmd << RESET << std::endl;
 	switch (mess.cmd)
 	{
 		case (CAP):
