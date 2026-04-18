@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commandUtils.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 19:30:55 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 19:43:46 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,6 @@
 #include "commands.hpp"
 #include <climits>
 
-std::string toLower(const std::string& str)
-{
-    std::string result = str;
-    for (size_t i = 0; i < result.size(); ++i)
-	{
-        result[i] = std::tolower(result[i]);
-    }
-    return result;
-}
 
 bool	IsValidNick(std::string nick, Client&  client, Server& serv)
 {

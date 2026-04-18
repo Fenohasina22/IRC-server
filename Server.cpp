@@ -6,22 +6,12 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/18 19:39:06 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 19:43:35 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "parser.hpp"
-
-std::string toLower(const std::string& str)
-{
-    std::string result = str;
-    for (size_t i = 0; i < result.size(); ++i)
-	{
-        result[i] = std::tolower(result[i]);
-    }
-    return result;
-}
 
 Server::Server()
 {
