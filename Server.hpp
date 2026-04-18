@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 14:20:15 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/16 14:30:56 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 11:41:17 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,6 @@ class Server
 		Client 					&findClient(int fd, bool &success);
 		Client&					findTrueClient(int fd, bool	&success);
 		Client&					findTrueClient(std::string nick, bool &success);
-
-
 		Client 					&findClient(std::string nick, bool &success);
 		Channel 				&findChan(std::string name, bool &success);
 		bool					NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize);

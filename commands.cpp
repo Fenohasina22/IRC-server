@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 08:55:13 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 11:00:03 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,34 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv, bool &validPass)
 	return (true);
 }
 
+void	PrintVec(std::vector<Client>& vec)
+{
+	unsigned int	i;
+
+	std::cout << YELLOW << "U got here" << std::endl;
+	for (i = 0; i < vec.size(); i++)
+	{
+		std::cout << vec[i].getFd() << " ";
+	}
+	std::cout << RESET << std::endl;
+}
+
 bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 {
 	std::string newNick;
 
+	//std::cout << "U're here " << serv.getPass() << std::endl;
+	if (!client.getPassState())
+	{
+		PrintVec(serv.getAllClients());
+		PrintVec(serv.getTrueClients());
+		client.ConcatenateWBuffer(FormatedMessage("464", ":server",
+			 "* :Password incorrect"), serv);
+		DeleteVecElement(serv.getVecPoll(), client.getFd());
+		DeleteVecElementClient(serv.getAllClients(), client.getFd());
+		close (client.getFd());
+		return (false);
+	}
 	if (mess.args.empty())
     {
 		client.ConcatenateWBuffer(FormatedMessage("431", ":server",
@@ -74,6 +98,17 @@ bool	userCmd(Client &client, iRCMessage &mess, Server& serv)
 {
 	std::string newUser;
 
+	if (!client.getPassState())
+	{
+		PrintVec(serv.getAllClients());
+		PrintVec(serv.getTrueClients());
+		client.ConcatenateWBuffer(FormatedMessage("464", ":server",
+			 "* :Password incorrect"), serv);
+		DeleteVecElement(serv.getVecPoll(), client.getFd());
+		DeleteVecElementClient(serv.getAllClients(), client.getFd());
+		close (client.getFd());
+		return (false);
+	}
 	if (client.isRegistered())
     {
 		client.ConcatenateWBuffer(FormatedMessage("462", ":server",
@@ -501,12 +536,5 @@ bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 		}
 	}
 	std::cout << GREEN  << "Bye " << client.getNick() << RESET << std::endl;
-	return (true);
-}
-
-bool	disconnectCmd(Client& client, Server& serv)
-{
-	(void) serv;
-	std::cout << GREEN <<  client.getUser() << " disconected" << RESET << std::endl;
 	return (true);
 }

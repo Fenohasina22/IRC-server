@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/17 19:32:14 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 09:57:31 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ bool	topicCmd(Client &client, iRCMessage &mess, Server &serv);
 bool	kickCmd(Client &client,iRCMessage &mess,Server &serv);
 bool	inviteCmd(Client &client,iRCMessage &mess,Server &serv);
 bool	quitCmd(iRCMessage& mess, Client& client, Server& serv);
-bool	disconnectCmd(Client& client, Server& serv);
 bool	modeCmd(Client &client,iRCMessage &mess,Server &serv);
 
 /************************************UTILS************************************/

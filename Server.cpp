@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/18 09:08:17 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 11:41:20 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	Server::Initialize()
 		return (1);
 	}
 	if (bind(this->_sockfd, (struct sockaddr *)&(this->_addr), sizeof(this->_addr)) == 0)
-		std::cout << GREEN << "Binding successfull" << RESET<< std::endl;
+		std::cout << GREEN << "Binding successfull" << RESET << std::endl;
 	else
 	{
 		std::cout << RED <<"Binding failed" << RESET << std::endl;
@@ -265,7 +265,7 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 			c = &(server.findTrueClient(server.getVecPoll()[i].fd, foundClnt));
 		if (!foundClnt)
 		{
-			std::cout << "no such client" << std::endl;
+			std::cout << "Client couldn't connect (incorrect password)" << std::endl;
 			return (1);
 		}
 		parsedMess = parseMessage(messages[m]);
@@ -299,7 +299,7 @@ void	Server::Processmessage (int i)
 		return ;
 	}
 	if (ParseAndExecute(i, buff, cl, *this))
-		return ;
+		return ; // err pass
 
 	size_t		pos;
 	pos = cl.getReadBuffer().rfind("\r\n");
