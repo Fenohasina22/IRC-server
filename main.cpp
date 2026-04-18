@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:40:29 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 16:51:53 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int main(int argc, char **argv)
 {
 	if (argc != 3)
 	{
-		std::cout << "Usage: ./ft_irc <port> <pass>" << std::endl;
+		std::cerr << RED << "Usage: ./ft_irc <port> <pass>" << RESET << std::endl;
 		return (1);
 	}
 	signal(SIGPIPE, SIG_IGN);
@@ -103,10 +103,11 @@ int main(int argc, char **argv)
 
 	Server				server;
 	sockaddr_in			clientinfo;
-	pollfd				sock; // for initialization of the first element of vecpol
+	pollfd				sock;
 
 	if (!getParams(argv, server))
 	{
+		std::cerr << RED << "Error:Parameter error" << RESET << std::endl;
 		return (1);
 	}
 	if (server.Initialize())
@@ -114,12 +115,10 @@ int main(int argc, char **argv)
 	sock.events = POLLIN;
 	sock.fd =  server.getSockfd();
 	sock.revents = 0;
-	// ensure revents is initialized to avoid valgrind uninitialized use
 	std::vector<pollfd>&	vecpol = server.getVecPoll();
 	vecpol.push_back(sock);
 	while (1)
 	{
-		// poll SLEEPS AND WAKE UP WHEN AN EVENT HAPPENS LIKE POLLIN
 		if (signalCaught || poll(&vecpol[0], vecpol.size(), -1) < 0)
 			return (1);
 		WatchEvents(clientinfo, server);
