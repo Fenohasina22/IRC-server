@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/18 11:41:20 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/18 14:10:41 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,7 +265,8 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 			c = &(server.findTrueClient(server.getVecPoll()[i].fd, foundClnt));
 		if (!foundClnt)
 		{
-			std::cout << "Client couldn't connect (incorrect password)" << std::endl;
+			std::cout << RED << "Client couldn't connect (incorrect password)" << RESET << std::endl;
+			//return (1);
 			return (1);
 		}
 		parsedMess = parseMessage(messages[m]);
