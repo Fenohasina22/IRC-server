@@ -79,7 +79,9 @@ void	SendtoCorrectClient(int i, Server& serv)
 {
 	bool success;
 	Client *c = NULL;
+	int		fd;
 
+	fd = serv.getVecPoll()[i].fd;
 	c = &(serv.findTrueClient(serv.getVecPoll()[i].fd, success));
 	if (!success)
 		c = &(serv.findClient(serv.getVecPoll()[i].fd, success));
@@ -90,7 +92,7 @@ void	SendtoCorrectClient(int i, Server& serv)
 		serv.getVecPoll()[i].events &= ~POLLOUT;
 		if ((*c).getWriteBuffer().empty() && (*c).getPendingClose())
 		{
-			CleanUp(serv, i);
+			CleanUp(serv, fd);
 		}
 	}
 }

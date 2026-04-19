@@ -37,12 +37,12 @@ bool	IsValidNick(std::string nick, Client&  client, Server& serv)
 	return (true);
 }
 
-void	CleanUp(Server& serv, int i)
+void	CleanUp(Server& serv, int saveFd)
 {
 	bool	foundC;
-	int		saveFd;
+	// int		saveFd;
 
-	saveFd = serv.getVecPoll()[i].fd;
+	// saveFd = serv.getVecPoll()[i].fd;
 	Client	&c = serv.findTrueClient(saveFd, foundC);
 	if (!foundC)
 	{

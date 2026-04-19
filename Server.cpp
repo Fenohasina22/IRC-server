@@ -290,14 +290,16 @@ void	Server::Processmessage (int i)
 	char			buff[MSG_BUFFERSIZE + 1];
 	int				retval;
 	bool			success;
+	int				fd;
 
 
 	memset (buff, 0, MSG_BUFFERSIZE + 1);
+	fd = this->getVecPoll()[i].fd;
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
 	if (retval == -1 || retval == 0)
 	{
 		std::cout << BOLD << GREEN << "Client disconnected sucessfully" << RESET << std::endl;
-		CleanUp(*this, i);
+		CleanUp(*this, fd);
 		return ;
 	}
 	Client& cl = this->findClient(this->_vecPoll[i].fd, success);
