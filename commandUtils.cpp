@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commandUtils.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 09:21:54 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/19 15:42:14 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ bool	IsValidNick(std::string nick, Client&  client, Server& serv)
 	while (i < a.size())
 	{
 		pos = nick.find(a[i]);
-		if (pos != std::string::npos)
+		if (pos != std::string::npos || std::isdigit(nick[0]) || nick[0] == '-')
 		{
-			std::cout << BOLD << RED << "Invalid nickname was provided, please try again" << RESET << std::endl;
+			std::cout << BOLD << RED << "Invalid nickname, please try again" << RESET << std::endl;
 			client.ConcatenateWBuffer(FormatedMessage("432", ":" + serv.getName(),
 				 "* " + nick + " :Erroneous nickname" ), serv);
 			return (false);

@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 08:44:34 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/19 14:35:57 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	signalHandler(int sig)
 	{
 		close (AllFds[i]);
 	}
+	std::cout << std::endl;
 	signalCaught = true;
 }
 
