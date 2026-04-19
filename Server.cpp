@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/19 08:11:14 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/19 09:31:05 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 	tmp.fd = accept(this->_sockfd, (sockaddr *)&clientinfo, &csize);
 	tmp.events = POLLIN;
 	tmp.revents = 0;
-	std::cout << "New user is trying to connect from port : " << ntohs(clientinfo.sin_port) << std::endl;
+	std::cout << CYAN << "New connection: fd: " << tmp.fd << " port: " << ntohs(clientinfo.sin_port) << RESET << std::endl;
 	this->_vecPoll.push_back(tmp);
 	client.setFd(tmp.fd);
 	client.setClientInfos(clientinfo);
