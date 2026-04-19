@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:51:53 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/19 07:12:34 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,6 @@ void	SendtoCorrectClient(int i, Server& serv)
 		c = &(serv.findClient(serv.getVecPoll()[i].fd, success));
 	if (success && c != NULL)
 	{
-		std::cout << GREEN << "fd = " << serv.getVecPoll()[i].fd << RESET << std::endl;
-		std::cout << "Message sent to client |" << (*c).getWriteBuffer() << "|" << std::endl;
 		send(serv.getVecPoll()[i].fd, (*c).getWriteBuffer().c_str(), (*c).getWriteBuffer().size(), 0);
 		(*c).setWriteBuffer("");
 		serv.getVecPoll()[i].events &= ~POLLOUT;

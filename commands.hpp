@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:30:49 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/19 06:57:35 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,6 @@ void						processFlags(std::vector<std::string>&changesToDo,std::vector<std::str
 							ChanModes&mode,ModeAction&act,Channel&destChan,Client&client,char&currentSign,
 							std::string&finalFlags,std::string&finalArgs,Server&serv);
 std::string					CurrentHostname(Client& client);
-void						PrintArg(std::vector<std::string>& a);
+std::string					toLower(const std::string& str);
 
 #endif

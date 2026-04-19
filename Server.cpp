@@ -3,25 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/18 19:31:15 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/19 07:13:16 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "parser.hpp"
-
-std::string toLower(const std::string& str)
-{
-    std::string result = str;
-    for (size_t i = 0; i < result.size(); ++i)
-	{
-        result[i] = std::tolower(result[i]);
-    }
-    return result;
-}
 
 Server::Server()
 {
@@ -134,7 +124,7 @@ bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 	tmp.fd = accept(this->_sockfd, (sockaddr *)&clientinfo, &csize);
 	tmp.events = POLLIN;
 	tmp.revents = 0;
-	std::cout << "New user connected from port : " << clientinfo.sin_port << std::endl;
+	std::cout << "New user is trying to connect from port : " << ntohs(clientinfo.sin_port) << std::endl;
 	this->_vecPoll.push_back(tmp);
 	client.setFd(tmp.fd);
 	client.setClientInfos(clientinfo);
@@ -277,11 +267,11 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 	recvBuf = cl.getReadBuffer();
 	count = countOccurrences(recvBuf, CRLF);
 	messages = splitCRLF(recvBuf);
+	std::cout << "PAE\n count = "<< count << std::endl;
 	for (size_t m = 0; m < count; ++m)
 	{
 		if (!validPass)
 			c = &(server.findClient(server.getVecPoll()[i].fd, foundClnt));
-
 		else
 			c = &(server.findTrueClient(server.getVecPoll()[i].fd, foundClnt));
 		if (!foundClnt)
@@ -307,7 +297,7 @@ void	Server::Processmessage (int i)
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
 	if (retval == -1 || retval == 0)
 	{
-		std::cout << GREEN << "Client disconnected" << RESET << std::endl;
+		std::cout << GREEN << "Client disconnected sucessfully" << RESET << std::endl;
 		CleanUp(*this, i);
 		return ;
 	}

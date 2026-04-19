@@ -3,25 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:01:25 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 19:31:02 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 19:44:04 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 #include <algorithm>
-
-std::string toLower(const std::string& str)
-{
-    std::string result = str;
-    for (size_t i = 0; i < result.size(); ++i)
-	{
-        result[i] = std::tolower(result[i]);
-    }
-    return result;
-}
 
 Client::Client()
 : _fd(-1)

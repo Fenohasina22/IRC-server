@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dispatch.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 19:22:22 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/19 07:11:44 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv, bool &valid
 		return ;
 	}
 	if (!isMessValid(mess))
+	{
 		return ;
+	}
 	switch (mess.cmd)
 	{
 		case (CAP):
@@ -67,7 +69,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv, bool &valid
 		default:
 			client.ConcatenateWBuffer(FormatedMessage("421", ":" + serv.getName(),
 				 client.getNick() + " " + mess.strCmd + " :Unknown command"), serv);
-			std::cout << RED << "UNKNOWN COMMAND" << RESET << std::endl;
+			std::cout << RED << "Unknown command" << RESET << std::endl;
 			break;
 	}
 }

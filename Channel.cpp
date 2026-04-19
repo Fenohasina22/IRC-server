@@ -3,23 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:09 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 19:32:48 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/18 19:44:12 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 #include "Client.hpp"
-
-std::string toLower(const std::string& str) {
-    std::string result = str;
-    for (size_t i = 0; i < result.size(); ++i) {
-        result[i] = std::tolower(result[i]);
-    }
-    return result;
-}
 
 Channel::Channel()
 : _name("")

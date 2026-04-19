@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 17:17:08 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/19 07:10:52 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 bool	passCmd(Client &client, iRCMessage &mess, Server &serv, bool &validPass)
 {
-	PrintArg(mess.args);
     if (client.isRegistered())
     {
 		client.ConcatenateWBuffer(FormatedMessage("462", ":" + serv.getName(),
@@ -23,7 +22,6 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv, bool &validPass)
 	}
 	if (mess.args.empty())
     {
-		std::cout << RED << "HEY PASS" << RESET << std::endl;
 		client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
 			 "* PASS :Not enough parameters"), serv);
 		return (false);
@@ -43,26 +41,12 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv, bool &validPass)
 	return (true);
 }
 
-void	PrintVec(std::vector<Client>& vec)
-{
-	unsigned int	i;
-
-	std::cout << YELLOW << "U got here" << std::endl;
-	for (i = 0; i < vec.size(); i++)
-	{
-		std::cout << vec[i].getFd() << " ";
-	}
-	std::cout << RESET << std::endl;
-}
-
 bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 {
 	std::string newNick;
 
 	if (!client.getPassState())
 	{
-		PrintVec(serv.getAllClients());
-		PrintVec(serv.getTrueClients());
 		client.ConcatenateWBuffer(FormatedMessage("464", ":" + serv.getName(),
 			 "* :Password incorrect"), serv);
 		DeleteVecElement(serv.getVecPoll(), client.getFd());
@@ -99,8 +83,6 @@ bool	userCmd(Client &client, iRCMessage &mess, Server& serv)
 
 	if (!client.getPassState())
 	{
-		PrintVec(serv.getAllClients());
-		PrintVec(serv.getTrueClients());
 		client.ConcatenateWBuffer(FormatedMessage("464", ":" + serv.getName(),
 			 "* :Password incorrect"), serv);
 		DeleteVecElement(serv.getVecPoll(), client.getFd());
@@ -191,16 +173,6 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 		i++;
 	}
 	return (true);
-}
-
-void	PrintArg(std::vector<std::string>& a)
-{
-	std::cout << YELLOW << "----------------------" << std::endl;
-	for (unsigned int i = 0; i < a.size(); i++)
-	{
-		std::cout << "a[" << i << "] = "<< a[i] << " ";
-	}
-	std::cout << "\n----------------------"<< RESET<< std::endl;
 }
 
 bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
