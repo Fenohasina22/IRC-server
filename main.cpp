@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 08:08:03 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/19 08:11:05 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int main(int argc, char **argv)
 {
 	if (argc != 3)
 	{
-		std::cerr << BLUE << RED << "Usage: ./ft_irc <port> <pass>" << RESET << std::endl;
+		std::cerr << BOLD << RED << "Usage: ./ft_irc <port> <pass>" << RESET << std::endl;
 		return (1);
 	}
 	signal(SIGPIPE, SIG_IGN);
