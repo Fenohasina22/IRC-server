@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 07:12:34 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/19 07:51:25 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int main(int argc, char **argv)
 
 	if (!getParams(argv, server))
 	{
-		std::cerr << RED << "Error:Parameter error" << RESET << std::endl;
+		std::cerr << RED << "Error: Parameter error" << RESET << std::endl;
 		return (1);
 	}
 	if (server.Initialize())
