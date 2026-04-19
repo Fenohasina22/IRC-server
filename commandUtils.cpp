@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 08:10:52 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/19 08:21:45 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,6 @@ bool	IsValidNick(std::string nick, Client&  client, Server& serv)
 		i++;
 	}
 	return (true);
-}
-
-void	PrintClients(std::vector<Client>& container)
-{
-	std::cout << " === fds ===" << std::endl;
-	for (unsigned int i = 0; i < container.size(); i++)
-	{
-		std::cout << "["<<container[i].getFd() << "] ";
-	}
-	std::cout << std::endl;
 }
 
 void	CleanUp(Server& serv, int i)
