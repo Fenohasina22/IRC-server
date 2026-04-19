@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 08:35:12 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/19 08:47:33 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 
 	if (!client.getPassState())
 	{
-		client.ConcatenateWBuffer(FormatedMessage("464", ":" + serv.getName(),
-			 "* :Password incorrect"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("451", ":" + serv.getName(),
+		 "* :You have not registered"), serv);
 		client.setPendingClose(true);
 		return (false);
 	}
@@ -79,8 +79,8 @@ bool	userCmd(Client &client, iRCMessage &mess, Server& serv)
 
 	if (!client.getPassState())
 	{
-		client.ConcatenateWBuffer(FormatedMessage("464", ":" + serv.getName(),
-			 "* :Password incorrect"), serv);
+		client.ConcatenateWBuffer(FormatedMessage("451", ":" + serv.getName(),
+		 "* :You have not registered"), serv);
 		client.setPendingClose(true);
 		return (false);
 	}
