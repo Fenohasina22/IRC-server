@@ -6,13 +6,33 @@ IRC (Internet Relay Chat) is a real-time text-based communication protocol where
 
 The objective of this project is to implement a basic IRC server that follows core protocol behaviors. The reference client used for testing and interaction is irssi.
 
-## Installation
+## Instructions
 
 To compile the project, run:
 
 ```bash
 make
 ```
+This command will generate a bunch of object file and the ./ft_irc program
+
+
+```bash
+make clean
+```
+This command will remove the object files created except the program
+
+
+```bash
+make fclean
+```
+This command removes both object files and the program
+
+
+```bash
+make re
+```
+This command removes object files and the program , then recompiles it
+
 
 ## Usage
 
@@ -100,6 +120,7 @@ MODE <#channel> {[+|-]<modes>} [params...]
 ### Documentation
 - [RFC 1459](https://www.rfc-editor.org/rfc/rfc1459)
 - [GeeksforGeeks: Internet Relay Chat (IRC)](https://www.geeksforgeeks.org/computer-networks/internet-relay-chat-irc/)
+- [GeeksforGeeks: Socket programming](https://www.geeksforgeeks.org/c/socket-programming-cc/)
 
 ### AI Usage
 
