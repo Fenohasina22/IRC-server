@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 09:25:38 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/19 16:04:24 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -424,6 +424,7 @@ bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 		else
 			return (false);
 	}
+	// needs to cleanUp (modify delete stuff to by fd to be more efficient)
 	std::cout << GREEN  << "Bye " << client.getNick() << RESET << std::endl;
 	return (true);
 }

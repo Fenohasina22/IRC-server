@@ -86,20 +86,20 @@ Mark ✔ only if all 3 are satisfied.
     - [x] → Expected: `403`
     - [x] → Verify: no channel created
 
-- [ ] **Invite-only (+i)**
-    - [ ] → Enable +i
-    - [ ] → Expected: join blocked
-    - [ ] → Verify: `473`
+- [x] **Invite-only (+i)**
+    - [x] → Enable +i
+    - [x] → Expected: join blocked
+    - [x] → Verify: `473`
 
-- [ ] **Key (+k)**
-    - [ ] → Wrong key
-    - [ ] → Expected: reject
-    - [ ] → Verify: `475`
+- [x] **Key (+k)**
+    - [x] → Wrong key
+    - [x] → Expected: reject
+    - [x] → Verify: `475`
 
-- [ ] **Limit (+l)**
-    - [ ] → Exceed limit
-    - [ ] → Expected: reject
-    - [ ] → Verify: `471`
+- [x] **Limit (+l)**
+    - [x] → Exceed limit
+    - [x] → Expected: reject
+    - [x] → Verify: `471`
 
 
 ---
