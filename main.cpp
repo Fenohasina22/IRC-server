@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 08:11:05 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/19 08:40:31 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,10 @@ void	SendtoCorrectClient(int i, Server& serv)
 		send(serv.getVecPoll()[i].fd, (*c).getWriteBuffer().c_str(), (*c).getWriteBuffer().size(), 0);
 		(*c).setWriteBuffer("");
 		serv.getVecPoll()[i].events &= ~POLLOUT;
+		if ((*c).getWriteBuffer().empty() && (*c).getPendingClose())
+		{
+			CleanUp(serv, i);
+		}
 	}
 }
 

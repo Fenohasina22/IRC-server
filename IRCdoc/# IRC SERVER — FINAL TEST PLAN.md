@@ -15,56 +15,56 @@ Mark ✔ only if all 3 are satisfied.
 
 # ⚙️ PREPARATION
 
-- [ ] **Build server**
+- [x] **Build server**
     - [x] → Run `make`
     - [x] → Expected: no errors
     - [x] → Verify: binary exists
 
-- [ ] **Check port availability**
-    - [ ] → Use port `6667`
-    - [ ] → Expected: free
-    - [ ] → Verify: server binds successfully
-    - [ ] ->verify min and max ports 
+- [x] **Check port availability**
+    - [x] → Use port `6667`
+    - [x] → Expected: free
+    - [x] → Verify: server binds successfully
+    - [x] ->verify min and max ports 
 
 
 ---
 
 # 🚀 LIFECYCLE
 
-- [ ] **Start server**
-    - [ ] → Launch binary
-    - [ ] → Expected: listening
-    - [ ] → Verify: can connect via `nc`
+- [x] **Start server**
+    - [x] → Launch binary
+    - [x] → Expected: listening
+    - [x] → Verify: can connect via `nc`
 
-- [ ] **Graceful shutdown**
-    - [ ] → Send `SIGINT`
-    - [ ] → Expected: clean exit
-    - [ ] → Verify: port freed
+- [x] **Graceful shutdown**
+    - [x] → Send `SIGINT`
+    - [x] → Expected: clean exit
+    - [x] → Verify: port freed
 
-- [ ] **Restart immediately**
-    - [ ] → Restart server
-    - [ ] → Expected: no bind error
-    - [ ] → Verify: connects again
+- [x] **Restart immediately**
+    - [x] → Restart server
+    - [x] → Expected: no bind error
+    - [x] → Verify: connects again
 
 
 ---
 
 # 🔌 CONNECTION & REGISTRATION
 
-- [ ] **Valid registration**
-    - [ ] → Send `PASS`, `NICK`, `USER`
-    - [ ] → Expected: `001–004`
-    - [ ] → Verify: correct order + format
+- [x] **Valid registration**
+    - [x] → Send `PASS`, `NICK`, `USER`
+    - [x] → Expected: `001–004`
+    - [x] → Verify: correct order + format
 
-- [ ] **Missing USER/NICK**
-    - [ ] → Omit one
-    - [ ] → Expected: no welcome
-    - [ ] → Verify: no `001`
+- [x] **Missing USER/NICK**
+    - [x] → Omit one
+    - [x] → Expected: no welcome
+    - [x] → Verify: no `001`
 
-- [ ] **Duplicate nick**
-    - [ ] → Two clients same nick
-    - [ ] → Expected: `433`
-    - [ ] → Verify: second rejected
+- [x] **Duplicate nick**
+    - [x] → Two clients same nick
+    - [x] → Expected: `433`
+    - [x] → Verify: second rejected
 
 
 ---

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:01:25 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 19:44:04 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/19 08:39:23 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,19 @@ Client::Client()
 , _userIsRegistered(false)
 , _readBuffer("")
 , _writeBuffer("")
+, _pendingClose(false)
 
 {
+}
+
+bool	Client::getPendingClose() const
+{
+	return this->_pendingClose;
+}
+
+void	Client::setPendingClose(bool state)
+{
+	this->_pendingClose = state;
 }
 
 Client::~Client()
@@ -226,6 +237,7 @@ Client&	Client::operator=(const Client& c)
         this->_readBuffer = c._readBuffer;
         this->_writeBuffer = c._writeBuffer;
         this->_joinedChannels = c._joinedChannels;
+		this->_pendingClose = c._pendingClose;
     }
     return (*this);
 }

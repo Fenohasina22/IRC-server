@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 07:10:52 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/19 08:35:12 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,7 @@ bool	passCmd(Client &client, iRCMessage &mess, Server &serv, bool &validPass)
     {
 		client.ConcatenateWBuffer(FormatedMessage("464", ":" + serv.getName(),
 			 "* :Password incorrect"), serv);
-		DeleteVecElement(serv.getVecPoll(), client.getFd());
-		DeleteVecElementClient(serv.getAllClients(), client.getFd());
-		close (client.getFd());
+		client.setPendingClose(true);
 		return (false);
 	}
     client.setPassState(true);
@@ -49,9 +47,7 @@ bool	nickCmd(Client &client, iRCMessage &mess, Server &serv)
 	{
 		client.ConcatenateWBuffer(FormatedMessage("464", ":" + serv.getName(),
 			 "* :Password incorrect"), serv);
-		DeleteVecElement(serv.getVecPoll(), client.getFd());
-		DeleteVecElementClient(serv.getAllClients(), client.getFd());
-		close (client.getFd());
+		client.setPendingClose(true);
 		return (false);
 	}
 	if (mess.args.empty())
@@ -85,9 +81,7 @@ bool	userCmd(Client &client, iRCMessage &mess, Server& serv)
 	{
 		client.ConcatenateWBuffer(FormatedMessage("464", ":" + serv.getName(),
 			 "* :Password incorrect"), serv);
-		DeleteVecElement(serv.getVecPoll(), client.getFd());
-		DeleteVecElementClient(serv.getAllClients(), client.getFd());
-		close (client.getFd());
+		client.setPendingClose(true);
 		return (false);
 	}
 	if (client.isRegistered())

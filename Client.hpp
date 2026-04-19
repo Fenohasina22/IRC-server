@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:00:12 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:53:01 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/19 08:34:59 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,14 @@ class Client
 		std::string				_writeBuffer;
 		std::set<std::string>	_joinedChannels;
 		struct sockaddr_in		_clientinfos;
+		bool					_pendingClose;
 
 	public:
 		int 				getFd() const;
 		std::string			getNick() const;
 		std::string			getUser() const;
+		bool				getPendingClose() const;
+		void				setPendingClose(bool state);
 		std::string			getReal() const;
 		std::string			getWriteBuffer() const;
 		std::string			getReadBuffer() const;
