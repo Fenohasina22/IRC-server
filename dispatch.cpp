@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 09:57:17 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 19:38:02 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/19 07:11:44 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv, bool &validPass)
 {
-	PrintArg(mess.args);
-	std::cout << RED << "X--" << mess.ogMess << "--X" << RESET << std::endl;
 	if (!client.isRegistered() && mess.cmd != CAP
 	&& mess.cmd != PASS && mess.cmd != NICK && mess.cmd != USER)
 	{
@@ -25,10 +23,8 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv, bool &valid
 	}
 	if (!isMessValid(mess))
 	{
-		std::cout << "0_0" << std::endl;
 		return ;
 	}
-	std::cout << BLUE << mess.cmd << RESET << std::endl;
 	switch (mess.cmd)
 	{
 		case (CAP):
@@ -73,7 +69,7 @@ void	dispatchCommand(iRCMessage &mess, Client &client, Server &serv, bool &valid
 		default:
 			client.ConcatenateWBuffer(FormatedMessage("421", ":" + serv.getName(),
 				 client.getNick() + " " + mess.strCmd + " :Unknown command"), serv);
-			std::cout << RED << "UNKNOWN COMMAND" << RESET << std::endl;
+			std::cout << RED << "Unknown command" << RESET << std::endl;
 			break;
 	}
 }

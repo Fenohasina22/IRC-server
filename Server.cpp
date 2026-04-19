@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/18 19:43:35 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/19 07:13:16 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 	tmp.fd = accept(this->_sockfd, (sockaddr *)&clientinfo, &csize);
 	tmp.events = POLLIN;
 	tmp.revents = 0;
-	std::cout << "New user connected from port : " << clientinfo.sin_port << std::endl;
+	std::cout << "New user is trying to connect from port : " << ntohs(clientinfo.sin_port) << std::endl;
 	this->_vecPoll.push_back(tmp);
 	client.setFd(tmp.fd);
 	client.setClientInfos(clientinfo);
@@ -297,7 +297,7 @@ void	Server::Processmessage (int i)
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
 	if (retval == -1 || retval == 0)
 	{
-		std::cout << GREEN << "Client disconnected" << RESET << std::endl;
+		std::cout << GREEN << "Client disconnected sucessfully" << RESET << std::endl;
 		CleanUp(*this, i);
 		return ;
 	}
