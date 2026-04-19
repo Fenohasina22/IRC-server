@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 07:09:46 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/19 07:59:47 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool	IsValidNick(std::string nick, Client&  client, Server& serv)
 		pos = nick.find(a[i]);
 		if (pos != std::string::npos)
 		{
-			std::cout << RED << "Invalid nickname was provided, please try again" << RESET << std::endl;
+			std::cout << BLUE << RED << "Invalid nickname was provided, please try again" << RESET << std::endl;
 			client.ConcatenateWBuffer(FormatedMessage("432", ":" + serv.getName(),
 				 "* " + nick + " :Erroneous nickname" ), serv);
 			return (false);

@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/19 07:13:16 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/19 08:00:59 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,22 +93,22 @@ int	Server::Initialize()
 	opt = 1;
 	if (setsockopt(this->_sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
 	{
-		std::cout << RED << "Setsockopt error" << RESET << std::endl;
+		std::cout << BLUE << RED << "Setsockopt error" << RESET << std::endl;
 		return (1);
 	}
 	if (bind(this->_sockfd, (struct sockaddr *)&(this->_addr), sizeof(this->_addr)) == 0)
-		std::cout << GREEN << "Binding successfull" << RESET << std::endl;
+		std::cout << BLUE << GREEN << "Binding successfull" << RESET << std::endl;
 	else
 	{
-		std::cout << RED <<"Binding failed" << RESET << std::endl;
+		std::cout << BLUE << RED <<"Binding failed" << RESET << std::endl;
 		close(this->_sockfd);
 		return (1);
 	}
 	if (listen(this->_sockfd, SOMAXCONN) == 0)
-		std::cout << GREEN << "Listen successful" << RESET <<  std::endl;
+		std::cout << BLUE << GREEN << "Listen successful" << RESET <<  std::endl;
 	else
 	{
-		std::cout << RED << "Listen failed" << RESET << std::endl;
+		std::cout << BLUE << RED << "Listen failed" << RESET << std::endl;
 		close (this->_sockfd);
 		return (1);
 	}
@@ -267,7 +267,6 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 	recvBuf = cl.getReadBuffer();
 	count = countOccurrences(recvBuf, CRLF);
 	messages = splitCRLF(recvBuf);
-	std::cout << "PAE\n count = "<< count << std::endl;
 	for (size_t m = 0; m < count; ++m)
 	{
 		if (!validPass)
@@ -276,7 +275,7 @@ int		ParseAndExecute(int i, char *buff, Client& cl, Server& server)
 			c = &(server.findTrueClient(server.getVecPoll()[i].fd, foundClnt));
 		if (!foundClnt)
 		{
-			std::cout << RED << "Client couldn't connect (incorrect password)" << RESET << std::endl;
+			std::cout << BLUE << RED << "Client couldn't connect (incorrect password)" << RESET << std::endl;
 			return (1);
 		}
 		parsedMess = parseMessage(messages[m] + CRLF);
@@ -297,7 +296,7 @@ void	Server::Processmessage (int i)
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
 	if (retval == -1 || retval == 0)
 	{
-		std::cout << GREEN << "Client disconnected sucessfully" << RESET << std::endl;
+		std::cout << BLUE << GREEN << "Client disconnected sucessfully" << RESET << std::endl;
 		CleanUp(*this, i);
 		return ;
 	}

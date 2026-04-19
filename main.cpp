@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 07:12:34 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/19 08:00:28 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,30 @@
 
 std::vector<int>	AllFds;
 bool				signalCaught = false;
+
+void ircIntro() {
+    std::cout << BLUE << "\n"
+         << "   ███████╗███████╗███████╗███╗   ██╗\n"
+         << "   ██╔════╝██╔════╝██╔════╝████╗  ██║\n"
+         << "   ███████╗█████╗  █████╗  ██╔██╗ ██║\n"
+         << "   ╚════██║██╔══╝  ██╔══╝  ██║╚██╗██║\n"
+         << "   ███████║███████╗███████╗██║ ╚████║\n"
+         << "   ╚══════╝╚══════╝╚══════╝╚═╝  ╚═══╝\n" << RESET;
+
+    std::cout << BLUE << "\n"
+         << "     \n"
+         << "	  █▓▒░ seen.nowhere ░▒▓█\n"
+         << "  \n"
+         << "   " << BLUE << "Internet Relay Chat Server in C/C++\n"
+         << "  \n"
+         << "   " << GREEN << "Status: ONLINE" << RESET << "\n\n";
+
+    std::cout << BLUE << "╔══════════════════════════════════════╗\n"
+         << "║ Server: " << GREEN << "seen.nowhere                 " << BLUE << "║\n"
+         << "║ Devs: " << GREEN << "fsamy-an, mratsima             " << BLUE << "║\n"
+         << "║ Address family: " << GREEN << "IPv4                 " << BLUE << "║\n"
+         << "╚══════════════════════════════════════╝" << RESET << "\n\n";
+}
 
 bool	getParams(char **argv, Server &serv)
 {
@@ -93,12 +117,12 @@ int main(int argc, char **argv)
 {
 	if (argc != 3)
 	{
-		std::cerr << RED << "Usage: ./ft_irc <port> <pass>" << RESET << std::endl;
+		std::cerr << BLUE << RED << "Usage: ./ft_irc <port> <pass>" << RESET << std::endl;
 		return (1);
 	}
 	signal(SIGPIPE, SIG_IGN);
 	signal(SIGINT, signalHandler);
-
+	ircIntro();
 	Server				server;
 	sockaddr_in			clientinfo;
 	pollfd				sock;
