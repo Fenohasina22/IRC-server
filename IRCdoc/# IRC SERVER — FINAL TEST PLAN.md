@@ -24,6 +24,7 @@ Mark ✔ only if all 3 are satisfied.
     - [ ] → Use port `6667`
     - [ ] → Expected: free
     - [ ] → Verify: server binds successfully
+    - [ ] ->verify min and max ports 
 
 
 ---

@@ -21,6 +21,11 @@ To run the IRC server:
 ```bash
 ./ft_irc <port 1024-65535> <password>
 ```
+
+Port requirements
+
+- Use ports `1024–65535` (ports <1024 are privileged and require root; 65535 is the protocol maximum).
+
 ## Commands
 
 | Command  | Description                                      |
