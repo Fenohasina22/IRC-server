@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:40 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:55:02 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/19 07:16:26 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,6 @@
 # define BLUE    "\033[1;36m"
 # define RESET   "\033[0m"
 
-// CAP — negotiates client/server capabilities before full registration
-// PASS — provides server password for authentication
-// NICK — sets or changes the client’s nickname
-// USER — supplies username and real name to complete registration
-// PING — checks connection liveness (expects PONG reply)
-// KICK — forcibly removes a user from a channel
-// TOPIC — sets or retrieves the channel’s topic
-// MODE — changes or queries user/channel modes (permissions and flags)
-// JOIN — makes a user enter a channel (creates it if needed)
-// PART — makes a user leave a channel
-// PRIVMSG — sends a message to a user or channel
-// INVITE — invites a user to join a channel
-// QUIT — disconnects a client from the server with a message
-// DISCONNECT — non-standard command to forcibly close a connection (server-specific)
 typedef enum	command
 {
 	CAP     ,

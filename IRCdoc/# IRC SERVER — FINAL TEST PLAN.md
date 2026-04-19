@@ -16,14 +16,15 @@ Mark ✔ only if all 3 are satisfied.
 # ⚙️ PREPARATION
 
 - [ ] **Build server**
-    - [ ] → Run `make`
-    - [ ] → Expected: no errors
-    - [ ] → Verify: binary exists
+    - [x] → Run `make`
+    - [x] → Expected: no errors
+    - [x] → Verify: binary exists
 
 - [ ] **Check port availability**
     - [ ] → Use port `6667`
     - [ ] → Expected: free
     - [ ] → Verify: server binds successfully
+    - [ ] ->verify min and max ports 
 
 
 ---
