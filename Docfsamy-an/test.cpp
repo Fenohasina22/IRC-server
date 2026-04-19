@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 16:58:57 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/19 10:30:16 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 	// sleep(1000000);
 	if (listen(fd, 10) == 0) // 10 personnes en file d'attente, listen cre une file d'attente d'une taille 10
 	{
-		std::cout << "Listen successful"<<  std::endl;
+		std::cout << "Listen successfull"<<  std::endl;
 	}
 	else
 	{

@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/19 08:11:14 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/19 14:21:16 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int	Server::Initialize()
 		return (1);
 	}
 	if (listen(this->_sockfd, SOMAXCONN) == 0)
-		std::cout << BOLD << GREEN << "Listen successful" << RESET <<  std::endl;
+		std::cout << BOLD << GREEN << "Listen successfull" << RESET <<  std::endl;
 	else
 	{
 		std::cout << BOLD << RED << "Listen failed" << RESET << std::endl;
