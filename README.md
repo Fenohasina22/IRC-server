@@ -46,6 +46,55 @@ Port requirements
 
 - Use ports `1024–65535` (ports <1024 are privileged and require root; 65535 is the protocol maximum).
 
+
+## Basic Usage Example
+
+Build and run the server:
+
+```bash
+make
+./ft_irc 6667 mySecretPassword
+```
+
+Quick manual test with `netcat` (each command on its own line):
+
+```bash
+nc 127.0.0.1 6667
+PASS mySecretPassword
+NICK mynick
+USER myuser 0 * :Real Name
+JOIN #test
+PRIVMSG #test :Hello from nc
+QUIT :Bye
+```
+
+Connect with `irssi` (interactive):
+
+```
+/connect 127.0.0.1 6667 mySecretPassword
+# then use /nick, /join, /msg inside irssi
+```
+
+## Registration Sequence
+
+Clients must complete registration before they can fully interact with the server. Recommended sequence (each line terminated with CRLF):
+
+```text
+# optional: capability negotiation
+CAP LS
+
+# server password (server binary requires a password argument)
+PASS <password>
+
+# choose a nickname
+NICK <nick>
+
+# provide username and real name
+USER <username> 0 * :Real Name
+```
+
+If the server was started with a password, the client must send `PASS` with the same password before or during registration.
+
 ## Commands
 
 | Command  | Description                                      |
@@ -66,37 +115,6 @@ Port requirements
 | QUIT     | Disconnects a client from the server with a message |
 | DISCONNECT | Non-standard command to forcibly close a connection (server-specific) |
 
-## Numeric Replies
-
-| Code | Name              | Description                          |
-|------|-------------------|--------------------------------------|
-| 001  | RPL_WELCOME      | Registration complete                |
-| 002  | RPL_YOURHOST     | Server info                          |
-| 003  | RPL_CREATED      | Server creation date                 |
-| 004  | RPL_MYINFO       | Server capabilities                  |
-| 331  | RPL_NOTOPIC      | No topic set                         |
-| 332  | RPL_TOPIC        | Channel topic                        |
-| 341  | RPL_INVITING     | Invite sent                          |
-| 353  | RPL_NAMREPLY     | List of names                        |
-| 366  | RPL_ENDOFNAMES   | End of names list                    |
-| 401  | ERR_NOSUCHNICK   | Nick not found                       |
-| 403  | ERR_NOSUCHCHANNEL| Channel not found                    |
-| 421  | ERR_UNKNOWNCOMMAND| Bad command                         |
-| 431  | ERR_NONICKNAMEGIVEN| Missing nick                       |
-| 432  | ERR_ERRONEUSNICKNAME| Invalid nick                      |
-| 433  | ERR_NICKNAMEINUSE| Nick taken                          |
-| 441  | ERR_USERNOTINCHANNEL | User not in channel                  |
-| 442  | ERR_NOTONCHANNEL | Not in channel                       |
-| 443  | ERR_USERONCHANNEL| Already in channel                  |
-| 451  | ERR_NOTREGISTERED| Not registered                      |
-| 461  | ERR_NEEDMOREPARAMS| Missing parameters                  |
-| 462  | ERR_ALREADYREGISTRED | Already registered                   |
-| 464  | ERR_PASSWDMISMATCH   | Password incorrect                   |
-| 471  | ERR_CHANNELISFULL| Channel limit reached               |
-| 473  | ERR_INVITEONLYCHAN| Invite only channel                |
-| 475  | ERR_BADCHANNELKEY| Bad channel key                     |
-| 482  | ERR_CHANOPRIVSNEEDED| Channel operator privileges needed |
-
 ## Supported Modes
 
 Modes are changed with the `MODE` command. Syntax (channel modes):
@@ -114,6 +132,19 @@ MODE <#channel> {[+|-]<modes>} [params...]
 | k    | Channel  | Channel requires a password          | `MODE #channel +k secretpass` / `MODE #channel -k` |
 | l    | Channel  | User limit on channel                | `MODE #channel +l 50` / `MODE #channel -l`    |
 | o    | Channel  | Channel operator status              | `MODE #channel +o nick` / `MODE #channel -o nick` |
+
+## Behavior & Limits
+
+- Password: the server binary requires a password argument; clients should send `PASS <password>` during registration if the server enforces it.
+- Message length: the IRC protocol limits messages to 512 bytes including CRLF; the server aims to follow this—check `parser.cpp` for exact enforcement.
+- Nicknames and channels: channel names typically start with `#`. Exact nickname and channel length/character limits are implemented in the parser — consult `parser.cpp` and `Client.cpp` for specifics.
+- Modes: channel modes `i`, `t`, `k`, `l`, `o` are supported; mode parameters (for `k` and `l`) are consumed left-to-right.
+- Concurrency: the server uses a single process with non-blocking sockets/select or poll (see `Server.cpp`) — stress-test with multiple clients if needed.
+
+## Stopping the Server
+
+- Ctrl+C (SIGINT): stop the server cleanly from the terminal where it was started.
+- `DISCONNECT`: a non-standard, server-specific command that may be implemented to forcibly close a connection; behavior depends on server code and privileges.
 
 ## Resources
 
