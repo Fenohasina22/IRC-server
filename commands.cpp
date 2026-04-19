@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 09:02:24 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/19 09:25:38 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ bool	pongCmd(Client &client, iRCMessage &mess, Server& serv)
 	else
 		pongstr = "PONG " + mess.args[0] + CRLF;
 	client.ConcatenateWBuffer(pongstr, serv);
+	std::cout << GREEN << "PING handled for fd:" << client.getFd() << RESET << std::endl;
 	return (true);
 }
 
@@ -201,6 +202,7 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 					return (false);
 				}
 				serv.getAllChans().push_back(Channel(vec[i], ""));
+				std::cout << GREEN << "Channel created: " << vec[i] << RESET << std::endl;
 				destChan = &(serv.getAllChans().back());
 			}
 			else
@@ -208,6 +210,7 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 			if (!checkChanRestrictions(client, serv, mess, destChan))
 				return (false);
 			destChan->addClient(&client);
+			std::cout << GREEN << client.getNick() << " joined " << destChan->getName() << RESET << std::endl;
 			if (destChan->getMembers().size() == 1)
 				destChan->addOperator(&client);
 			broadcastJoin(broadcastMess, client, serv, destChan);
@@ -253,11 +256,15 @@ bool	partCmd(Client &client, iRCMessage &mess, Server &serv)
 	if (mess.args.size() > 1)
 		broadcastMess += mess.args[1];
 	broadcastMess += CRLF;
+	std::string reason = (mess.args.size() > 1) ? mess.args[1] : "";
+	std::cout << GREEN << "PART: " << client.getNick() << " -> " << destChan.getName()
+		<< (reason.empty() ? "" : std::string(" reason: ") + reason) << RESET << std::endl;
 	client.ConcatenateWBuffer(broadcastMess, serv);
 	serv.broadcast(broadcastMess, client, destChan, serv);
-	destChan.removeClient(&client);
-	if (destChan.getMembers().size() == 0)
-		serv.deleteChan(mess.args[0]);
+		destChan.removeClient(&client);
+		std::cout << GREEN << client.getNick() << " parted " << destChan.getName() << RESET << std::endl;
+		if (destChan.getMembers().size() == 0)
+			serv.deleteChan(mess.args[0]);
 	return (true);
 }
 
@@ -314,9 +321,10 @@ bool	kickCmd(Client &client,iRCMessage &mess,Server &serv)
 	if (!checkChannelAccess(foundChan, client, mess, serv, destCli, destChan, foundCli))
 		return (false);
 	broadCastKick(broadcastMess, client, destCli, destChan, mess, serv);
-	destChan.removeClient(&destCli);
-	if (destChan.getMembers().size() == 0)
-		serv.deleteChan(mess.args[0]);
+		destChan.removeClient(&destCli);
+		std::cout << GREEN << client.getNick() << " kicked " << destCli.getNick() << " from " << destChan.getName() << RESET << std::endl;
+		if (destChan.getMembers().size() == 0)
+			serv.deleteChan(mess.args[0]);
 	return (true);
 }
 
@@ -350,8 +358,9 @@ bool	inviteCmd(Client &client,iRCMessage &mess,Server &serv)
 	invitedCli.ConcatenateWBuffer(invitationMess, serv);
 	senderCli.ConcatenateWBuffer(FormatedMessage("341", ":" + serv.getName(),
 		 confirmationMess), serv);
-	destChan.addInvited(&invitedCli);
-	return (true);
+		destChan.addInvited(&invitedCli);
+		std::cout << GREEN << client.getNick() << " invited " << invitedCli.getNick() << " to " << destChan.getName() << RESET << std::endl;
+		return (true);
 }
 
 bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
@@ -362,6 +371,7 @@ bool	modeCmd(Client &client,iRCMessage &mess,Server &serv)
 			 client.getNick() + " MODE :Not enough parameters"), serv);
 		return (false);
 	}
+
 
 	bool						foundChan	= false;
 	Channel 					&destChan	= serv.findChan(mess.args[0], foundChan);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commandUtils.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 08:21:45 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/19 09:21:54 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void 	tryRegistration(Client &client, Server& serv)
 		std::string all = msg001 + msg002 + msg003 + msg004;
 
 		client.ConcatenateWBuffer(all, serv);
+			std::cout << GREEN << "Registered: " << client.getNick() << " (fd:" << client.getFd() << ")" << RESET << std::endl;
 	}
 }
 
@@ -634,6 +635,7 @@ void	broadcastTopicChange(
 	broadcastMess += CRLF;
 	client.ConcatenateWBuffer(broadcastMess, serv);
 	serv.broadcast(broadcastMess, client, destChan, serv);
+	std::cout << GREEN << client.getNick() << " changed topic on " << destChan.getName() << " to: " << destChan.getTopic() << RESET << std::endl;
 }
 
 void	updateTopic(
@@ -715,6 +717,7 @@ void	broadCastKick(
 	broadcastMess += CRLF;
 	client.ConcatenateWBuffer(broadcastMess, serv);
 	serv.broadcast(broadcastMess, client, destChan, serv);
+	std::cout << GREEN << client.getNick() << " KICK -> " << destCli.getNick() << " in " << destChan.getName() << RESET << std::endl;
 }
 
 bool	validateChannelModeAccess(Server &serv, Client &client, iRCMessage &mess)
@@ -810,6 +813,7 @@ void	broacastModeChange(Client &client, Channel &destChan, const std::string &fi
 
 	serv.broadcast(broadcastMess, client, destChan, serv);
 	client.ConcatenateWBuffer(broadcastMess, serv);
+	std::cout << GREEN << client.getNick() << " MODE " << destChan.getName() << " " << finalModeStr << RESET << std::endl;
 }
 
 bool	validateInvite(

@@ -71,20 +71,20 @@ Mark ✔ only if all 3 are satisfied.
 
 # 🚪 JOIN
 
-- [ ] **Create channel**
-    - [ ] → `/join #chan`
-    - [ ] → Expected: JOIN - [ ] → 331/332 - [ ] → 353 - [ ] → 366
-    - [ ] → Verify: correct order
+- [x] **Create channel**
+    - [x] → `/join #chan`
+    - [x] → Expected: JOIN - [ ] → 331/332 - [ ] → 353 - [ ] → 366
+    - [x] → Verify: correct order
 
-- [ ] **Join existing channel**
-    - [ ] → 2 clients join
-    - [ ] → Expected: broadcast JOIN
-    - [ ] → Verify: both see each other
+- [x] **Join existing channel**
+    - [x] → 2 clients join
+    - [x] → Expected: broadcast JOIN
+    - [x] → Verify: both see each other
 
-- [ ] **Invalid channel**
-    - [ ] → `JOIN chan`
-    - [ ] → Expected: `403`
-    - [ ] → Verify: no channel created
+- [x] **Invalid channel**
+    - [x] → `JOIN chan`
+    - [x] → Expected: `403`
+    - [x] → Verify: no channel created
 
 - [ ] **Invite-only (+i)**
     - [ ] → Enable +i
