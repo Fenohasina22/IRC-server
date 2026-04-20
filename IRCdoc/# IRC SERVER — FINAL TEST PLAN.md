@@ -150,32 +150,32 @@ Mark ✔ only if all 3 are satisfied.
 
 ## Query
 
-- [ ] **Get modes**
-    - [ ] → `MODE #chan`
-    - [ ] → Expected: `324 #chan +modes`
-    - [ ] → Verify: order = `itkl`, empty = `+`
+- [x] **Get modes**
+    - [x] → `MODE #chan`
+    - [x] → Expected: `324 #chan +modes`
+    - [x] → Verify: order = `itkl`, empty = `+`
 
 
 ---
 
 ## Change
 
-- [ ] **Enable mode**
-    - [ ] → `MODE #chan +i`
-    - [ ] → Expected: broadcast
-    - [ ] → Verify: only `+i` sent
+- [x] **Enable mode**
+    - [x] → `MODE #chan +i`
+    - [x] → Expected: broadcast
+    - [x] → Verify: only `+i` sent
 
-- [ ] **Disable mode**
-    - [ ] → `MODE #chan -i`
-    - [ ] → Expected: broadcast
+- [x] **Disable mode**
+    - [x] → `MODE #chan -i`
+    - [x] → Expected: broadcast
 
-- [ ] **Invalid mode**
-    - [ ] → `MODE #chan +z`
-    - [ ] → Expected: `472`
+- [x] **Invalid mode**
+    - [x] → `MODE #chan +z` 
+    - [x] → Expected: `472`
 
-- [ ] **Missing param**
-    - [ ] → `MODE #chan +k`
-    - [ ] → Expected: `461`
+- [x] **Missing param**
+    - [x] → `MODE #chan +k`
+    - [x] → Expected: `461`
 
 
 ---
