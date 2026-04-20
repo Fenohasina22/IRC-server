@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 09:25:38 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/19 16:04:24 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -408,6 +408,10 @@ bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 	inet_ntop(AF_INET, &tmp.sin_addr, hostname, INET_ADDRSTRLEN);
 	msg += ":" + client.getNick() + "!" + client.getUser() + "@" + hostname;
 	msg += " QUIT ";
+	if (mess.args.empty())
+	{
+		mess.args.push_back("leaving");
+	}
 	msg += mess.args[0];
 	msg += CRLF;
 	joinedChannel = client.getJoinedChannels();
@@ -424,6 +428,9 @@ bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 		else
 			return (false);
 	}
+	
+	// needs to cleanUp (modify delete stuff to by fd to be more efficient)
+	CleanUp(serv, client.getFd());
 	std::cout << GREEN  << "Bye " << client.getNick() << RESET << std::endl;
 	return (true);
 }

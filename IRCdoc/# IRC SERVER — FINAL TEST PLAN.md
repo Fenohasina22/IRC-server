@@ -86,61 +86,62 @@ Mark ✔ only if all 3 are satisfied.
     - [x] → Expected: `403`
     - [x] → Verify: no channel created
 
-- [ ] **Invite-only (+i)**
-    - [ ] → Enable +i
-    - [ ] → Expected: join blocked
-    - [ ] → Verify: `473`
+- [x] **Invite-only (+i)**
+    - [x] → Enable +i
+    - [x] → Expected: join blocked
+    - [x] → Verify: `473`
 
-- [ ] **Key (+k)**
-    - [ ] → Wrong key
-    - [ ] → Expected: reject
-    - [ ] → Verify: `475`
+- [x] **Key (+k)**
+    - [x] → Wrong key
+    - [x] → Expected: reject
+    - [x] → Verify: `475`
 
-- [ ] **Limit (+l)**
-    - [ ] → Exceed limit
-    - [ ] → Expected: reject
-    - [ ] → Verify: `471`
+- [x] **Limit (+l)**
+    - [x] → Exceed limit
+    - [x] → Expected: reject
+    - [x] → Verify: `471`
 
 
 ---
 
 # 💬 PRIVMSG
 
-- [ ] **User message**
-    - [ ] → `PRIVMSG nick :msg`
-    - [ ] → Expected: received
-    - [ ] → Verify: correct prefix
+- [x] **User message**
+    - [x] → `PRIVMSG nick :msg`
+    - [x] → Expected: received
+    - [x] → Verify: correct prefix
 
 - [ ] **Channel message**
-    - [ ] → `PRIVMSG #chan :msg`
-    - [ ] → Expected: broadcast
-    - [ ] → Verify: all members receive
+    - [ ] → `PRIVMSG #chan :msg` (someone not member of a channel can send message in it but can't receive is it normal)
+    - [x] → Expected: broadcast
+    - [x] → Verify: all members receive
 
 - [ ] **Missing target**
-    - [ ] → `PRIVMSG`
-    - [ ] → Expected: `411`
+    - [?] → `PRIVMSG`
+    - [?] → Expected: `411` (there is 461 and no 411 in the code)
 
 - [ ] **Missing message**
-    - [ ] → `PRIVMSG nick`
-    - [ ] → Expected: `412`
+    - [?] → `PRIVMSG nick`
+    - [?] → Expected: `412` (there is 461 and no 412 in the code)
+
 
 
 ---
 
 # 🏷️ TOPIC
 
-- [ ] **Set topic**
-    - [ ] → `TOPIC #chan :text`
-    - [ ] → Expected: broadcast
-    - [ ] → Verify: all updated
+- [x] **Set topic**
+    - [x] → `TOPIC #chan :text`
+    - [x] → Expected: broadcast
+    - [x] → Verify: all updated
 
-- [ ] **Get topic**
-    - [ ] → `TOPIC #chan`
-    - [ ] → Expected: `332` or `331`
+- [x] **Get topic**
+    - [x] → `TOPIC #chan`
+    - [x] → Expected: `332` or `331`
 
-- [ ] **Restricted (+t)**
-    - [ ] → non-op sets topic
-    - [ ] → Expected: `482`
+- [x] **Restricted (+t)**
+    - [x] → non-op sets topic
+    - [x] → Expected: `482`
 
 
 ---

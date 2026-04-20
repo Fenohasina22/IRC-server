@@ -51,39 +51,39 @@ Mark ✔ only if all 3 are satisfied.
 # 🔌 CONNECTION & REGISTRATION
 
 - [ ] **Valid registration**
-    - [ ] → Send `PASS`, `NICK`, `USER`
-    - [ ] → Expected: `001–004`
-    - [ ] → Verify: correct order + format
+    - [x] → Send `PASS`, `NICK`, `USER`
+    - [x] → Expected: `001–004`
+    - [ ] → Verify: correct order + format (There is broken pipe after some errors then valid)
 
-- [ ] **Missing USER/NICK**
-    - [ ] → Omit one
-    - [ ] → Expected: no welcome
-    - [ ] → Verify: no `001`
+- [x] **Missing USER/NICK**
+    - [x] → Omit one
+    - [x] → Expected: no welcome
+    - [x] → Verify: no `001`
 
-- [ ] **Duplicate nick**
-    - [ ] → Two clients same nick
-    - [ ] → Expected: `433`
-    - [ ] → Verify: second rejected
+- [x] **Duplicate nick**
+    - [x] → Two clients same nick
+    - [x] → Expected: `433`
+    - [x] → Verify: second rejected
 
 
 ---
 
 # 🚪 JOIN
 
-- [ ] **Create channel**
-    - [ ] → `/join #chan`
-    - [ ] → Expected: JOIN - [ ] → 331/332 - [ ] → 353 - [ ] → 366
-    - [ ] → Verify: correct order
+- [x] **Create channel**
+    - [x] → `/join #chan`
+    - [x] → Expected: JOIN - [ ] → 331/332 - [ ] → 353 - [ ] → 366
+    - [x] → Verify: correct order
 
-- [ ] **Join existing channel**
-    - [ ] → 2 clients join
-    - [ ] → Expected: broadcast JOIN
-    - [ ] → Verify: both see each other
+- [x] **Join existing channel**
+    - [x] → 2 clients join
+    - [x] → Expected: broadcast JOIN
+    - [x] → Verify: both see each other
 
-- [ ] **Invalid channel**
-    - [ ] → `JOIN chan`
-    - [ ] → Expected: `403`
-    - [ ] → Verify: no channel created
+- [x] **Invalid channel**
+    - [x] → `JOIN chan` (in irssi, creates #chan)
+    - [x] → Expected: `403`
+    - [x] → Verify: no channel created
 
 - [ ] **Invite-only (+i)**
     - [ ] → Enable +i

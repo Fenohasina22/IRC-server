@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/19 09:31:05 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/19 14:26:41 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int	Server::Initialize()
 		return (1);
 	}
 	if (listen(this->_sockfd, SOMAXCONN) == 0)
-		std::cout << BOLD << GREEN << "Listen successful" << RESET <<  std::endl;
+		std::cout << BOLD << GREEN << "Listen successfull" << RESET <<  std::endl;
 	else
 	{
 		std::cout << BOLD << RED << "Listen failed" << RESET << std::endl;
@@ -290,14 +290,16 @@ void	Server::Processmessage (int i)
 	char			buff[MSG_BUFFERSIZE + 1];
 	int				retval;
 	bool			success;
+	int				fd;
 
 
 	memset (buff, 0, MSG_BUFFERSIZE + 1);
+	fd = this->getVecPoll()[i].fd;
 	retval = recv(this->_vecPoll[i].fd, buff, MSG_BUFFERSIZE, 0);
 	if (retval == -1 || retval == 0)
 	{
 		std::cout << BOLD << GREEN << "Client disconnected sucessfully" << RESET << std::endl;
-		CleanUp(*this, i);
+		CleanUp(*this, fd);
 		return ;
 	}
 	Client& cl = this->findClient(this->_vecPoll[i].fd, success);

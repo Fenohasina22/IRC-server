@@ -78,7 +78,7 @@ void						DeleteVecElement(std::vector<pollfd>& vec, int i);
 void						DeleteVecElementClient(std::vector<Client>& vec, int fd);
 bool						getNeighbors(Client &client, Server &serv, std::set<std::string> &membersToNotify);
 bool						notifyNeighbors(Client &client, Server &serv, std::string &newNick);
-void						CleanUp(Server& serv, int i);
+void						CleanUp(Server& serv, int saveFd);
 bool						IsValidNick(std::string nick, Client&  client, Server& serv);
 void						privmsgToChan(Client &sender, Channel &destChan, Server &serv,iRCMessage &mess,
 							std::string &messageOutput);

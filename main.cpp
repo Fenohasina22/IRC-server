@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 08:44:34 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/19 14:35:57 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	signalHandler(int sig)
 	{
 		close (AllFds[i]);
 	}
+	std::cout << std::endl;
 	signalCaught = true;
 }
 
@@ -78,7 +79,9 @@ void	SendtoCorrectClient(int i, Server& serv)
 {
 	bool success;
 	Client *c = NULL;
+	int		fd;
 
+	fd = serv.getVecPoll()[i].fd;
 	c = &(serv.findTrueClient(serv.getVecPoll()[i].fd, success));
 	if (!success)
 		c = &(serv.findClient(serv.getVecPoll()[i].fd, success));
@@ -89,7 +92,7 @@ void	SendtoCorrectClient(int i, Server& serv)
 		serv.getVecPoll()[i].events &= ~POLLOUT;
 		if ((*c).getWriteBuffer().empty() && (*c).getPendingClose())
 		{
-			CleanUp(serv, i);
+			CleanUp(serv, fd);
 		}
 	}
 }
