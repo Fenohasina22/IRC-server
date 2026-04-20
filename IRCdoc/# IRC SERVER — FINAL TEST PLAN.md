@@ -182,13 +182,13 @@ Mark ✔ only if all 3 are satisfied.
 
 ## Mode enforcement
 
-- [ ] **+i blocks JOIN - [ ] → `473`**
+- [x] **+i blocks JOIN - [ ] → `473`**
 
-- [ ] **+k blocks JOIN - [ ] → `475`**
+- [x] **+k blocks JOIN - [ ] → `475`**
 
-- [ ] **+l blocks JOIN - [ ] → `471`**
+- [x] **+l blocks JOIN - [ ] → `471`**
 
-- [ ] **+t blocks TOPIC - [ ] → `482`**
+- [x] **+t blocks TOPIC - [ ] → `482`**
 
 
 ---
