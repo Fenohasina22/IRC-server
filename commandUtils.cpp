@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/20 15:24:15 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/20 15:25:41 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,7 @@ bool	IsValidNick(std::string nick, Client&  client, Server& serv)
 void	CleanUp(Server& serv, int saveFd)
 {
 	bool	foundC;
-	// int		saveFd;
 
-	// saveFd = serv.getVecPoll()[i].fd;
 	Client	&c = serv.findTrueClient(saveFd, foundC);
 	if (!foundC)
 	{
@@ -394,7 +392,6 @@ bool	getNeighbors(Client &client, Server &serv, std::set<std::string> &membersTo
 		}
 	}
 	membersToNotify.erase(client.getNick());
-	// ensure we remove using normalized (lowercase) nick
 	membersToNotify.erase(toLower(client.getNick()));
 	return (true);
 }

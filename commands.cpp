@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/20 14:33:38 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/20 15:27:08 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -418,7 +418,6 @@ bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 			return (false);
 	}
 
-	// needs to cleanUp (modify delete stuff to by fd to be more efficient)
 	CleanUp(serv, client.getFd());
 	std::cout << GREEN  << "Bye " << client.getNick() << RESET << std::endl;
 	return (true);
