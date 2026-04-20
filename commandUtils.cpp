@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/20 11:19:04 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/20 14:47:04 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -394,6 +394,8 @@ bool	getNeighbors(Client &client, Server &serv, std::set<std::string> &membersTo
 		}
 	}
 	membersToNotify.erase(client.getNick());
+	// ensure we remove using normalized (lowercase) nick
+	membersToNotify.erase(toLower(client.getNick()));
 	return (true);
 }
 
@@ -402,9 +404,11 @@ void updateInvitedAcrossAll(Server &serv, const std::string &oldNick, const std:
     std::vector<Channel> &chans = serv.getAllChans();
     for (size_t i = 0; i < chans.size(); ++i)
     {
-        std::set<std::string> &inv = chans[i].getInvited();
-        if (inv.erase(oldNick))
-            inv.insert(newNick);
+		std::set<std::string> &inv = chans[i].getInvited();
+		std::string lowerOld = toLower(oldNick);
+		std::string lowerNew = toLower(newNick);
+		if (inv.erase(lowerOld))
+			inv.insert(lowerNew);
     }
 }
 
@@ -421,17 +425,19 @@ bool	updateChannels(Client &client, Server &serv, std::string &newNick)
 		{
 			std::set<std::string>::iterator itMember;
 			std::set<std::string>::iterator itOps;
-			itMember = members.find(client.getNick());
-			itOps = ops.find(client.getNick());
+			std::string lowerOld = toLower(client.getNick());
+			std::string lowerNew = toLower(newNick);
+			itMember = members.find(lowerOld);
+			itOps = ops.find(lowerOld);
 			if (itMember != members.end())
 			{
 				members.erase(itMember);
-				members.insert(newNick);
+				members.insert(lowerNew);
 			}
 			if (itOps != ops.end())
 			{
 				ops.erase(itOps);
-				ops.insert(newNick);
+				ops.insert(lowerNew);
 			}
 		}
 		else

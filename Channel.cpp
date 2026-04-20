@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 11:25:09 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 19:44:12 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/20 14:47:04 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,37 +149,36 @@ bool	Channel::operator==(const Channel &other)
 
 void	Channel::addClient(Client* c)
 {
-	std::string nick = c->getNick();
-	std::transform(nick.begin(), nick.end(), nick.begin(), ::tolower);
+	std::string nick = toLower(c->getNick());
 	this->_members.insert(nick);
 	c->addChannel(this->_name);
 }
 
 void	Channel::addOperator(Client* c)
 {
-	std::string nick = c->getNick();
-	std::transform(nick.begin(), nick.end(), nick.begin(), ::tolower);
+	std::string nick = toLower(c->getNick());
 	this->_ops.insert(nick);
 }
 
 void	Channel::addInvited(Client* c)
 {
-	std::string nick = c->getNick();
-	std::transform(nick.begin(), nick.end(), nick.begin(), ::tolower);
+	std::string nick = toLower(c->getNick());
 	this->_invited.insert(nick);
 }
 
 void	Channel::removeClient(Client* c)
 {
-	this->_members.erase(c->getNick());
-	if (this->isOps(c->getNick()))
+	std::string nick = toLower(c->getNick());
+	this->_members.erase(nick);
+	if (this->isOps(nick))
 		this->removeOperator(c);
 	c->removeChannel(this->_name);
 }
 
 void	Channel::removeOperator(Client* c)
 {
-	this->_ops.erase(c->getNick());
+	std::string nick = toLower(c->getNick());
+	this->_ops.erase(nick);
 }
 
 void	Channel::addFlag(std::string flag)
@@ -196,7 +195,7 @@ void	Channel::removeFlag(std::string flag)
 void	Channel::removeInvited(Client *c)
 {
 	if (!_invited.empty())
-		this->_invited.erase(c->getNick());
+		this->_invited.erase(toLower(c->getNick()));
 }
 
 bool	Channel::isOps(Client &c)
@@ -213,16 +212,8 @@ bool	Channel::isOps(Client &c)
 
 bool	Channel::isOps(const std::string &nick) const
 {
-	std::string lowerNick = nick;
-	std::transform(lowerNick.begin(), lowerNick.end(), lowerNick.begin(), ::tolower);
-	for (std::set<std::string>::const_iterator it = _ops.begin(); it != _ops.end(); ++it)
-	{
-		std::string opNick = *it;
-		std::transform(opNick.begin(), opNick.end(), opNick.begin(), ::tolower);
-		if (opNick == lowerNick)
-			return true;
-	}
-	return false;
+	std::string lowerNick = toLower(nick);
+	return (_ops.find(lowerNick) != _ops.end());
 }
 
 bool	Channel::isInvited(const std::string &nick) const
