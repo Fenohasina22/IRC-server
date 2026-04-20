@@ -247,9 +247,9 @@ Mark ✔ only if all 3 are satisfied.
     - [/] → partial send (maybe u need to test it more throughthully ?)
     - [x] → Expected: no crash
 
-- [?] **Invalid JOIN**
-    - [?] → `JOIN` (nothing happens)
-    - [?] → Expected: `461` (nothing)
+- [x] **Invalid JOIN**
+    - [x] → `JOIN` (nothing happens)
+    - [x] → Expected: `461` (nothing)
 
 - [x] **Broken PRIVMSG**
     - [x] → `PRIVMSG nick`
