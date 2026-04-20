@@ -195,55 +195,41 @@ Mark ✔ only if all 3 are satisfied.
 
 # 👑 OPERATORS (+o)
 
-- [ ] **Grant op**
-    - [ ] → `MODE #chan +o nick`
-    - [ ] → Expected: `@nick` in NAMES
+- [x] **Grant op**
+    - [x] → `MODE #chan +o nick`
+    - [x] → Expected: `@nick` in NAMES
 
-- [ ] **Remove op**
-    - [ ] → `MODE #chan -o nick`
-    - [ ] → Expected: removed
+- [x] **Remove op**
+    - [x] → `MODE #chan -o nick`
+    - [x] → Expected: removed
 
-- [ ] **Non-op action**
-    - [ ] → try KICK/MODE
-    - [ ] → Expected: `482`
+- [x] **Non-op action**
+    - [x] → try KICK/MODE
+    - [x] → Expected: `482`
 
 
 ---
 
 # 🥾 KICK
 
-- [ ] **Kick user**
-    - [ ] → `KICK #chan nick`
-    - [ ] → Expected: removed + broadcast
+- [x] **Kick user**
+    - [x] → `KICK #chan nick`
+    - [x] → Expected: removed + broadcast
 
-- [ ] **Invalid target**
-    - [ ] → Expected: `441`
+- [x] **Invalid target**
+    - [x] → Expected: `441`
 
 
 ---
 
 # ✉️ INVITE
 
-- [ ] **Invite user**
-    - [ ] → `INVITE nick #chan`
-    - [ ] → Expected: target notified + `341`
+- [x] **Invite user**
+    - [x] → `INVITE nick #chan`
+    - [x] → Expected: target notified + `341`
 
-- [ ] **Join after invite**
-    - [ ] → Expected: succeeds
-
-
----
-
-# 📡 NAMES
-
-- [ ] **Names list**
-    - [ ] → Expected: `353` + `366`
-
-- [ ] **Operator prefix**
-    - [ ] → Expected: `@nick`
-
-
----
+- [x] **Join after invite**
+    - [x] → Expected: succeeds
 
 # 💣 NC BREAK TESTS
 
@@ -253,29 +239,29 @@ Mark ✔ only if all 3 are satisfied.
 
 ---
 
-- [ ] **Random input**
-    - [ ] → `HELLO`
-    - [ ] → Expected: no crash
+- [x] **Random input**
+    - [x] → `HELLO`
+    - [x] → Expected: no crash
 
-- [ ] **Missing CRLF**
-    - [ ] → partial send
-    - [ ] → Expected: no crash
+- [/] **Missing CRLF**
+    - [/] → partial send (maybe u need to test it more throughthully ?)
+    - [x] → Expected: no crash
 
-- [ ] **Invalid JOIN**
-    - [ ] → `JOIN`
-    - [ ] → Expected: `461`
+- [?] **Invalid JOIN**
+    - [?] → `JOIN` (nothing happens)
+    - [?] → Expected: `461` (nothing)
 
-- [ ] **Broken PRIVMSG**
-    - [ ] → `PRIVMSG nick`
-    - [ ] → Expected: `412`
+- [?] **Broken PRIVMSG**
+    - [?] → `PRIVMSG nick`
+    - [?] → Expected: `412` (461 caught)
 
-- [ ] **Broken MODE**
-    - [ ] → `MODE #chan i`
-    - [ ] → Expected: reject
+- [x] **Broken MODE**
+    - [x] → `MODE #chan i`
+    - [x] → Expected: reject
 
-- [ ] **Invalid limit**
-    - [ ] → `MODE #chan +l -5`
-    - [ ] → Expected: reject
+- [?] **Invalid limit**
+    - [?] → `MODE #chan +l -5` (461 not enough params)
+    - [?] → Expected: reject
 
 - [ ] **Flood test**
     - [ ] → spam commands

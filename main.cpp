@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 14:35:57 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/20 13:31:28 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,23 +134,30 @@ int main(int argc, char **argv)
 	sockaddr_in			clientinfo;
 	pollfd				sock;
 
-	if (!getParams(argv, server))
+	try
 	{
-		std::cerr << RED << "Error: Parameter error" << RESET << std::endl;
-		return (1);
-	}
-	if (server.Initialize())
-		return (0);
-	sock.events = POLLIN;
-	sock.fd =  server.getSockfd();
-	sock.revents = 0;
-	std::vector<pollfd>&	vecpol = server.getVecPoll();
-	vecpol.push_back(sock);
-	while (1)
-	{
-		if (signalCaught || poll(&vecpol[0], vecpol.size(), -1) < 0)
+		if (!getParams(argv, server))
+		{
+			std::cerr << RED << "Error: Parameter error" << RESET << std::endl;
 			return (1);
-		WatchEvents(clientinfo, server);
+		}
+		if (server.Initialize())
+			return (0);
+		sock.events = POLLIN;
+		sock.fd =  server.getSockfd();
+		sock.revents = 0;
+		std::vector<pollfd>&	vecpol = server.getVecPoll();
+		vecpol.push_back(sock);
+		while (1)
+		{
+			if (signalCaught || poll(&vecpol[0], vecpol.size(), -1) < 0)
+				return (1);
+			WatchEvents(clientinfo, server);
+		}
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << BOLD << RED << "Error : " << e.what() << "Please restart the server" << RESET << std::endl;
 	}
 	return (0);
 }
