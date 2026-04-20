@@ -251,9 +251,9 @@ Mark ✔ only if all 3 are satisfied.
     - [?] → `JOIN` (nothing happens)
     - [?] → Expected: `461` (nothing)
 
-- [?] **Broken PRIVMSG**
-    - [?] → `PRIVMSG nick`
-    - [?] → Expected: `412` (461 caught)
+- [x] **Broken PRIVMSG**
+    - [x] → `PRIVMSG nick`
+    - [x] → Expected: `412` (461 caught)
 
 - [x] **Broken MODE**
     - [x] → `MODE #chan i`

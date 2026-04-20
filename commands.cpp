@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/20 14:05:45 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/20 14:18:41 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,12 +152,9 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 		}
 	}
 
-	std::vector<std::string> vec;
+	std::vector<std::string>	vec = split(mess.args[0], ',');
+	unsigned int				i	= 0;
 
-	vec = split(mess.args[0], ',');
-	unsigned int		i;
-
-	i = 0;
 	while (i < vec.size())
 	{
 		bool			foundClient 	= false;
@@ -189,15 +186,18 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 
 bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 {
-	Channel 	*destChan;
-	bool		foundChan = false;
-	std::string broadcastMess;
-	std::vector<std::string> vec;
+	Channel 					*destChan;
+	bool						foundChan	= false;
+	std::string 				broadcastMess;
+	std::vector<std::string>	vec;
+	unsigned int				idx			= 0;
 
-
-	unsigned int	idx;
-
-	idx = 0;
+	if (mess.args.empty())
+	{
+		client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
+			 "* JOIN :Not enough parameters"), serv);
+		return (false);
+	}
 	while (idx < mess.args.size())
 	{
 		vec = split(mess.args[idx],',');
@@ -206,12 +206,6 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 		while (i < vec.size())
 		{
 			vec[i] = strtrim(vec[i]);
-			if (vec[i].empty())
-			{
-				client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
-					 "* JOIN :Not enough parameters"), serv);
-				return (false);
-			}
 			if (!chanExists(vec[i], serv))
 			{
 				if (vec[i][0] != '#')
