@@ -112,7 +112,7 @@ Mark ✔ only if all 3 are satisfied.
     - [x] → Verify: correct prefix
 
 - [ ] **Channel message**
-    - [ ] → `PRIVMSG #chan :msg` (someone not member of a channel can send message in it but can't receive is it normal)
+    - [x] → `PRIVMSG #chan :msg` (someone not member of a channel can send message in it but can't receive is it normal)
     - [x] → Expected: broadcast
     - [x] → Verify: all members receive
 
