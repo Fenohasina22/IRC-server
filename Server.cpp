@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/19 14:26:41 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/20 14:05:49 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,9 +191,11 @@ Client &Server::findClient(std::string nick, bool	&success)
 	int		fakeIdx = this->_allClients.size() - 1;
 
 	success = false;
+	std::string lowerNick = toLower(nick);
 	for (size_t idx = 0; idx < this->_allClients.size(); ++idx)
 	{
-		if (this->_allClients[idx].getNick() == nick)
+		std::string clientNick = toLower(this->_allClients[idx].getNick());
+		if (clientNick == lowerNick)
 		{
 			success = true;
 			return (this->_allClients[idx]);

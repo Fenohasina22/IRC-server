@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/14 19:01:29 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/18 19:31:10 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/20 11:29:51 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,10 @@ void	handleTrailingArgs(
 	}
 	parsedMess.args.push_back(splitMess[i]);
 	if (!splitMess[i].empty() && splitMess[i][0] == ':')
+	{
 		trailing = true;
+		parsedMess.has_trailing = true;
+	}
 }
 
 void	initialiseIRCMessage(iRCMessage &msg)
@@ -119,4 +122,5 @@ void	initialiseIRCMessage(iRCMessage &msg)
     msg.crlf = "";
     msg.len = 0;
     msg.ogMess = "";
+	msg.has_trailing = false;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 16:04:24 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/20 14:05:45 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,11 +126,30 @@ bool	pongCmd(Client &client, iRCMessage &mess, Server& serv)
 
 bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 {
-	if (mess.args.size() < 2)
+	if (mess.args.empty())
 	{
 		client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
-			 "* PRIVMSG :Not enough parameters"), serv);
+			"* PRIVMSG :Not enough parameters"), serv);
 		return (false);
+	}
+	if (mess.args.size() < 2)
+	{
+		bool clientExists = false;
+		serv.findTrueClient(mess.args[0], clientExists);
+		bool chanExistsFlag = chanExists(mess.args[0], serv);
+
+		if (!clientExists && !chanExistsFlag)
+		{
+			client.ConcatenateWBuffer(FormatedMessage("411", ":" + serv.getName(),
+				"PRIVMSG :No recipient given (PRIVMSG)"), serv);
+			return (false);
+		}
+		if (!mess.has_trailing)
+		{
+			client.ConcatenateWBuffer(FormatedMessage("412", ":" + serv.getName(),
+				"PRIVMSG :No text to send"), serv);
+			return (false);
+		}
 	}
 
 	std::vector<std::string> vec;
@@ -428,7 +447,7 @@ bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 		else
 			return (false);
 	}
-	
+
 	// needs to cleanUp (modify delete stuff to by fd to be more efficient)
 	CleanUp(serv, client.getFd());
 	std::cout << GREEN  << "Bye " << client.getNick() << RESET << std::endl;
