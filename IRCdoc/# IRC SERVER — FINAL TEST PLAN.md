@@ -150,10 +150,10 @@ Mark ✔ only if all 3 are satisfied.
 
 ## Query
 
-- [ ] **Get modes**
-    - [ ] → `MODE #chan`
-    - [ ] → Expected: `324 #chan +modes`
-    - [ ] → Verify: order = `itkl`, empty = `+`
+- [x] **Get modes**
+    - [x] → `MODE #chan`
+    - [x] → Expected: `324 #chan +modes`
+    - [?] → Verify: order = `itkl`, empty = `+` (can't add more modes , only it are visble)
 
 
 ---
