@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commandUtils.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/20 11:19:04 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/20 14:34:02 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -948,4 +948,34 @@ std::string	CurrentHostname(Client& client)
 	inet_ntop(AF_INET, &(tmp.sin_addr), hostname, INET_ADDRSTRLEN);
 	host = hostname;
 	return (host);
+}
+
+bool	privmsgError(iRCMessage& mess, Client& client, Server& serv)
+{
+	if (mess.args.empty())
+	{
+		client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
+			"* PRIVMSG :Not enough parameters"), serv);
+		return (true);
+	}
+	if (mess.args.size() < 2)
+	{
+		bool clientExists = true;
+		serv.findTrueClient(mess.args[0], clientExists);
+		bool chanExistsFlag = chanExists(mess.args[0], serv);
+
+		if (!clientExists && !chanExistsFlag)
+		{
+			client.ConcatenateWBuffer(FormatedMessage("411", ":" + serv.getName(),
+				"PRIVMSG :No recipient given (PRIVMSG)"), serv);
+			return (true);
+		}
+		if (!mess.has_trailing)
+		{
+			client.ConcatenateWBuffer(FormatedMessage("412", ":" + serv.getName(),
+				"PRIVMSG :No text to send"), serv);
+			return (true);
+		}
+	}
+	return (false);
 }
