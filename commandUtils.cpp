@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/20 14:47:04 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/20 15:14:30 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -798,10 +798,17 @@ bool	processModeChange(
 			break;
 
 		case l:
-			if (!doLflag(destChan, act, args))
+			if (act == ADD && args.size() < 1)
 			{
 				client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
 					 client.getNick() + " MODE :Not enough parameters"), serv);
+				return (false);
+			}
+			if (!doLflag(destChan, act, args))
+			{
+				std::string invalidArg = args.empty() ? modeChange : args.front();
+				client.ConcatenateWBuffer(FormatedMessage("472", ":" + serv.getName(),
+					 client.getNick() + " " + invalidArg + " :Invalid parameter"), serv);
 				return (false);
 			}
 			break;
