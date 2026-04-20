@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commandUtils.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 15:42:14 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/20 11:19:04 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -473,17 +473,24 @@ void	privmsgToChan(
 	iRCMessage	&mess,
 	std::string &messageOutput)
 {
+	if (!sender.isInChannel(destChan.getName()))
+	{
+		sender.ConcatenateWBuffer(FormatedMessage("442", ":" + serv.getName(),
+			 sender.getNick() + " " + destChan.getName()
+			 + " :You're not on that channel"), serv);
+		return ;
+	}
 	std::set<std::string> members = destChan.getMembers();
-		for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)
-		{
-			bool found = false;
-			Client &target = serv.findTrueClient(*it, found);
-			if (!found)
-				continue;
-			messageOutput = formChanMess(sender, destChan, mess);
-			if (target.getNick() != sender.getNick())
-				target.ConcatenateWBuffer(messageOutput, serv);
-		}
+	for (std::set<std::string>::iterator it = members.begin(); it != members.end(); ++it)
+	{
+		bool found = false;
+		Client &target = serv.findTrueClient(*it, found);
+		if (!found)
+			continue;
+		messageOutput = formChanMess(sender, destChan, mess);
+		if (target.getNick() != sender.getNick())
+			target.ConcatenateWBuffer(messageOutput, serv);
+	}
 }
 
 bool	checkChanRestrictions(Client &client, iRCMessage &mess, Server serv, Channel *destChan)

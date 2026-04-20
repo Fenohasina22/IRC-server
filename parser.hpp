@@ -6,7 +6,7 @@
 /*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/06 08:53:40 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 07:16:26 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/20 11:30:06 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ struct iRCMessage
 	std::string 				crlf;
 	size_t						len;
 	std::string					ogMess;
+	bool						has_trailing;
 };
 
 

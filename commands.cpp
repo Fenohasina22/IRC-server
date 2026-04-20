@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/19 16:04:24 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/20 14:18:41 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,19 +126,35 @@ bool	pongCmd(Client &client, iRCMessage &mess, Server& serv)
 
 bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 {
-	if (mess.args.size() < 2)
+	if (mess.args.empty())
 	{
 		client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
-			 "* PRIVMSG :Not enough parameters"), serv);
+			"* PRIVMSG :Not enough parameters"), serv);
 		return (false);
 	}
+	if (mess.args.size() < 2)
+	{
+		bool clientExists = false;
+		serv.findTrueClient(mess.args[0], clientExists);
+		bool chanExistsFlag = chanExists(mess.args[0], serv);
 
-	std::vector<std::string> vec;
+		if (!clientExists && !chanExistsFlag)
+		{
+			client.ConcatenateWBuffer(FormatedMessage("411", ":" + serv.getName(),
+				"PRIVMSG :No recipient given (PRIVMSG)"), serv);
+			return (false);
+		}
+		if (!mess.has_trailing)
+		{
+			client.ConcatenateWBuffer(FormatedMessage("412", ":" + serv.getName(),
+				"PRIVMSG :No text to send"), serv);
+			return (false);
+		}
+	}
 
-	vec = split(mess.args[0], ',');
-	unsigned int		i;
+	std::vector<std::string>	vec = split(mess.args[0], ',');
+	unsigned int				i	= 0;
 
-	i = 0;
 	while (i < vec.size())
 	{
 		bool			foundClient 	= false;
@@ -170,15 +186,18 @@ bool	privmsgCmd(Client &client, iRCMessage &mess, Server &serv)
 
 bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 {
-	Channel 	*destChan;
-	bool		foundChan = false;
-	std::string broadcastMess;
-	std::vector<std::string> vec;
+	Channel 					*destChan;
+	bool						foundChan	= false;
+	std::string 				broadcastMess;
+	std::vector<std::string>	vec;
+	unsigned int				idx			= 0;
 
-
-	unsigned int	idx;
-
-	idx = 0;
+	if (mess.args.empty())
+	{
+		client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
+			 "* JOIN :Not enough parameters"), serv);
+		return (false);
+	}
 	while (idx < mess.args.size())
 	{
 		vec = split(mess.args[idx],',');
@@ -187,12 +206,6 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 		while (i < vec.size())
 		{
 			vec[i] = strtrim(vec[i]);
-			if (vec[i].empty())
-			{
-				client.ConcatenateWBuffer(FormatedMessage("461", ":" + serv.getName(),
-					 "* JOIN :Not enough parameters"), serv);
-				return (false);
-			}
 			if (!chanExists(vec[i], serv))
 			{
 				if (vec[i][0] != '#')
@@ -428,7 +441,7 @@ bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 		else
 			return (false);
 	}
-	
+
 	// needs to cleanUp (modify delete stuff to by fd to be more efficient)
 	CleanUp(serv, client.getFd());
 	std::cout << GREEN  << "Bye " << client.getNick() << RESET << std::endl;

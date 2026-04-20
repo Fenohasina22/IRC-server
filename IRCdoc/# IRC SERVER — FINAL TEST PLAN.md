@@ -111,18 +111,18 @@ Mark ✔ only if all 3 are satisfied.
     - [x] → Expected: received
     - [x] → Verify: correct prefix
 
-- [ ] **Channel message**
-    - [ ] → `PRIVMSG #chan :msg` (someone not member of a channel can send message in it but can't receive is it normal)
+- [x] **Channel message**
+    - [x] → `PRIVMSG #chan :msg` (someone not member of a channel can send message in it but can't receive is it normal)
     - [x] → Expected: broadcast
     - [x] → Verify: all members receive
 
-- [ ] **Missing target**
-    - [?] → `PRIVMSG`
-    - [?] → Expected: `411` (there is 461 and no 411 in the code)
+- [x] **Missing target**
+    - [x] → `PRIVMSG`
+    - [x] → Expected: `411` (there is 461 and no 411 in the code)
 
-- [ ] **Missing message**
-    - [?] → `PRIVMSG nick`
-    - [?] → Expected: `412` (there is 461 and no 412 in the code)
+- [x] **Missing message**
+    - [x] → `PRIVMSG nick`
+    - [x] → Expected: `412` (there is 461 and no 412 in the code)
 
 
 
@@ -251,9 +251,9 @@ Mark ✔ only if all 3 are satisfied.
     - [?] → `JOIN` (nothing happens)
     - [?] → Expected: `461` (nothing)
 
-- [?] **Broken PRIVMSG**
-    - [?] → `PRIVMSG nick`
-    - [?] → Expected: `412` (461 caught)
+- [x] **Broken PRIVMSG**
+    - [x] → `PRIVMSG nick`
+    - [x] → Expected: `412` (461 caught)
 
 - [x] **Broken MODE**
     - [x] → `MODE #chan i`
