@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/21 16:29:29 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/21 16:54:27 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,13 @@ bool	IsValidNickChar(char c)
 bool	IsValidNick(std::string nick, Client&  client, Server& serv)
 {
 	unsigned int i;
+	unsigned int n;
 
 	i = 0;
-	while (i < nick.size())
+	n = nick.size();
+	if (nick.empty())
+		n++;
+	while (i < n)
 	{
 		if (nick.size() < 2 || nick.size() > 9 
 				|| std::isdigit(nick[0]) || nick[0] == '-' 
