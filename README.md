@@ -13,7 +13,7 @@ To compile the project, run:
 ```bash
 make
 ```
-This command will generate a bunch of object file and the ./ft_irc program
+This command will generate a bunch of object file and the ./ircserv program
 
 
 ```bash
@@ -39,7 +39,7 @@ This command removes object files and the program , then recompiles it
 To run the IRC server:
 
 ```bash
-./ft_irc <port 1024-65535> <password>
+./ircserv <port 1024-65535> <password>
 ```
 
 Port requirements
@@ -53,7 +53,7 @@ Build and run the server:
 
 ```bash
 make
-./ft_irc 6667 mySecretPassword
+./ircserv 6667 mySecretPassword
 ```
 
 Quick manual test with `netcat` (each command on its own line):
@@ -135,16 +135,23 @@ MODE <#channel> {[+|-]<modes>} [params...]
 
 ## Behavior & Limits
 
-- Password: the server binary requires a password argument; clients should send `PASS <password>` during registration if the server enforces it.
-- Message length: the IRC protocol limits messages to 512 bytes including CRLF; the server aims to follow this—check `parser.cpp` for exact enforcement.
-- Nicknames and channels: channel names typically start with `#`. Exact nickname and channel length/character limits are implemented in the parser — consult `parser.cpp` and `Client.cpp` for specifics.
+- Password: the server binary requires a password argument; clients should send `PASS <password>` during registration.
+- Message length: the IRC protocol limits messages to 512 bytes including CRLF; the server aims to follow .
+- Nicknames and channels: channel names typically start with `#`.
 - Modes: channel modes `i`, `t`, `k`, `l`, `o` are supported; mode parameters (for `k` and `l`) are consumed left-to-right.
-- Concurrency: the server uses a single process with non-blocking sockets/select or poll (see `Server.cpp`) — stress-test with multiple clients if needed.
+
 
 ## Stopping the Server
 
 - Ctrl+C (SIGINT): stop the server cleanly from the terminal where it was started.
 - `DISCONNECT`: a non-standard, server-specific command that may be implemented to forcibly close a connection; behavior depends on server code and privileges.
+
+## Contributions
+### fsamy-an — Server core & connection management
+implemented the networking layer, client lifecycle and buffer management, and main server loop.
+
+### mratsima — IRC protocol logic & command processing
+implemented the message parser, command handlers, and parsing utilities.
 
 ## Resources
 
@@ -162,3 +169,4 @@ AI was used as a support tool in the following areas:
 - Referencing IRC numeric replies with their syntax and their meanings
 - Improving productivity for simple utility implementations (e.g., helper functions like toLower)
 - Creating full reference documentation for IRC
+- Readme formatting
