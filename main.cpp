@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/20 13:31:28 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/20 15:11:43 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	signalHandler(int sig)
 	}
 	std::cout << std::endl;
 	signalCaught = true;
+	std::cout << BOLD << RED << "Server closed." << RESET << std::endl;
 }
 
 void	SendtoCorrectClient(int i, Server& serv)
@@ -157,7 +158,7 @@ int main(int argc, char **argv)
 	}
 	catch(const std::exception& e)
 	{
-		std::cerr << BOLD << RED << "Error : " << e.what() << "Please restart the server" << RESET << std::endl;
+		std::cerr << BOLD << RED << "Error : " << e.what() << "\nPlease restart the server" << RESET << std::endl;
 	}
 	return (0);
 }

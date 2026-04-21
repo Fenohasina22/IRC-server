@@ -13,7 +13,7 @@ To compile the project, run:
 ```bash
 make
 ```
-This command will generate a bunch of object file and the ./ft_irc program
+This command will generate a bunch of object file and the ./ircserv program
 
 
 ```bash
@@ -39,7 +39,7 @@ This command removes object files and the program , then recompiles it
 To run the IRC server:
 
 ```bash
-./ft_irc <port 1024-65535> <password>
+./ircserv <port 1024-65535> <password>
 ```
 
 Port requirements
@@ -53,7 +53,7 @@ Build and run the server:
 
 ```bash
 make
-./ft_irc 6667 mySecretPassword
+./ircserv 6667 mySecretPassword
 ```
 
 Quick manual test with `netcat` (each command on its own line):
