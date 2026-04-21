@@ -263,44 +263,44 @@ Mark ✔ only if all 3 are satisfied.
     - [?] → `MODE #chan +l -5` (461 not enough params)
     - [?] → Expected: reject
 
-- [ ] **Flood test**
-    - [ ] → spam commands
-    - [ ] → Expected: stable
+- [x] **Flood test**
+    - [x] → spam commands
+    - [x] → Expected: stable
 
-- [ ] **Long message (>512)**
-    - [ ] → Expected: safe handling
+- [x] **Long message (>512)**
+    - [x] → Expected: safe handling
 
-- [ ] **Unknown command**
-    - [ ] → `FOOBAR`
-    - [ ] → Expected: `421`
+- [x] **Unknown command**
+    - [x] → `FOOBAR`
+    - [x] → Expected: `421`
 
 
 ---
 
 # 🧱 EDGE CASES
 
-- [ ] No ghost users
+- [x] No ghost users
 
-- [ ] No duplicate users
+- [x] No duplicate users
 
-- [ ] Channel deleted when empty
+- [x] Channel deleted when empty
 
-- [ ] Rejoin works cleanly
+- [x] Rejoin works cleanly
 
 
 ---
 
 # 🧪 FINAL VALIDATION
 
-- [ ] No crashes
+- [x] No crashes
 
-- [ ] All numerics correct
+- [/] All numerics correct
 
-- [ ] All ordering correct
+- [/] All ordering correct
 
-- [ ] irssi behaves correctly
+- [x] irssi behaves correctly
 
-- [ ] No desync
+- [x] No desync
 
 
 ---
