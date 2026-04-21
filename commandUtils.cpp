@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/20 15:25:41 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/21 16:29:29 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,32 @@
 #include "commands.hpp"
 #include <climits>
 
+bool	IsValidNickChar(char c)
+{
+	std::string str = "[]\\`^{}-_";
+	size_t		pos;
+
+	pos = str.find(c);
+	if (std::isalnum(c) || pos != std::string::npos)
+	{
+		return (true);
+	}
+	return (false);
+}
 
 bool	IsValidNick(std::string nick, Client&  client, Server& serv)
 {
-	std::string	a = "@!*?$#, .";
-	size_t pos;
 	unsigned int i;
 
 	i = 0;
-	while (i < a.size())
+	while (i < nick.size())
 	{
-		pos = nick.find(a[i]);
-		if (pos != std::string::npos || std::isdigit(nick[0]) || nick[0] == '-')
+		if (nick.size() < 2 || nick.size() > 9 
+				|| std::isdigit(nick[0]) || nick[0] == '-' 
+				|| nick[0] == '_' || !IsValidNickChar(nick[i]))
 		{
-			std::cout << BOLD << RED << "Invalid nickname, please try again" << RESET << std::endl;
 			client.ConcatenateWBuffer(FormatedMessage("432", ":" + serv.getName(),
-				 "* " + nick + " :Erroneous nickname" ), serv);
+				 "* " + nick + " :Erroneous nickname"), serv);
 			return (false);
 		}
 		i++;
