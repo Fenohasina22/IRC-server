@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:49:06 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/20 14:34:42 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/21 16:21:11 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,5 +108,6 @@ void						processFlags(std::vector<std::string>&changesToDo,std::vector<std::str
 std::string					CurrentHostname(Client& client);
 std::string					toLower(const std::string& str);
 bool						privmsgError(iRCMessage& mess, Client& client, Server& serv);
+bool						isValidChanName(const std::string &name, Client &client, Server &serv);
 
 #endif

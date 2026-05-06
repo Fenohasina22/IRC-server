@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
+/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 16:48:57 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/20 15:27:08 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/21 16:23:40 by mratsima         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,12 +184,8 @@ bool	joinCmd(Client &client, iRCMessage &mess, Server &serv)
 			vec[i] = strtrim(vec[i]);
 			if (!chanExists(vec[i], serv))
 			{
-				if (vec[i][0] != '#')
-				{
-					client.ConcatenateWBuffer(FormatedMessage("403", ":" + serv.getName(),
-						 client.getNick() + " " + vec[i] + " :No such channel"), serv);
+				if (!isValidChanName(vec[i], client, serv))
 					return (false);
-				}
 				serv.getAllChans().push_back(Channel(vec[i], ""));
 				std::cout << GREEN << "Channel created: " << vec[i] << RESET << std::endl;
 				destChan = &(serv.getAllChans().back());
@@ -419,6 +415,5 @@ bool	quitCmd(iRCMessage& mess, Client& client, Server& serv)
 	}
 
 	CleanUp(serv, client.getFd());
-	std::cout << GREEN  << "Bye " << client.getNick() << RESET << std::endl;
 	return (true);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mratsima <mratsima@student.42antananari    +#+  +:+       +#+        */
+/*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/07 15:41:51 by fsamy-an          #+#    #+#             */
-/*   Updated: 2026/04/20 14:05:49 by mratsima         ###   ########.fr       */
+/*   Updated: 2026/04/21 17:41:37 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ int	Server::Initialize()
 		close (this->_sockfd);
 		return (1);
 	}
-	AllFds.push_back(this->_sockfd);
+	this->_AllFds.push_back(this->_sockfd);
 	return (0);
 }
 
@@ -129,7 +129,7 @@ bool	Server::NewUserHandling(sockaddr_in& clientinfo, socklen_t&  csize)
 	client.setFd(tmp.fd);
 	client.setClientInfos(clientinfo);
 	this->_allClients.push_back(client);
-	AllFds.push_back(tmp.fd);
+	this->_AllFds.push_back(tmp.fd);
 	return (true);
 }
 
@@ -385,4 +385,14 @@ pollfd&	Server::findElementByfd(int fd, bool& a)
 	}
 	a = false;
 	return (vec[i]);
+}
+
+void	Server::closeAllfds()
+{
+	if (this->_AllFds.empty())
+		return ;
+	for (unsigned int i = 0; i < this->_AllFds.size(); i++)
+	{
+		close(this->_AllFds[i]);
+	}
 }

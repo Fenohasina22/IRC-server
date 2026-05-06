@@ -6,13 +6,14 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/10 15:10:46 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/21 16:54:27 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/21 16:35:11 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "commands.hpp"
 #include <climits>
+
 
 bool	IsValidNickChar(char c)
 {
@@ -1002,4 +1003,34 @@ bool	privmsgError(iRCMessage& mess, Client& client, Server& serv)
 		}
 	}
 	return (false);
+}
+
+bool	isValidChanName(const std::string &name, Client &client, Server &serv)
+{
+	std::string s = name;
+	if (s.empty())
+	{
+		client.ConcatenateWBuffer(FormatedMessage("403", ":" + serv.getName(),
+			 client.getNick() + " " + name + " :No such channel"), serv);
+		return (false);
+	}
+	if (s[0] == ':')
+		s = s.substr(1);
+	if (s.empty() || s[0] != '#' || s.size() < 2 || s.size() > 50)
+	{
+		client.ConcatenateWBuffer(FormatedMessage("403", ":" + serv.getName(),
+			 client.getNick() + " " + name + " :No such channel"), serv);
+		return (false);
+	}
+	for (size_t i = 0; i < name.size(); i++)
+	{
+		unsigned char c = static_cast<unsigned char>(s[i]);
+		if (c == ' ' || c == ',' || c == ':' || c < 32 || c == 127)
+		{
+			client.ConcatenateWBuffer(FormatedMessage("403", ":" + serv.getName(),
+			 client.getNick() + " " + name + " :No such channel"), serv);
+			return (false);
+		}
+	}
+	return (true);
 }

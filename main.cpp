@@ -6,7 +6,7 @@
 /*   By: fsamy-an <fsamy-an@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 15:02:43 by mratsima          #+#    #+#             */
-/*   Updated: 2026/04/20 15:11:43 by fsamy-an         ###   ########.fr       */
+/*   Updated: 2026/04/21 17:41:05 by fsamy-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "parser.hpp"
 #include <climits>
 
-std::vector<int>		AllFds;
 volatile sig_atomic_t	signalCaught = false;
 
 void ircIntro() {
@@ -67,10 +66,6 @@ bool	getParams(char **argv, Server &serv)
 void	signalHandler(int sig)
 {
 	(void)sig;
-	for (unsigned int i = 0; i < AllFds.size(); i++)
-	{
-		close (AllFds[i]);
-	}
 	std::cout << std::endl;
 	signalCaught = true;
 	std::cout << BOLD << RED << "Server closed." << RESET << std::endl;
@@ -152,7 +147,10 @@ int main(int argc, char **argv)
 		while (1)
 		{
 			if (signalCaught || poll(&vecpol[0], vecpol.size(), -1) < 0)
+			{
+				server.closeAllfds();
 				return (1);
+			}
 			WatchEvents(clientinfo, server);
 		}
 	}
