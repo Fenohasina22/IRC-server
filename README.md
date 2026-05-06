@@ -151,7 +151,7 @@ MODE <#channel> {[+|-]<modes>} [params...]
 implemented the networking layer, client lifecycle and buffer management, and main server loop.
 
 ### mratsima — IRC protocol logic & command processing
-implemented the message parser, command handlers, and parsing utilities.
+implemented the commands, command handlers, and parsing utilities.
 
 ## Resources
 
